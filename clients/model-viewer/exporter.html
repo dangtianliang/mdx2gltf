@@ -420,6 +420,20 @@
                         <label for="include-skeleton">包含骨骼</label>
                         <input type="checkbox" id="include-skeleton" checked>
                     </div>
+                    <div class="option-group">
+                        <label for="team-color">队伍颜色</label>
+                        <select id="team-color">
+                            <option value="0">默认 (无队伍颜色)</option>
+                            <option value="1">红色</option>
+                            <option value="2">蓝色</option>
+                            <option value="3">青色</option>
+                            <option value="4">紫色</option>
+                            <option value="5">黄色</option>
+                            <option value="6">橙色</option>
+                            <option value="7">绿色</option>
+                            <option value="8">粉色</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="conversion-buttons">
                     <button class="btn btn-primary" id="convert-btn">开始转换</button>
@@ -532,6 +546,19 @@
         
         // 当前模型的材质文件路径
         let currentMaterialPath = null;
+        
+        // Warcraft 3 队伍颜色常量
+        const TEAM_COLORS = {
+            0: null, // 默认 (无队伍颜色)
+            1: 0xFF0000, // 红色
+            2: 0x0000FF, // 蓝色
+            3: 0x00FFFF, // 青色
+            4: 0xFF00FF, // 紫色
+            5: 0xFFFF00, // 黄色
+            6: 0xFF8000, // 橙色
+            7: 0x00FF00, // 绿色
+            8: 0xFF8080  // 粉色
+        };
         
         // 初始化函数
         function init() {
@@ -1695,12 +1722,15 @@
             const embedTextures = document.getElementById('embed-textures').checked;
             const includeAnimations = document.getElementById('include-animations').checked;
             const textureFormat = document.getElementById('texture-format').value;
+            const teamColorIndex = parseInt(document.getElementById('team-color').value);
+            const teamColor = TEAM_COLORS[teamColorIndex];
             
             console.log('转换选项:');
             console.log('输出格式:', outputFormat);
             console.log('嵌入纹理:', embedTextures);
             console.log('包含动画:', includeAnimations);
             console.log('纹理格式:', textureFormat);
+            console.log('队伍颜色:', teamColorIndex, teamColor ? `0x${teamColor.toString(16).toUpperCase()}` : '默认');
             
             // 加载并转换模型
             fetch(selectedModel.path)
@@ -1738,6 +1768,7 @@
                         // 提取材质和纹理数据
                         let materialsData = [];
                         let texturesData = [];
+                        let layersData = [];
                         
                         if (model.Materials) {
                             materialsData = model.Materials;
@@ -1754,6 +1785,56 @@
                             texturesData = model.textures;
                             console.log('提取到纹理数据:', texturesData.length, '个纹理');
                         }
+                        
+                        // 提取层数据（用于获取每个材质使用的纹理）
+                        if (model.Layers) {
+                            layersData = model.Layers;
+                            console.log('提取到层数据:', layersData.length, '个层');
+                        } else if (model.layers) {
+                            layersData = model.layers;
+                            console.log('提取到层数据:', layersData.length, '个层');
+                        }
+                        
+                        // 分析每个材质使用的纹理及其 ReplaceableId
+                        const materialTextureMap = new Map();
+                        materialsData.forEach((material, materialIndex) => {
+                            console.log(`分析材质 ${materialIndex}:`);
+                            
+                            // 检查材质是否有层数据
+                            if (material.Layers) {
+                                material.Layers.forEach((layer, layerIndex) => {
+                                    let textureId = 0;
+                                    if (layer.TextureID) {
+                                        textureId = layer.TextureID;
+                                    } else if (layer.textureId) {
+                                        textureId = layer.textureId;
+                                    }
+                                    
+                                    console.log(`  层 ${layerIndex}: TextureID = ${textureId}`);
+                                    
+                                    // 检查对应的纹理是否为队伍颜色纹理
+                                    if (texturesData[textureId]) {
+                                        const texture = texturesData[textureId];
+                                        let replaceableId = 0;
+                                        if (texture.ReplaceableId) {
+                                            replaceableId = texture.ReplaceableId;
+                                        } else if (texture.replaceableId) {
+                                            replaceableId = texture.replaceableId;
+                                        }
+                                        
+                                        console.log(`  对应的纹理 ReplaceableId = ${replaceableId}`);
+                                        
+                                        // 如果是队伍颜色纹理，记录到材质纹理映射中
+                                        if (replaceableId === 1 || replaceableId === 2) {
+                                            materialTextureMap.set(materialIndex, replaceableId);
+                                            console.log(`  材质 ${materialIndex} 使用了队伍颜色纹理 (ReplaceableId = ${replaceableId})`);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                        
+                        console.log('材质纹理映射:', materialTextureMap);
                         
                         // 提取动画数据
                         let animationsData = [];
@@ -2153,14 +2234,21 @@
                         console.log('准备转换动画数据...');
                         console.log(`animationsData: ${animationsData ? animationsData.length : 0} 个序列`);
                         console.log(`bonesData: ${bonesData ? bonesData.length : 0} 个骨骼`);
+                        console.log(`是否包含动画: ${includeAnimations}`);
                         
                         try {
-                            animations = convertAnimationsToThreeJS(animationsData, bonesData);
-                            console.log('动画数据转换完成，animations数组长度:', animations.length);
-                            console.log('animations数组内容:', animations);
-                            // 存储到全局变量，确保异步回调中可以访问
-                            window.exportAnimations = animations;
-                            console.log('动画已存储到 window.exportAnimations:', window.exportAnimations.length);
+                            if (includeAnimations) {
+                                animations = convertAnimationsToThreeJS(animationsData, bonesData);
+                                console.log('动画数据转换完成，animations数组长度:', animations.length);
+                                console.log('animations数组内容:', animations);
+                                // 存储到全局变量，确保异步回调中可以访问
+                                window.exportAnimations = animations;
+                                console.log('动画已存储到 window.exportAnimations:', window.exportAnimations.length);
+                            } else {
+                                console.log('根据用户选项，不包含动画');
+                                animations = [];
+                                window.exportAnimations = [];
+                            }
                         } catch (error) {
                             console.error('动画数据转换失败:', error);
                             console.error('错误堆栈:', error.stack);
@@ -2495,6 +2583,16 @@
                                             texturePath = texture.image;
                                         }
                                         
+                                        // 提取 ReplaceableId
+                                        let replaceableId = 0;
+                                        if (texture.ReplaceableId) {
+                                            replaceableId = texture.ReplaceableId;
+                                        } else if (texture.replaceableId) {
+                                            replaceableId = texture.replaceableId;
+                                        }
+                                        
+                                        console.log(`纹理 ${index}: ReplaceableId = ${replaceableId}`);
+                                        
                                         if (texturePath) {
                                             // 统一路径分隔符为正斜杠
                                             const normalizedTexturePath = texturePath.replace(/\\/g, '/');
@@ -2807,7 +2905,7 @@
                                                                             side: material.side
                                                                         });
                                                                          
-                                                                        createMeshAndExport();
+                                                                        createMeshAndExport(teamColor);
                                                                     },
                                                                     undefined,
                                                                     (error) => {
@@ -2866,7 +2964,7 @@
                                                 wireframe: false,
                                                 side: THREE.DoubleSide
                                             });
-                                            createMeshAndExport();
+                                            createMeshAndExport(teamColor);
                                             return;
                                         }
                                         
@@ -2938,7 +3036,7 @@
                                                             side: THREE.DoubleSide
                                                         });
                                                     }
-                                                    createMeshAndExport();
+                                                    createMeshAndExport(teamColor);
                                                 },
                                                 (progress) => {
                                                     // 加载进度反馈
@@ -2978,7 +3076,7 @@
                                                     wireframe: false,
                                                     side: THREE.DoubleSide
                                                 });
-                                                createMeshAndExport();
+                                                createMeshAndExport(teamColor);
                                             },
                                             (progress) => {
                                                 // 加载进度反馈
@@ -3010,7 +3108,7 @@
                                     });
                                     
                                     // 继续导出
-                                    createMeshAndExport();
+                            createMeshAndExport(teamColor);
                                 }
                             } else {
                                 // 没有纹理数据，使用默认材质
@@ -3036,10 +3134,11 @@
                         }
                         
                         // 创建网格并导出的函数
-                        function createMeshAndExport() {
+                        function createMeshAndExport(teamColor) {
                             console.log('=== 开始创建网格和导出 ===');
                             console.log('动画数量:', window.exportAnimations ? window.exportAnimations.length : (animations ? animations.length : 0));
                             console.log('Geoset对象数量:', window.geosetObjects ? window.geosetObjects.length : 0);
+                            console.log('材质纹理映射:', materialTextureMap);
                             
                             // 创建一个组对象来容纳所有Geoset网格
                             const modelGroup = new THREE.Group();
@@ -3082,12 +3181,20 @@
                                         console.log('使用已创建的材质');
                                     } else {
                                         // 创建新材质 - 使用全局加载的纹理
-                                        const matOptions = {
-                                            color: 0xffffff,
-                                            roughness: 0.7,
-                                            metalness: 0.1,
-                                            side: THREE.DoubleSide
-                                        };
+                                const matOptions = {
+                                    color: 0xffffff,
+                                    roughness: 0.7,
+                                    metalness: 0.1,
+                                    side: THREE.DoubleSide
+                                };
+                                
+                                // 检查该材质是否使用了队伍颜色纹理
+                                if (teamColor && materialTextureMap.has(geosetObject.materialID)) {
+                                    matOptions.color = teamColor;
+                                    console.log(`材质 ${geosetObject.materialID} 使用队伍颜色: 0x${teamColor.toString(16).toUpperCase()}`);
+                                } else {
+                                    console.log(`材质 ${geosetObject.materialID} 使用默认颜色: 0xffffff`);
+                                }
                                         
                                         // 如果全局纹理已加载，应用到材质
                                         if (window.loadedTexture) {
@@ -3154,9 +3261,16 @@
                                     try {
                                         const skeleton = createSkeleton(bonesData);
                                         const skinnedGeometry = createSkinnedGeometry(geometry, bonesData, model);
+                                        // 检查该材质是否使用了队伍颜色纹理
+                                        let finalColor = material.color;
+                                        if (teamColor && materialTextureMap.has(0)) { // 假设 fallback 材质使用材质 ID 0
+                                            finalColor = teamColor;
+                                            console.log(`Fallback 材质使用队伍颜色: 0x${teamColor.toString(16).toUpperCase()}`);
+                                        }
+                                        
                                         const skinnedMaterial = new THREE.MeshStandardMaterial({ 
                                             map: material.map,
-                                            color: material.color,
+                                            color: finalColor,
                                             wireframe: material.wireframe,
                                             side: THREE.DoubleSide
                                         });
@@ -3199,16 +3313,16 @@
                             console.log('模型组添加到场景成功');
                             
                             // 执行导出
-                            doExport(scene);
+                            doExport(scene, embedTextures);
                         }
                         
                         // 带纹理导出的函数
-                        function exportWithTexture(texture) {
+                        function exportWithTexture(texture, embedTextures) {
                             const mesh = new THREE.Mesh(geometry, material);
                             scene.add(mesh);
                             
                             // 执行导出
-                            doExport(scene);
+                            doExport(scene, embedTextures);
                         }
                         
                         // 创建骨骼系统的函数
@@ -3570,9 +3684,9 @@
                         }
                         
                         // 执行导出的函数
-                        function doExport(scene) {
+                        function doExport(scene, embedTextures) {
                             console.log('=== 开始执行导出 ===');
-                            const animCount = window.exportAnimations ? window.exportAnimations.length : (animations ? animations.length : 0);
+                            const animCount = window.exportAnimations ? window.exportAnimations.length : 0;
                             console.log('导出动画数量:', animCount);
                             try {
                                 // 检查场景是否有效
@@ -3589,7 +3703,7 @@
                                 
                                 // 检查动画数组 - 优先使用 window.exportAnimations
                                 let exportAnimations = undefined;
-                                const animSource = (window.exportAnimations && window.exportAnimations.length > 0) ? window.exportAnimations : animations;
+                                const animSource = window.exportAnimations;
                                 if (animSource && Array.isArray(animSource) && animSource.length > 0) {
                                     exportAnimations = animSource;
                                     console.log('包含动画:', animSource.length, '个动画');

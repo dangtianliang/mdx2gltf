@@ -60,7 +60,7 @@ module.exports = (env, argv) => {
     },
     devServer: {
       contentBase: './',
-      port: 1024,
+      port: 3000,
       open: false,
       serveIndex: true,
     },
