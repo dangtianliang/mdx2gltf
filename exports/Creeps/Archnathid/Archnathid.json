@@ -1,0 +1,31 @@
+{
+  "name": "Archnathid_Range",
+  "vertices": 805,
+  "bones": 34,
+  "materials": 7,
+  "textures": 8,
+  "sequences": 10,
+  "geosets": 7,
+  "texturePaths": [
+    "units\\Creeps\\Archnathid\\Arachnathid.blp",
+    "Unknown",
+    "Textures\\gutz.blp",
+    "Textures\\Dust5A.blp",
+    "ReplaceableTextures\\Splats\\BurrowSplat.blp",
+    "Textures\\Zap1b.blp",
+    "Textures\\Green_Star.blp",
+    "Textures\\Green_Glow2.blp"
+  ],
+  "sequenceNames": [
+    "Stand",
+    "Walk",
+    "Attack",
+    "DEATH",
+    "Spell",
+    "Decay Flesh",
+    "Decay BONE",
+    "Morph",
+    "Stand Alternate",
+    "Morph ALTERNATE"
+  ]
+}

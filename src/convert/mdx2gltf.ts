@@ -163,8 +163,8 @@ function createThreeMaterial(model: any, material: any, blpBaseDir: string): THR
     return mat;
 }
 
-// 烘焙骨骼动画关键帧
-function bakeBoneAnimation(model: any, bone: any, sequence: any): THREE.KeyframeTrack[] {
+// 解析骨骼动画关键帧数据
+function getBoneAnimationTracks(model: any, bone: any, sequence: any): THREE.KeyframeTrack[] {
     const tracks: THREE.KeyframeTrack[] = [];
     const [startFrame, endFrame] = sequence.Interval;
     const fps = 30; // War3 默认 30fps
@@ -173,56 +173,120 @@ function bakeBoneAnimation(model: any, bone: any, sequence: any): THREE.Keyframe
     const boneIndex = model.Bones.indexOf(bone);
     const boneName = bone.Name || `Bone_${boneIndex}`;
     
-    // 采样关键帧（每5帧采样一次以节省空间）
-    const sampleTimes: number[] = [];
-    const sampleRate = 5;
-    for (let f = startFrame; f <= endFrame; f += sampleRate) {
-        sampleTimes.push((f - startFrame) / fps);
+    // 解析位置关键帧
+    if (bone.Translation && bone.Translation.length > 0) {
+        const { times, values } = parseAnimationData(bone.Translation, startFrame, endFrame, fps);
+        if (times.length > 0) {
+            tracks.push(new THREE.VectorKeyframeTrack(
+                `${boneName}.position`,
+                times,
+                values
+            ));
+        }
     }
     
-    const positions: number[] = [];
-    const rotations: number[] = [];
-    const scales: number[] = [];
-    
-    sampleTimes.forEach(time => {
-        const frame = startFrame + (time * fps);
-        
-        // 这里简化处理：实际应插值计算 transformation
-        // 完整实现需要解析 bone.Translation/Rotation/Scaling 的关键帧数据
-        const pos = bone.PivotPoint || [0, 0, 0];
-        positions.push(pos[0], pos[1], pos[2]);
-        
-        // 旋转（四元数）
-        rotations.push(0, 0, 0, 1); // 单位四元数
-        
-        // 缩放
-        scales.push(1, 1, 1);
-    });
-    
-    // 创建轨道
-    if (positions.length > 0) {
-        tracks.push(new THREE.VectorKeyframeTrack(
-            `${boneName}.position`,
-            sampleTimes,
-            positions
-        ));
+    // 解析旋转关键帧（War3 使用四元数）
+    if (bone.Rotation && bone.Rotation.length > 0) {
+        const { times, values } = parseAnimationData(bone.Rotation, startFrame, endFrame, fps);
+        if (times.length > 0) {
+            tracks.push(new THREE.QuaternionKeyframeTrack(
+                `${boneName}.quaternion`,
+                times,
+                values
+            ));
+        }
     }
-    if (rotations.length > 0) {
-        tracks.push(new THREE.QuaternionKeyframeTrack(
-            `${boneName}.quaternion`,
-            sampleTimes,
-            rotations
-        ));
-    }
-    if (scales.length > 0) {
-        tracks.push(new THREE.VectorKeyframeTrack(
-            `${boneName}.scale`,
-            sampleTimes,
-            scales
-        ));
+    
+    // 解析缩放关键帧
+    if (bone.Scaling && bone.Scaling.length > 0) {
+        const { times, values } = parseAnimationData(bone.Scaling, startFrame, endFrame, fps);
+        if (times.length > 0) {
+            tracks.push(new THREE.VectorKeyframeTrack(
+                `${boneName}.scale`,
+                times,
+                values
+            ));
+        }
     }
     
     return tracks;
+}
+
+// 解析 MDX 动画数据
+function parseAnimationData(animationData: any[], startFrame: number, endFrame: number, fps: number): { times: number[], values: number[] } {
+    const times: number[] = [];
+    const values: number[] = [];
+    
+    // MDX 动画数据结构: [frame, value1, value2, value3, ...]
+    for (let i = 0; i < animationData.length; i += 5) { // 假设每个关键帧包含 1 个时间点和 4 个值（四元数）或 3 个值（位置/缩放）
+        const frame = animationData[i];
+        
+        // 只处理序列时间范围内的关键帧
+        if (frame >= startFrame && frame <= endFrame) {
+            const time = (frame - startFrame) / fps;
+            times.push(time);
+            
+            // 根据数据长度判断是四元数（4个值）还是向量（3个值）
+            if (i + 4 < animationData.length) {
+                // 四元数 (x, y, z, w)
+                values.push(
+                    animationData[i + 1],
+                    animationData[i + 2],
+                    animationData[i + 3],
+                    animationData[i + 4]
+                );
+            } else if (i + 3 < animationData.length) {
+                // 向量 (x, y, z)
+                values.push(
+                    animationData[i + 1],
+                    animationData[i + 2],
+                    animationData[i + 3]
+                );
+            }
+        }
+    }
+    
+    return { times, values };
+}
+
+// 创建动画剪辑
+function createAnimationClips(model: any): THREE.AnimationClip[] {
+    const clips: THREE.AnimationClip[] = [];
+    
+    if (!model.Sequences || model.Sequences.length === 0) {
+        return clips;
+    }
+    
+    model.Sequences.forEach((sequence: any) => {
+        const tracks: THREE.KeyframeTrack[] = [];
+        const [startFrame, endFrame] = sequence.Interval;
+        const fps = 30;
+        const duration = (endFrame - startFrame) / fps;
+        
+        // 为每个骨骼创建关键帧轨道
+        if (model.Bones) {
+            model.Bones.forEach((bone: any) => {
+                const boneTracks = getBoneAnimationTracks(model, bone, sequence);
+                tracks.push(...boneTracks);
+            });
+        }
+        
+        if (tracks.length > 0) {
+            const clip = new THREE.AnimationClip(
+                sequence.Name || `Sequence_${clips.length}`,
+                duration,
+                tracks,
+                sequence.Rarity || 1 // 动画权重
+            );
+            
+            // 循环信息会在 GLTF 文件中通过 animation.loop 字段表示
+            // 注意：AnimationClip 本身不直接支持 loop 属性，循环是由 AnimationAction 控制的
+            
+            clips.push(clip);
+        }
+    });
+    
+    return clips;
 }
 
 // 创建骨骼层级
@@ -402,29 +466,23 @@ export async function convertMDX2GLTF(
         // 5. 处理动画（序列 → GLTF AnimationClip）
         const clips: THREE.AnimationClip[] = [];
         if (exportAnimations && model.Sequences && model.Bones) {
-            model.Sequences.forEach((seq: any) => {
-                const tracks: THREE.KeyframeTrack[] = [];
-                
-                // 为每个骨骼烘焙动画
-                model.Bones.forEach((bone: any) => {
-                    const boneTracks = bakeBoneAnimation(model, bone, seq);
-                    tracks.push(...boneTracks);
-                });
-                
-                if (tracks.length > 0) {
-                    const clip = new THREE.AnimationClip(
-                        seq.Name || `Sequence_${clips.length}`,
-                        (seq.Interval[1] - seq.Interval[0]) / 30, // 30fps
-                        tracks
-                    );
-                    clips.push(clip);
-                }
-            });
+            clips.push(...createAnimationClips(model));
         }
         
         // 6. 导出 GLTF
         console.log(`📝 导出中... (${clips.length} 个动画片段)`);
         console.log(`📝 输出路径: ${outputPath}`);
+        
+        // 为场景添加动画剪辑（GLTFExporter 会自动处理这些剪辑）
+        if (clips.length > 0) {
+            // 在 Three.js 中，动画剪辑需要添加到场景的 animations 属性中，
+            // 这样 GLTFExporter 才能正确导出动画
+            (scene as any).animations = clips;
+            console.log(`📝 动画剪辑详情:`);
+            clips.forEach((clip, index) => {
+                console.log(`   ${index + 1}. ${clip.name} (${clip.duration.toFixed(2)}s, ${clip.tracks.length} 个轨道)`);
+            });
+        }
         
         // 由于在 Node.js 环境中 GLTFExporter 可能会遇到浏览器 API 限制，
         // 我们先创建一个简单的 JSON 导出，验证整个流程是否正常工作
@@ -461,17 +519,10 @@ export async function convertMDX2GLTF(
             
             console.log(`📝 导出选项: ${JSON.stringify(exportOptions)}`);
             
-            // 使用一个简化的场景，只包含一个基本的立方体，验证 GLTFExporter 是否能正常工作
-            const testScene = new THREE.Scene();
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-            const cube = new THREE.Mesh(geometry, material);
-            testScene.add(cube);
-            
             const result = await new Promise<ArrayBuffer | object>((resolve, reject) => {
-                console.log('📝 开始解析测试场景...');
+                console.log('📝 开始解析实际场景...');
                 exporter.parse(
-                    testScene,
+                    scene,
                     (gltf) => {
                         console.log('📝 解析成功，开始处理结果...');
                         resolve(gltf);
@@ -564,9 +615,11 @@ async function testMDXParse(inputPath: string): Promise<void> {
 }
 
 // CLI
-const args = process.argv.slice(2);
-if (args.length < 1) {
-    console.log(`
+// 只有当直接运行此文件时才执行 CLI 逻辑
+if (require.main === module) {
+    const args = process.argv.slice(2);
+    if (args.length < 1) {
+        console.log(`
 Warcraft 3 MDX → GLTF/GLB 转换器（完整版）
 
 用法:
@@ -583,31 +636,32 @@ Warcraft 3 MDX → GLTF/GLB 转换器（完整版）
   npm run convert src/model/Creeps/DireWolf/DireWolf.mdx output/DireWolf.gltf --blp-dir ./textures --no-embed
   npm run convert --test src/model/Creeps/DireWolf/DireWolf.mdx
 `);
-    process.exit(0);
-}
-
-// 检查是否是测试模式
-if (args[0] === '--test' && args.length >= 2) {
-    testMDXParse(args[1]);
-} else if (args.length >= 2) {
-    const [input, output] = args;
-    const blpDirIndex = args.indexOf('--blp-dir');
-    const blpDir = blpDirIndex > -1 ? args[blpDirIndex + 1] : undefined;
-    const noEmbed = args.includes('--no-embed');
-    const noAnim = args.includes('--no-anim');
-
-    // 确保输出目录存在
-    const outputDir = path.dirname(output);
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
+        process.exit(0);
     }
 
-    convertMDX2GLTF(input, output, {
-        blpBaseDir: blpDir,
-        embedTextures: !noEmbed,
-        exportAnimations: !noAnim
-    });
-} else {
-    console.log(`❌ 无效的命令参数，请使用 --help 查看用法`);
-    process.exit(1);
+    // 检查是否是测试模式
+    if (args[0] === '--test' && args.length >= 2) {
+        testMDXParse(args[1]);
+    } else if (args.length >= 2) {
+        const [input, output] = args;
+        const blpDirIndex = args.indexOf('--blp-dir');
+        const blpDir = blpDirIndex > -1 ? args[blpDirIndex + 1] : undefined;
+        const noEmbed = args.includes('--no-embed');
+        const noAnim = args.includes('--no-anim');
+
+        // 确保输出目录存在
+        const outputDir = path.dirname(output);
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir, { recursive: true });
+        }
+
+        convertMDX2GLTF(input, output, {
+            blpBaseDir: blpDir,
+            embedTextures: !noEmbed,
+            exportAnimations: !noAnim
+        });
+    } else {
+        console.log(`❌ 无效的命令参数，请使用 --help 查看用法`);
+        process.exit(1);
+    }
 }
