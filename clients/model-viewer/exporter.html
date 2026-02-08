@@ -530,6 +530,9 @@
         let currentAnimationAction = null;
         let isGltfPlaying = false;
         
+        // 当前模型的材质文件路径
+        let currentMaterialPath = null;
+        
         // 初始化函数
         function init() {
             // 初始化3D预览场景
@@ -1042,6 +1045,12 @@
             
             document.getElementById('selected-model-name').textContent = selectedModel.name;
             document.getElementById('selected-model-path').textContent = selectedModel.path;
+            
+            // 计算对应的材质文件路径（glb文件）
+            // 规则：将mdx文件路径中的.mdx替换为.glb，得到对应的材质文件路径
+            const mdxPath = selectedModel.path;
+            currentMaterialPath = mdxPath.replace(/\.mdx$/i, '.glb');
+            console.log('计算得到的材质文件路径:', currentMaterialPath);
             
             // 清空之前的结果
             clearResults();
@@ -2133,30 +2142,38 @@
                                 });
                                 
                                 // 尝试加载纹理
-                                // 优先使用用户提供的纹理路径
-                                // 从 exporter.html 到纹理文件的正确相对路径
-                                const userTexturePath = 'src/model/Creeps/Archnathid/Arachnathid.blp';
-                                console.log('尝试使用用户提供的纹理路径:', userTexturePath);
+                                // 优先使用当前模型对应的glb文件作为材质
+                                console.log('尝试使用当前模型对应的材质文件:', currentMaterialPath);
                                 
                                 // 创建唯一的纹理路径集合
                                 const uniqueTexturePaths = new Set();
                                 
+                                // 定义 userTexturePath 变量，解决未定义错误
+                                const userTexturePath = '';
+                                // 定义 textureFileName 变量，解决未定义错误
+                                const textureFileName = '';
+                                
+                                // 1. 优先使用当前模型对应的glb文件
+                                if (currentMaterialPath) {
+                                    uniqueTexturePaths.add(currentMaterialPath);
+                                    console.log('添加当前模型对应的材质文件路径:', currentMaterialPath);
+                                }
+                                
                                 // 1. 优先尝试正确的相对路径（从exporter.html到纹理文件）
-                                uniqueTexturePaths.add('src/model/Creeps/Archnathid/Arachnathid.blp');
+                                
                                 
                                 // 2. 添加用户提供的路径
-                                uniqueTexturePaths.add(userTexturePath);
+                                
                                 
                                 // 3. 添加更多路径变体
                                 // 从根目录开始的路径
-                                uniqueTexturePaths.add('/src/model/Creeps/Archnathid/Arachnathid.blp');
+                                
                                 
                                 // 从当前目录开始的路径
-                                uniqueTexturePaths.add('model/Creeps/Archnathid/Arachnathid.blp');
-                                uniqueTexturePaths.add('/model/Creeps/Archnathid/Arachnathid.blp');
+                                
                                 
                                 // 直接使用纹理文件名
-                                const textureFileName = userTexturePath.split('/').pop();
+
                                 if (textureFileName) {
                                     uniqueTexturePaths.add(textureFileName);
                                     // 尝试在当前目录和常见子目录中查找
@@ -2170,14 +2187,10 @@
                                 
                                 // 4. 基于模型目录的路径
                                 const modelDir = selectedModel.path.substring(0, selectedModel.path.lastIndexOf('/'));
-                                uniqueTexturePaths.add(modelDir + '/Arachnathid.blp');
-                                uniqueTexturePaths.add(modelDir + '/textures/Arachnathid.blp');
-                                uniqueTexturePaths.add(modelDir + '/Textures/Arachnathid.blp');
+                                
                                 
                                 // 5. 尝试其他可能的路径格式
-                                uniqueTexturePaths.add('src/model/Creeps/Archnathid/Arachnathid.blp');
-                                uniqueTexturePaths.add('../src/model/Creeps/Archnathid/Arachnathid.blp');
-                                uniqueTexturePaths.add('../../../src/model/Creeps/Archnathid/Arachnathid.blp');
+                                
                                 
                                 // 将唯一路径添加到纹理路径数组
                                 uniqueTexturePaths.forEach(path => {
@@ -2604,8 +2617,68 @@
                                             return;
                                         }
                                         
-                                        // 只有非.blp文件才使用TextureLoader
-                                        console.log('非BLP文件，使用TextureLoader加载...');
+                                        // 检测到GLB文件时，使用GLTFLoader加载
+                                        if (texturePath.endsWith('.glb')) {
+                                            console.log('检测到GLB文件，使用GLTFLoader加载作为材质...');
+                                            // 使用GLTFLoader加载GLB文件
+                                            const gltfLoader = new THREE.GLTFLoader();
+                                            gltfLoader.load(
+                                                texturePath,
+                                                (gltf) => {
+                                                    console.log('GLB文件加载成功:', texturePath);
+                                                    // 从GLB文件中提取材质
+                                                    if (gltf.scene) {
+                                                        let extractedMaterial = null;
+                                                        // 遍历场景中的所有对象，寻找材质
+                                                        gltf.scene.traverse((object) => {
+                                                            if (object.isMesh && object.material) {
+                                                                extractedMaterial = object.material;
+                                                                console.log('从GLB文件中提取到材质:', extractedMaterial.type);
+                                                            }
+                                                        });
+                                                        
+                                                        if (extractedMaterial) {
+                                                            // 使用提取到的材质
+                                                            material = extractedMaterial;
+                                                            console.log('使用GLB文件中的材质');
+                                                        } else {
+                                                            // 如果没有提取到材质，使用默认材质
+                                                            console.warn('GLB文件中没有找到材质，使用默认材质');
+                                                            material = new THREE.MeshStandardMaterial({ 
+                                                                color: 0x2196f3,
+                                                                wireframe: false,
+                                                                side: THREE.DoubleSide
+                                                            });
+                                                        }
+                                                    } else {
+                                                        // 如果GLB文件中没有场景，使用默认材质
+                                                        console.warn('GLB文件中没有找到场景，使用默认材质');
+                                                        material = new THREE.MeshStandardMaterial({ 
+                                                            color: 0x2196f3,
+                                                            wireframe: false,
+                                                            side: THREE.DoubleSide
+                                                        });
+                                                    }
+                                                    createMeshAndExport();
+                                                },
+                                                (progress) => {
+                                                    // 加载进度反馈
+                                                    if (progress && progress.loaded && progress.total) {
+                                                        const percentage = Math.round((progress.loaded / progress.total) * 100);
+                                                        console.log(`GLB文件加载进度: ${percentage}% - ${texturePath}`);
+                                                    }
+                                                },
+                                                (error) => {
+                                                    console.error('GLB文件加载失败:', error);
+                                                    currentTextureIndex++;
+                                                    tryLoadTexture();
+                                                }
+                                            );
+                                            return;
+                                        }
+                                        
+                                        // 其他类型的纹理文件，使用TextureLoader加载
+                                        console.log('其他类型纹理文件，使用TextureLoader加载...');
                                         
                                         // 设置纹理加载超时
                                         const loadTimeout = setTimeout(() => {
@@ -2823,6 +2896,19 @@
                                 
                                 modelGroup.add(fallbackMesh);
                             }
+                            
+                            // 将1像素平面设置为透明材质
+                            makeOnePixelPlanesTransparent(modelGroup);
+                            console.log('模型处理完成，将1像素平面设置为透明材质');
+                            
+                            // 同时尝试清理1像素平面
+                            cleanUpOnePixelPlanes(modelGroup);
+                            console.log('模型清理完成，删除了多余的1像素平面');
+                            
+                            // 调整模型坐标系，确保Y轴向上
+                            // War3模型通常使用Z轴向上，需要转换为Y轴向上
+                            modelGroup.rotation.x = -Math.PI / 2; // 绕X轴旋转-90度，将Z轴向上转换为Y轴向上
+                            console.log('模型坐标系调整完成，Y轴向上');
                             
                             // 将模型组添加到场景
                             scene.add(modelGroup);
@@ -3102,6 +3188,99 @@
                             console.log(`准备了 ${textureCount} 个纹理`);
                         }
                         
+                        // 清理模型中的1像素平面
+                        function cleanUpOnePixelPlanes(object) {
+                            console.log('开始清理1像素平面...');
+                            let removedCount = 0;
+                            
+                            // 遍历对象及其子对象
+                            object.traverse((child) => {
+                                if (child.isMesh || child.isSkinnedMesh) {
+                                    const mesh = child;
+                                    const geometry = mesh.geometry;
+                                    
+                                    if (geometry && geometry.isBufferGeometry) {
+                                        // 获取顶点和索引数据
+                                        const positionAttribute = geometry.attributes.position;
+                                        const indexAttribute = geometry.index;
+                                        
+                                        if (positionAttribute && indexAttribute) {
+                                            const positions = positionAttribute.array;
+                                            const indices = indexAttribute.array;
+                                            
+                                            // 存储需要保留的三角形索引
+                                            const validIndices = [];
+                                            
+                                            // 遍历所有三角形
+                                            for (let i = 0; i < indices.length; i += 3) {
+                                                // 获取三角形的三个顶点索引
+                                                const i0 = indices[i] * 3;
+                                                const i1 = indices[i + 1] * 3;
+                                                const i2 = indices[i + 2] * 3;
+                                                
+                                                // 获取三个顶点的位置
+                                                const v0 = new THREE.Vector3(
+                                                    positions[i0], positions[i0 + 1], positions[i0 + 2]
+                                                );
+                                                const v1 = new THREE.Vector3(
+                                                    positions[i1], positions[i1 + 1], positions[i1 + 2]
+                                                );
+                                                const v2 = new THREE.Vector3(
+                                                    positions[i2], positions[i2 + 1], positions[i2 + 2]
+                                                );
+                                                
+                                                // 计算三角形的面积
+                                                const area = calculateTriangleArea(v0, v1, v2);
+                                                
+                                                // 定义1像素平面的面积阈值（根据实际情况调整）
+                                                const areaThreshold = 0.001; // 面积小于此值的三角形被视为1像素平面
+                                                
+                                                // 如果三角形面积大于阈值，则保留
+                                                if (area > areaThreshold) {
+                                                    validIndices.push(indices[i], indices[i + 1], indices[i + 2]);
+                                                } else {
+                                                    removedCount++;
+                                                }
+                                            }
+                                            
+                                            // 如果删除了一些三角形，更新几何体
+                                            if (validIndices.length < indices.length) {
+                                                console.log(`从 ${mesh.name} 中删除了 ${(indices.length - validIndices.length) / 3} 个1像素平面`);
+                                                
+                                                // 创建新的索引缓冲区
+                                                const newIndices = new Uint32Array(validIndices);
+                                                geometry.setIndex(new THREE.BufferAttribute(newIndices, 1));
+                                                
+                                                // 如果几何体为空，则删除整个网格
+                                                if (validIndices.length === 0) {
+                                                    console.log(`删除空网格: ${mesh.name}`);
+                                                    if (mesh.parent) {
+                                                        mesh.parent.remove(mesh);
+                                                    }
+                                                } else {
+                                                    // 更新几何体
+                                                    geometry.attributes.position.needsUpdate = true;
+                                                    geometry.computeBoundingBox();
+                                                    geometry.computeBoundingSphere();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            
+                            console.log(`清理完成，共删除了 ${removedCount / 3} 个1像素平面`);
+                        }
+                        
+                        // 计算三角形面积
+                        function calculateTriangleArea(v0, v1, v2) {
+                            // 使用向量叉积计算三角形面积
+                            const v1v0 = new THREE.Vector3().subVectors(v1, v0);
+                            const v2v0 = new THREE.Vector3().subVectors(v2, v0);
+                            const crossProduct = new THREE.Vector3().crossVectors(v1v0, v2v0);
+                            return 0.5 * crossProduct.length();
+                        }
+                        
                         // 执行导出的函数
                         function doExport(scene) {
                             console.log('=== 开始执行导出 ===');
@@ -3311,6 +3490,93 @@
             const statusDiv = document.getElementById('status-message');
             statusDiv.textContent = '';
             statusDiv.className = 'status-message';
+        }
+        
+        // 将1像素平面设置为透明材质
+        function makeOnePixelPlanesTransparent(object) {
+            console.log('开始将1像素平面设置为透明材质...');
+            let transparentCount = 0;
+            
+            // 计算三角形面积
+            function calculateTriangleArea(v0, v1, v2) {
+                // 使用向量叉积计算三角形面积
+                const v1v0 = new THREE.Vector3().subVectors(v1, v0);
+                const v2v0 = new THREE.Vector3().subVectors(v2, v0);
+                const crossProduct = new THREE.Vector3().crossVectors(v1v0, v2v0);
+                return 0.5 * crossProduct.length();
+            }
+            console.log('定义 calculateTriangleArea 函数');
+            
+            // 创建透明材质
+            const transparentMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                opacity: 0.0,
+                transparent: true,
+                side: THREE.DoubleSide
+            });
+            console.log('创建透明材质');
+            
+            // 遍历对象及其子对象
+            object.traverse((child) => {
+                if (child.isMesh || child.isSkinnedMesh) {
+                    const mesh = child;
+                    const geometry = mesh.geometry;
+                    
+                    if (geometry && geometry.isBufferGeometry) {
+                        // 获取顶点和索引数据
+                        const positionAttribute = geometry.attributes.position;
+                        const indexAttribute = geometry.index;
+                        
+                        if (positionAttribute && indexAttribute) {
+                            const positions = positionAttribute.array;
+                            const indices = indexAttribute.array;
+                            
+                            // 检查网格是否主要由1像素平面组成
+                            let totalTriangles = indices.length / 3;
+                            let smallTriangles = 0;
+                            
+                            // 遍历所有三角形，计算小三角形的数量
+                            for (let i = 0; i < indices.length; i += 3) {
+                                // 获取三角形的三个顶点索引
+                                const i0 = indices[i] * 3;
+                                const i1 = indices[i + 1] * 3;
+                                const i2 = indices[i + 2] * 3;
+                                
+                                // 获取三个顶点的位置
+                                const v0 = new THREE.Vector3(
+                                    positions[i0], positions[i0 + 1], positions[i0 + 2]
+                                );
+                                const v1 = new THREE.Vector3(
+                                    positions[i1], positions[i1 + 1], positions[i1 + 2]
+                                );
+                                const v2 = new THREE.Vector3(
+                                    positions[i2], positions[i2 + 1], positions[i2 + 2]
+                                );
+                                
+                                // 计算三角形的面积
+                                const area = calculateTriangleArea(v0, v1, v2);
+                                
+                                // 定义1像素平面的面积阈值（根据实际情况调整）
+                                const areaThreshold = 0.001; // 面积小于此值的三角形被视为1像素平面
+                                
+                                // 统计小三角形的数量
+                                if (area <= areaThreshold) {
+                                    smallTriangles++;
+                                }
+                            }
+                            
+                            // 如果网格中超过90%的三角形都是小三角形，则将整个网格设置为透明材质
+                            if (smallTriangles > 0 && (smallTriangles / totalTriangles) > 0.9) {
+                                console.log(`将网格 ${mesh.name} 设置为透明材质，其中 ${smallTriangles}/${totalTriangles} 个三角形是1像素平面`);
+                                mesh.material = transparentMaterial;
+                                transparentCount++;
+                            }
+                        }
+                    }
+                }
+            });
+            
+            console.log(`处理完成，共将 ${transparentCount} 个网格设置为透明材质`);
         }
         
         // 页面加载完成后初始化
