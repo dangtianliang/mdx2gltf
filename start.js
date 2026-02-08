@@ -74,7 +74,7 @@ setTimeout(() => {
   }
   
   // 执行打开浏览器的命令，直接访问模型查看器页面
-  const modelViewerUrl = 'http://localhost:8080/clients/model-viewer/';
+  const modelViewerUrl = 'http://localhost:1024/clients/model-viewer/';
   exec(`${openCommand} ${modelViewerUrl}`, {
     cwd: __dirname
   }, (error) => {
@@ -88,7 +88,7 @@ setTimeout(() => {
 }, 3000); // 延迟3秒，确保服务器有足够的时间启动
 
 console.log('开发环境启动中...');
-console.log('3秒后将自动打开浏览器访问 http://localhost:8080/clients/model-viewer/');
+console.log('3秒后将自动打开浏览器访问 http://localhost:1024/clients/model-viewer/');
 console.log('这是模型查看器的首页，可以查看和操作所有模型');
 console.log('');
 console.log('日志服务器运行在 http://localhost:8081');

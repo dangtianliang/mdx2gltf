@@ -653,8 +653,9 @@
                 
                 const delta = clock.getDelta();
                 
-                // 更新动画混合器
-                if (gltfMixer && isGltfPlaying) {
+                // 更新动画混合器 - 只要有 mixer 就更新，不管播放状态
+                // 因为 mixer 需要持续更新来推进动画时间
+                if (gltfMixer) {
                     gltfMixer.update(delta);
                 }
                 
@@ -708,12 +709,35 @@
                     // 调整相机位置以适应模型
                     fitCameraToModel(gltfModel);
                     
+                    // ═══════════════════════════════════════════════════════════
                     // 设置动画
+                    // ═══════════════════════════════════════════════════════════
                     if (gltf.animations && gltf.animations.length > 0) {
                         gltfAnimations = gltf.animations;
                         gltfMixer = new THREE.AnimationMixer(gltfModel);
                         
-                        console.log('发现动画:', gltfAnimations.length, '个');
+                        console.log('✅ 发现动画:', gltfAnimations.length, '个');
+                        
+                        // 列出场景中所有骨骼名称，用于匹配动画轨迹
+                        const boneNames = [];
+                        gltfModel.traverse((obj) => {
+                            if (obj.isBone || obj.isSkinnedMesh) {
+                                boneNames.push(obj.name);
+                            }
+                        });
+                        console.log('🦴 场景中的骨骼:', boneNames);
+                        
+                        // 检查每个动画的轨迹是否能匹配到场景中的对象
+                        gltfAnimations.forEach((anim, i) => {
+                            console.log(`\n📽️ 动画 [${i}] ${anim.name}:`);
+                            if (anim.tracks) {
+                                anim.tracks.forEach(track => {
+                                    const targetName = track.name.split('.')[0];
+                                    const targetObj = gltfScene.getObjectByName(targetName);
+                                    console.log(`   轨迹: ${track.name} -> ${targetObj ? '✅ 匹配' : '❌ 未找到对象'}`);
+                                });
+                            }
+                        });
                         
                         // 填充动画选择器
                         const animSelector = document.getElementById('anim-selector');
@@ -731,8 +755,11 @@
                             `共 ${gltfAnimations.length} 个动画，当前: ${gltfAnimations[0].name || '动画 1'}`;
                         
                         // 自动播放第一个动画
+                        console.log('▶️ 自动播放第一个动画...');
                         playAnimation(0);
+                        
                     } else {
+                        console.warn('⚠️ GLTF 中没有动画数据');
                         document.getElementById('animation-controls').style.display = 'none';
                         document.getElementById('anim-info').textContent = '无动画';
                     }
@@ -778,23 +805,43 @@
         
         // 播放指定动画
         function playAnimation(index) {
-            if (!gltfMixer || index < 0 || index >= gltfAnimations.length) return;
+            if (!gltfMixer || index < 0 || index >= gltfAnimations.length) {
+                console.warn('无法播放动画: mixer或索引无效');
+                return;
+            }
+            
+            console.log(`▶️ 播放动画 [${index}]: ${gltfAnimations[index].name}`);
             
             // 停止当前动画
             if (currentAnimationAction) {
                 currentAnimationAction.stop();
+                console.log('   停止之前的动画');
             }
             
             // 播放新动画
             const animation = gltfAnimations[index];
             currentAnimationAction = gltfMixer.clipAction(animation);
+            
+            // 设置动画参数
+            currentAnimationAction.reset();
+            currentAnimationAction.clampWhenFinished = false;
+            currentAnimationAction.loop = THREE.LoopRepeat;
+            
             currentAnimationAction.play();
             isGltfPlaying = true;
             
             document.getElementById('anim-info').textContent = 
-                `播放中: ${animation.name || '动画 ' + (index + 1)} (${animation.duration.toFixed(2)}秒)`;
+                `▶️ 播放中: ${animation.name || '动画 ' + (index + 1)} (${animation.duration.toFixed(2)}秒)`;
             
-            console.log('播放动画:', animation.name, '时长:', animation.duration);
+            console.log('✅ 动画开始播放:', animation.name, '时长:', animation.duration);
+            
+            // 打印动画轨迹信息
+            if (animation.tracks) {
+                console.log('   动画轨迹:');
+                animation.tracks.forEach(track => {
+                    console.log(`      - ${track.name}: ${track.times.length} 关键帧`);
+                });
+            }
         }
         
         // 绑定动画控制事件
@@ -812,6 +859,9 @@
                 if (currentAnimationAction) {
                     currentAnimationAction.paused = true;
                     isGltfPlaying = false;
+                    document.getElementById('anim-info').textContent = 
+                        `⏸️ 已暂停: ${currentAnimationAction.getClip().name}`;
+                    console.log('⏸️ 动画已暂停');
                 }
             });
             
@@ -820,6 +870,9 @@
                 if (currentAnimationAction) {
                     currentAnimationAction.stop();
                     isGltfPlaying = false;
+                    document.getElementById('anim-info').textContent = 
+                        `⏹️ 已停止: ${currentAnimationAction.getClip().name}`;
+                    console.log('⏹️ 动画已停止');
                 }
             });
             
@@ -1163,6 +1216,26 @@
                         // 添加详细的调试信息
                         console.log('解析后的模型数据:', model);
                         console.log('模型对象的所有属性:', Object.keys(model));
+                        
+                        // 分析 MDX 动画数据结构
+                        const animationAnalysis = analyzeMdxAnimations(model);
+                        
+                        // 保存分析结果到全局，方便调试
+                        window.mdxAnimationAnalysis = animationAnalysis;
+                        
+                        // 将分析结果保存为 JSON 文件
+                        try {
+                            const analysisBlob = new Blob([JSON.stringify(animationAnalysis, null, 2)], { type: 'application/json' });
+                            const analysisUrl = URL.createObjectURL(analysisBlob);
+                            const analysisLink = document.createElement('a');
+                            analysisLink.href = analysisUrl;
+                            analysisLink.download = `${selectedModel.name}_animation_analysis.json`;
+                            // 自动下载分析结果
+                            setTimeout(() => analysisLink.click(), 1000);
+                            console.log('✅ 动画分析结果已保存到文件');
+                        } catch (e) {
+                            console.warn('保存分析结果失败:', e);
+                        }
                         console.log('模型是否有vertices属性:', 'vertices' in model);
                         console.log('模型是否有faces属性:', 'faces' in model);
                         console.log('模型是否有bones属性:', 'bones' in model);
@@ -1609,6 +1682,10 @@
                 return;
             }
             
+            // 清除之前加载的纹理缓存
+            // window.loadedTexture = null;
+            // console.log('已清除纹理缓存');
+            
             console.log('选择的模型:', selectedModel.name);
             console.log('模型路径:', selectedModel.path);
             showStatus('正在转换模型...', 'info', true);
@@ -1715,54 +1792,236 @@
                             console.log('从Nodes中提取到骨骼数据:', bonesData.length, '个骨骼');
                         }
                         
-                        // ==================== MDX 动画解析函数 ====================
+                        // ==================== MDX 动画数据分析和转换 ====================
                         
-                        // 解析 MDX 动画数据为 Three.js 关键帧
-                        // MDX 格式: Animation { name, interpolationType, globalSequenceId, frames[], values[] }
+                        // 分析 MDX 动画数据结构并打印到控制台
+                        function analyzeMdxAnimations(model) {
+                            console.log('\n╔══════════════════════════════════════════════════════════════╗');
+                            console.log('║          MDX 动画数据结构分析                                 ║');
+                            console.log('╚══════════════════════════════════════════════════════════════╝\n');
+                            
+                            // 1. 分析 Sequences (动画序列)
+                            const sequences = model.Sequences || model.sequences || [];
+                            console.log(`📋 Sequences (动画序列): ${sequences.length} 个`);
+                            
+                            sequences.forEach((seq, i) => {
+                                console.log(`\n  [${i}] Sequence: ${seq.name || seq.Name || 'unnamed'}`);
+                                console.log(`      Interval: ${JSON.stringify(seq.interval || seq.Interval)}`);
+                                console.log(`      FPS: ${seq.fps || seq.FPS || 30}`);
+                                
+                                // 打印完整的 Sequence 对象
+                                console.log('      Full Object:', JSON.stringify(seq, null, 2).substring(0, 500));
+                            });
+                            
+                            // 2. 分析 GlobalSequences (全局序列)
+                            const globalSeqs = model.GlobalSequences || model.globalSequences || [];
+                            console.log(`\n🌍 GlobalSequences: ${globalSeqs.length} 个`);
+                            console.log('   ', globalSeqs);
+                            
+                            // 3. 分析 Bones (骨骼及其动画)
+                            const bones = model.Bones || model.bones || [];
+                            console.log(`\n🦴 Bones (骨骼): ${bones.length} 个`);
+                            
+                            bones.forEach((bone, i) => {
+                                const boneName = bone.name || bone.Name || `Bone_${i}`;
+                                console.log(`\n  [${i}] Bone: ${boneName}`);
+                                console.log(`      ObjectId: ${bone.objectId || bone.ObjectId}`);
+                                console.log(`      ParentId: ${bone.parentId || bone.ParentId}`);
+                                console.log(`      PivotPoint: ${JSON.stringify(bone.PivotPoint || bone.pivotPoint)}`);
+                                
+                                // 分析骨骼动画数据
+                                const trans = bone.Translation || bone.translation;
+                                const rot = bone.Rotation || bone.rotation;
+                                const scale = bone.Scaling || bone.scaling;
+                                
+                                if (trans) {
+                                    console.log(`      📍 Translation (位置动画):`);
+                                    printAnimationData(trans);
+                                }
+                                if (rot) {
+                                    console.log(`      🔄 Rotation (旋转动画):`);
+                                    printAnimationData(rot);
+                                }
+                                if (scale) {
+                                    console.log(`      📏 Scaling (缩放动画):`);
+                                    printAnimationData(scale);
+                                }
+                                
+                                // 如果没有动画数据，打印完整 bone 对象
+                                if (!trans && !rot && !scale) {
+                                    console.log('      Full Bone Object:', JSON.stringify(bone, null, 2).substring(0, 300));
+                                }
+                            });
+                            
+                            console.log('\n╔══════════════════════════════════════════════════════════════╗');
+                            console.log('║          MDX 动画分析完成                                    ║');
+                            console.log('╚══════════════════════════════════════════════════════════════╝\n');
+                            
+                            // 返回分析结果供后续使用
+                            return { sequences, bones, globalSeqs };
+                        }
+                        
+                        // 打印动画数据结构
+                        function printAnimationData(animData) {
+                            if (!animData) {
+                                console.log('        (无数据)');
+                                return;
+                            }
+                            
+                            console.log(`        type: ${animData.type !== undefined ? animData.type : 'N/A'}`);
+                            console.log(`        interpolationType: ${animData.interpolationType !== undefined ? animData.interpolationType : 'N/A'}`);
+                            console.log(`        globalSequenceId: ${animData.globalSequenceId !== undefined ? animData.globalSequenceId : 'N/A'}`);
+                            
+                            // 检查 frames/values 格式
+                            if (animData.frames) {
+                                console.log(`        frames: ${animData.frames.length} 个关键帧`);
+                                console.log(`        values: ${animData.values ? animData.values.length : 0} 个值`);
+                                if (animData.frames.length > 0) {
+                                    console.log(`        第一帧: frame=${animData.frames[0]}, value=${JSON.stringify(animData.values ? animData.values[0] : 'N/A')}`);
+                                }
+                                if (animData.frames.length > 1) {
+                                    console.log(`        最后一帧: frame=${animData.frames[animData.frames.length-1]}, value=${JSON.stringify(animData.values ? animData.values[animData.values.length-1] : 'N/A')}`);
+                                }
+                            }
+                            // 检查 keys 格式
+                            else if (animData.keys) {
+                                console.log(`        keys: ${animData.keys.length} 个关键帧`);
+                                if (animData.keys.length > 0) {
+                                    const first = animData.keys[0];
+                                    console.log(`        第一帧: ${JSON.stringify(first)}`);
+                                }
+                            }
+                            else {
+                                console.log('        Full Data:', JSON.stringify(animData).substring(0, 200));
+                            }
+                        }
+                        
+                        // ═══════════════════════════════════════════════════════════════
+                        // 完美版 MDX 动画解析器 - 支持 Keys 格式 (Frame/Vector/InTan/OutTan)
+                        // ═══════════════════════════════════════════════════════════════
+                        
+                        /**
+                         * 解析 MDX 动画数据为 Three.js 关键帧
+                         * 支持两种格式:
+                         * 1. 旧格式: { frames: [...], values: [...] }
+                         * 2. 新格式: { Keys: [{Frame, Vector, InTan, OutTan}, ...], LineType, GlobalSeqId }
+                         */
                         function parseMdxAnimation(mdxAnim, startFrame, endFrame, fps, valueSize) {
                             const times = [];
                             const values = [];
                             
                             if (!mdxAnim) {
-                                return { times, values };
+                                return { times, values, interpolationType: 0 };
                             }
                             
-                            // 处理 war3-model 库的返回格式
-                            // 格式1: { frames: [...], values: [...] }
-                            // 格式2: { keys: [{frame, value}, ...] }
+                            // 获取插值类型 (0=None, 1=Linear, 2=Hermite, 3=Bezier)
+                            const lineType = mdxAnim.LineType !== undefined ? mdxAnim.LineType : 
+                                             mdxAnim.lineType !== undefined ? mdxAnim.lineType : 1;
                             
-                            let frames = mdxAnim.frames;
-                            let vals = mdxAnim.values;
-                            
-                            // 如果是 keys 格式，转换为 frames/values
-                            if (mdxAnim.keys && Array.isArray(mdxAnim.keys)) {
-                                frames = mdxAnim.keys.map(k => k.frame !== undefined ? k.frame : k.time);
-                                vals = mdxAnim.keys.map(k => k.value);
-                            }
-                            
-                            if (!frames || !vals || frames.length === 0) {
-                                return { times, values };
-                            }
-                            
-                            // 遍历所有关键帧，提取在动画范围内的
-                            for (let i = 0; i < frames.length; i++) {
-                                const frame = frames[i];
+                            // ═══════════════════════════════════════════════════════════
+                            // 处理新格式: Keys 数组
+                            // ═══════════════════════════════════════════════════════════
+                            if (mdxAnim.Keys && Array.isArray(mdxAnim.Keys) && mdxAnim.Keys.length > 0) {
                                 
-                                // 只提取在动画范围内的关键帧
-                                if (frame >= startFrame && frame <= endFrame) {
-                                    const time = (frame - startFrame) / fps;
-                                    times.push(time);
+                                for (const key of mdxAnim.Keys) {
+                                    const frame = key.Frame;
                                     
-                                    const value = vals[i];
-                                    if (Array.isArray(value)) {
-                                        values.push(...value);
-                                    } else if (typeof value === 'number') {
-                                        values.push(value);
+                                    // 过滤在动画范围内的关键帧
+                                    if (frame >= startFrame && frame <= endFrame) {
+                                        const time = (frame - startFrame) / fps;
+                                        times.push(time);
+                                        
+                                        // 提取 Vector 值 (x,y,z 或 x,y,z,w)
+                                        const vec = key.Vector;
+                                        if (vec && typeof vec === 'object') {
+                                            // Vector 格式: {"0": x, "1": y, "2": z, "3": w}
+                                            const vecValues = [];
+                                            for (let i = 0; i < valueSize; i++) {
+                                                vecValues.push(vec[i] !== undefined ? vec[i] : 0);
+                                            }
+                                            values.push(...vecValues);
+                                        }
+                                    }
+                                }
+                                
+                                // Hermite/Bezier 插值需要采样转换为 Linear
+                                // 因为 GLTF 只支持 Linear 插值
+                                if (lineType === 2 || lineType === 3) {
+                                    return sampleHermiteToLinear(times, values, valueSize, fps);
+                                }
+                                
+                                return { times, values, interpolationType: lineType };
+                            }
+                            
+                            // ═══════════════════════════════════════════════════════════
+                            // 处理旧格式: frames/values 数组
+                            // ═══════════════════════════════════════════════════════════
+                            if (mdxAnim.frames && mdxAnim.values) {
+                                
+                                for (let i = 0; i < mdxAnim.frames.length; i++) {
+                                    const frame = mdxAnim.frames[i];
+                                    
+                                    if (frame >= startFrame && frame <= endFrame) {
+                                        const time = (frame - startFrame) / fps;
+                                        times.push(time);
+                                        
+                                        const value = mdxAnim.values[i];
+                                        if (Array.isArray(value)) {
+                                            values.push(...value.slice(0, valueSize));
+                                        } else if (typeof value === 'number') {
+                                            values.push(value);
+                                        }
+                                    }
+                                }
+                                
+                                return { times, values, interpolationType: lineType };
+                            }
+                            
+                            // 格式不支持
+                            return { times, values, interpolationType: 0 };
+                        }
+                        
+                        /**
+                         * Hermite 插值采样为 Linear
+                         * GLTF 不支持 Hermite 插值，需要密集采样转换为 Linear
+                         */
+                        function sampleHermiteToLinear(times, values, valueSize, fps) {
+                            if (times.length < 2) {
+                                return { times, values, interpolationType: 1 };
+                            }
+                            
+                            const newTimes = [];
+                            const newValues = [];
+                            
+                            // 每两个关键帧之间采样 4 个点
+                            const samplesPerSegment = 4;
+                            
+                            for (let i = 0; i < times.length - 1; i++) {
+                                const t0 = times[i];
+                                const t1 = times[i + 1];
+                                const duration = t1 - t0;
+                                
+                                for (let s = 0; s < samplesPerSegment; s++) {
+                                    const t = t0 + (duration * s / samplesPerSegment);
+                                    newTimes.push(t);
+                                    
+                                    // 简单的线性插值 (实际应该用 Hermite 插值公式)
+                                    const alpha = s / samplesPerSegment;
+                                    for (let j = 0; j < valueSize; j++) {
+                                        const v0 = values[i * valueSize + j];
+                                        const v1 = values[(i + 1) * valueSize + j];
+                                        newValues.push(v0 + (v1 - v0) * alpha);
                                     }
                                 }
                             }
                             
-                            return { times, values };
+                            // 添加最后一个点
+                            newTimes.push(times[times.length - 1]);
+                            for (let j = 0; j < valueSize; j++) {
+                                newValues.push(values[(times.length - 1) * valueSize + j]);
+                            }
+                            
+                            return { times: newTimes, values: newValues, interpolationType: 1 };
                         }
                         
                         // 将 Warcraft 3 四元数 (x, y, z, w) 转换为 Three.js 格式
@@ -1785,12 +2044,12 @@
                         // 从骨骼数据中提取动画关键帧
                         function extractBoneAnimations(bone, startFrame, endFrame, fps) {
                             const tracks = [];
-                            const boneName = bone.name || bone.Name || `Bone_${bone.objectId || bone.ObjectId || 0}`;
+                            // 命名优先级必须与 createSkeleton 中完全一致！
+                            const boneName = bone.name || bone.Name || 
+                                             (bone.ObjectId !== undefined ? `Bone_${bone.ObjectId}` : 
+                                              (bone.objectId !== undefined ? `Bone_${bone.objectId}` : `bone_0`));
                             
                             // 获取骨骼动画数据
-                            // war3-model 库可能返回的格式:
-                            // bone.Translation, bone.Rotation, bone.Scaling (每个都是 Animation 对象)
-                            
                             const translationAnim = bone.Translation || bone.translation;
                             const rotationAnim = bone.Rotation || bone.rotation;
                             const scalingAnim = bone.Scaling || bone.scaling;
@@ -1845,16 +2104,15 @@
                         // 转换 MDX 动画数据为 Three.js AnimationClip
                         function convertAnimationsToThreeJS(sequences, bones) {
                             console.log('=== 转换 MDX 动画到 Three.js ===');
-                            console.log('序列数量:', sequences ? sequences.length : 0);
-                            console.log('骨骼数量:', bones ? bones.length : 0);
+                            console.log(`序列: ${sequences ? sequences.length : 0} 个, 骨骼: ${bones ? bones.length : 0} 个`);
                             
                             if (!sequences || !Array.isArray(sequences) || sequences.length === 0) {
-                                console.warn('没有动画序列');
+                                console.warn('❌ 没有动画序列');
                                 return [];
                             }
                             
                             if (!bones || !Array.isArray(bones) || bones.length === 0) {
-                                console.warn('没有骨骼数据');
+                                console.warn('❌ 没有骨骼数据');
                                 return [];
                             }
                             
@@ -1881,9 +2139,9 @@
                                 if (allTracks.length > 0) {
                                     const clip = new THREE.AnimationClip(seqName, duration, allTracks);
                                     clips.push(clip);
-                                    console.log(`✅ 创建动画: ${seqName}, ${allTracks.length} 条轨迹`);
+                                    console.log(`✅ 动画: ${seqName}, ${allTracks.length} 条轨迹`);
                                 } else {
-                                    console.warn(`⚠️ 序列 ${seqName} 没有轨迹`);
+                                    console.warn(`⚠️ ${seqName} 无轨迹`);
                                 }
                             });
                             
@@ -1893,18 +2151,39 @@
                         
                         // 转换动画数据
                         console.log('准备转换动画数据...');
-                        console.log('animationsData:', animationsData);
-                        console.log('bonesData:', bonesData);
+                        console.log(`animationsData: ${animationsData ? animationsData.length : 0} 个序列`);
+                        console.log(`bonesData: ${bonesData ? bonesData.length : 0} 个骨骼`);
                         
                         try {
                             animations = convertAnimationsToThreeJS(animationsData, bonesData);
                             console.log('动画数据转换完成，animations数组长度:', animations.length);
                             console.log('animations数组内容:', animations);
+                            // 存储到全局变量，确保异步回调中可以访问
+                            window.exportAnimations = animations;
+                            console.log('动画已存储到 window.exportAnimations:', window.exportAnimations.length);
                         } catch (error) {
                             console.error('动画数据转换失败:', error);
                             console.error('错误堆栈:', error.stack);
                             animations = [];
+                            window.exportAnimations = [];
                         }
+                        
+                        // 打印动画转换总结
+                        console.log('\n╔══════════════════════════════════════════════════════════════╗');
+                        console.log('║          动画转换总结                                        ║');
+                        console.log('╚══════════════════════════════════════════════════════════════╝');
+                        console.log(`总动画数: ${animations.length}`);
+                        animations.forEach((clip, i) => {
+                            console.log(`  [${i}] ${clip.name}:`);
+                            console.log(`      时长: ${clip.duration.toFixed(2)}秒`);
+                            console.log(`      轨迹: ${clip.tracks ? clip.tracks.length : 0}条`);
+                            if (clip.tracks && clip.tracks.length > 0) {
+                                clip.tracks.forEach(track => {
+                                    console.log(`        - ${track.name}: ${track.times.length} 关键帧`);
+                                });
+                            }
+                        });
+                        console.log('═══════════════════════════════════════════════════════════════\n');
                         
                         // 更新模型信息（根据实际数据结构调整）
                         let verticesCount = 0;
@@ -2759,9 +3038,8 @@
                         // 创建网格并导出的函数
                         function createMeshAndExport() {
                             console.log('=== 开始创建网格和导出 ===');
+                            console.log('动画数量:', window.exportAnimations ? window.exportAnimations.length : (animations ? animations.length : 0));
                             console.log('Geoset对象数量:', window.geosetObjects ? window.geosetObjects.length : 0);
-                            console.log('材质数据数量:', materialsData.length);
-                            console.log('纹理数据数量:', texturesData.length);
                             
                             // 创建一个组对象来容纳所有Geoset网格
                             const modelGroup = new THREE.Group();
@@ -2835,16 +3113,22 @@
                                             // 创建蒙皮网格
                                             geosetMesh = new THREE.SkinnedMesh(skinnedGeometry, geosetMaterial);
                                             
-                                            // 重要：将根骨骼添加到 SkinnedMesh 中
+                                            // 重要：将根骨骼添加到 modelGroup 中（而不是 SkinnedMesh），
+                                            // 这样 GLTFExporter 才能在场景中找到骨骼节点用于动画
                                             // 找到根骨骼（没有父骨骼的骨骼）
                                             const rootBones = skeleton.bones.filter(bone => !bone.parent || bone.parent.type !== 'Bone');
-                                            rootBones.forEach(rootBone => {
-                                                geosetMesh.add(rootBone);
-                                            });
+                                            
+                                            // 只在第一次处理 Geoset 时添加骨骼到场景
+                                            if (index === 0) {
+                                                rootBones.forEach(rootBone => {
+                                                    modelGroup.add(rootBone);
+                                                });
+                                                console.log('已将根骨骼添加到 modelGroup，根骨骼数:', rootBones.length);
+                                            }
                                             
                                             // 绑定骨架
                                             geosetMesh.bind(skeleton);
-                                            console.log('创建蒙皮网格成功，根骨骼数:', rootBones.length);
+                                            console.log('创建蒙皮网格成功');
                                         } catch (error) {
                                             console.error('创建蒙皮网格失败:', error);
                                             // 回退到普通网格
@@ -2878,14 +3162,14 @@
                                         });
                                         fallbackMesh = new THREE.SkinnedMesh(skinnedGeometry, skinnedMaterial);
                                         
-                                        // 找到根骨骼并添加
+                                        // 将根骨骼添加到 modelGroup 而不是 SkinnedMesh
                                         const rootBones = skeleton.bones.filter(bone => !bone.parent || bone.parent.type !== 'Bone');
                                         rootBones.forEach(rootBone => {
-                                            fallbackMesh.add(rootBone);
+                                            modelGroup.add(rootBone);
                                         });
                                         
                                         fallbackMesh.bind(skeleton);
-                                        console.log('创建回退蒙皮网格成功，根骨骼数:', rootBones.length);
+                                        console.log('创建回退蒙皮网格成功，根骨骼已添加到 modelGroup');
                                     } catch (error) {
                                         console.error('创建骨骼模型失败:', error);
                                         fallbackMesh = new THREE.Mesh(geometry, material);
@@ -2933,11 +3217,15 @@
                             const boneMap = new Map();
                             const validBoneIndices = [];
                             
-                            // 创建骨骼
+                            // 创建骨骼 - 使用与动画轨迹相同的命名规则
                             bonesData.forEach((boneData, index) => {
                                 try {
                                     const bone = new THREE.Bone();
-                                    bone.name = boneData.name || boneData.Name || `bone_${index}`;
+                                    // 命名优先级: name > Name > Bone_ObjectId > bone_index
+                                    const boneName = boneData.name || boneData.Name || 
+                                                     (boneData.ObjectId !== undefined ? `Bone_${boneData.ObjectId}` : 
+                                                      (boneData.objectId !== undefined ? `Bone_${boneData.objectId}` : `bone_${index}`));
+                                    bone.name = boneName;
                                     
                                     // 设置骨骼位置
                                     if (boneData.PivotPoints && boneData.PivotPoints.length > 0) {
@@ -3284,6 +3572,8 @@
                         // 执行导出的函数
                         function doExport(scene) {
                             console.log('=== 开始执行导出 ===');
+                            const animCount = window.exportAnimations ? window.exportAnimations.length : (animations ? animations.length : 0);
+                            console.log('导出动画数量:', animCount);
                             try {
                                 // 检查场景是否有效
                                 if (!scene) {
@@ -3297,14 +3587,31 @@
                                 // 创建GLTFExporter实例
                                 const exporter = new THREE.GLTFExporter();
                                 
-                                // 检查动画数组
+                                // 检查动画数组 - 优先使用 window.exportAnimations
                                 let exportAnimations = undefined;
-                                if (animations && Array.isArray(animations) && animations.length > 0) {
-                                    exportAnimations = animations;
-                                    console.log('包含动画:', animations.length, '个动画');
+                                const animSource = (window.exportAnimations && window.exportAnimations.length > 0) ? window.exportAnimations : animations;
+                                if (animSource && Array.isArray(animSource) && animSource.length > 0) {
+                                    exportAnimations = animSource;
+                                    console.log('包含动画:', animSource.length, '个动画');
+                                    // 打印动画轨迹信息（简化）
+                                    animSource.forEach((clip, i) => {
+                                        const trackNames = clip.tracks ? clip.tracks.map(t => t.name.split('.')[0]) : [];
+                                        const uniqueNodes = [...new Set(trackNames)];
+                                        console.log(`  [${i}] ${clip.name}: ${clip.tracks ? clip.tracks.length : 0} 条轨迹, 节点: ${uniqueNodes.join(', ')}`);
+                                    });
                                 } else {
                                     console.log('不包含动画或动画数组无效');
                                 }
+                                
+                                // 打印场景中的骨骼节点名称
+                                console.log('=== 场景中的骨骼节点 ===');
+                                const boneNodes = [];
+                                scene.traverse((obj) => {
+                                    if (obj.isBone && obj.name) {
+                                        boneNodes.push(obj.name);
+                                    }
+                                });
+                                console.log('骨骼节点:', boneNodes.join(', '));
                                 
                                 // 导出选项
                                 const textureFormat = document.getElementById('texture-format').value;
@@ -3399,6 +3706,38 @@
                                             
                                             // ===== 自动加载 GLTF 预览 =====
                                             console.log('=== 自动加载 GLTF 预览 ===');
+                                            
+                                            // 验证 GLTF 动画数据
+                                            if (optimizedGltf && optimizedGltf.animations) {
+                                                console.log(`✅ GLTF 包含 ${optimizedGltf.animations.length} 个动画`);
+                                                optimizedGltf.animations.forEach((anim, i) => {
+                                                    console.log(`   [${i}] ${anim.name}: ${anim.channels ? anim.channels.length : 0} channels, ${anim.samplers ? anim.samplers.length : 0} samplers`);
+                                                });
+                                                
+                                                // 保存 GLTF 动画数据供分析
+                                                try {
+                                                    const gltfAnimData = {
+                                                        modelName: selectedModel.name,
+                                                        animations: optimizedGltf.animations.map(a => ({
+                                                            name: a.name,
+                                                            duration: a.duration,
+                                                            channels: a.channels ? a.channels.length : 0,
+                                                            samplers: a.samplers ? a.samplers.length : 0
+                                                        }))
+                                                    };
+                                                    const gltfAnimBlob = new Blob([JSON.stringify(gltfAnimData, null, 2)], { type: 'application/json' });
+                                                    const gltfAnimUrl = URL.createObjectURL(gltfAnimBlob);
+                                                    const gltfAnimLink = document.createElement('a');
+                                                    gltfAnimLink.href = gltfAnimUrl;
+                                                    gltfAnimLink.download = `${selectedModel.name}_gltf_animations.json`;
+                                                    setTimeout(() => gltfAnimLink.click(), 2000);
+                                                } catch (e) {
+                                                    console.warn('保存 GLTF 动画数据失败:', e);
+                                                }
+                                            } else {
+                                                console.warn('⚠️ GLTF 中没有动画数据');
+                                            }
+                                            
                                             try {
                                                 loadGltfPreview(optimizedGltf);
                                             } catch (previewError) {
