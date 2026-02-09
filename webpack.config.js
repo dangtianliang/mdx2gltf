@@ -60,8 +60,8 @@ module.exports = (env, argv) => {
     },
     devServer: {
       contentBase: './',
-      port: 3000,
-      open: false,
+      port: 1024,
+      open: 'http://localhost:1024/clients/model-viewer/',
       serveIndex: true,
     },
   };

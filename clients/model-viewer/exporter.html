@@ -395,7 +395,7 @@
                     </div>
                     <div class="option-group">
                         <label for="include-animations">包含动画</label>
-                        <input type="checkbox" id="include-animations">
+                        <input type="checkbox" id="include-animations" checked>
                     </div>
                     <div class="option-group">
                         <label for="texture-format">纹理格式</label>
@@ -531,6 +531,26 @@
     <script src="https://unpkg.com/war3-model@4.0.0/dist/war3-model.browser.js"></script>
     
     <script>
+        // 日志发送函数 - 发送关键日志到服务器
+        function sendLog(type, message, data = {}) {
+            const logData = {
+                type: type,
+                message: message,
+                data: data,
+                url: window.location.href,
+                userAgent: navigator.userAgent
+            };
+            
+            fetch('http://localhost:8081/api/log', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(logData)
+            }).catch(err => {
+                // 静默失败，不影响正常功能
+                console.warn('日志发送失败:', err);
+            });
+        }
+        
         // 全局变量
         let selectedModel = null;
         let scene, camera, renderer, controls;
@@ -2187,6 +2207,25 @@
                             console.log('=== 转换 MDX 动画到 Three.js ===');
                             console.log(`序列: ${sequences ? sequences.length : 0} 个, 骨骼: ${bones ? bones.length : 0} 个`);
                             
+                            // 发送日志记录输入数据
+                            sendLog('convert_animations_input', '动画转换输入数据', {
+                                sequenceCount: sequences ? sequences.length : 0,
+                                boneCount: bones ? bones.length : 0,
+                                sequences: sequences ? sequences.map((s, i) => ({
+                                    index: i,
+                                    name: s.name || s.Name,
+                                    interval: s.interval || s.Interval
+                                })) : [],
+                                bones: bones ? bones.map((b, i) => ({
+                                    index: i,
+                                    name: b.name || b.Name,
+                                    parent: b.parent !== undefined ? b.parent : (b.Parent !== undefined ? b.Parent : -1),
+                                    hasTranslation: !!(b.Translation || b.translation),
+                                    hasRotation: !!(b.Rotation || b.rotation),
+                                    hasScaling: !!(b.Scaling || b.scaling)
+                                })) : []
+                            });
+                            
                             if (!sequences || !Array.isArray(sequences) || sequences.length === 0) {
                                 console.warn('❌ 没有动画序列');
                                 return [];
@@ -2227,6 +2266,23 @@
                             });
                             
                             console.log(`\n=== 动画转换完成: ${clips.length} 个动画 ===`);
+                            
+                            // 发送日志记录转换完成的详细结果
+                            sendLog('convert_animations_result', '动画转换完成', {
+                                clipCount: clips.length,
+                                clips: clips.map((clip, i) => ({
+                                    index: i,
+                                    name: clip.name,
+                                    duration: clip.duration,
+                                    trackCount: clip.tracks ? clip.tracks.length : 0,
+                                    tracks: clip.tracks ? clip.tracks.map(t => ({
+                                        name: t.name,
+                                        timesCount: t.times ? t.times.length : 0,
+                                        valuesCount: t.values ? t.values.length : 0
+                                    })) : []
+                                }))
+                            });
+                            
                             return clips;
                         }
                         
@@ -2244,6 +2300,18 @@
                                 // 存储到全局变量，确保异步回调中可以访问
                                 window.exportAnimations = animations;
                                 console.log('动画已存储到 window.exportAnimations:', window.exportAnimations.length);
+                                
+                                // 发送日志记录转换结果
+                                sendLog('animation_conversion', '动画数据转换完成', {
+                                    animCount: animations.length,
+                                    animations: animations.map((clip, i) => ({
+                                        index: i,
+                                        name: clip.name,
+                                        duration: clip.duration,
+                                        trackCount: clip.tracks ? clip.tracks.length : 0,
+                                        trackNames: clip.tracks ? clip.tracks.map(t => t.name) : []
+                                    }))
+                                });
                             } else {
                                 console.log('根据用户选项，不包含动画');
                                 animations = [];
@@ -2252,6 +2320,10 @@
                         } catch (error) {
                             console.error('动画数据转换失败:', error);
                             console.error('错误堆栈:', error.stack);
+                            sendLog('animation_conversion_error', '动画数据转换失败', {
+                                error: error.message,
+                                stack: error.stack
+                            });
                             animations = [];
                             window.exportAnimations = [];
                         }
@@ -3330,8 +3402,12 @@
                             const bones = [];
                             const boneMap = new Map();
                             const validBoneIndices = [];
+                            const objectIdToBoneIndex = new Map(); // 映射 ObjectId 到 boneIndex
                             
-                            // 创建骨骼 - 使用与动画轨迹相同的命名规则
+                            console.log('=== 开始创建骨骼 ===');
+                            console.log('骨骼数据数量:', bonesData ? bonesData.length : 0);
+                            
+                            // 第一遍：创建骨骼并建立 ObjectId 映射
                             bonesData.forEach((boneData, index) => {
                                 try {
                                     const bone = new THREE.Bone();
@@ -3340,6 +3416,12 @@
                                                      (boneData.ObjectId !== undefined ? `Bone_${boneData.ObjectId}` : 
                                                       (boneData.objectId !== undefined ? `Bone_${boneData.objectId}` : `bone_${index}`));
                                     bone.name = boneName;
+                                    
+                                    // 记录 ObjectId 到索引的映射
+                                    const objectId = boneData.ObjectId !== undefined ? boneData.ObjectId : 
+                                                     (boneData.objectId !== undefined ? boneData.objectId : index);
+                                    objectIdToBoneIndex.set(objectId, index);
+                                    bone.userData.objectId = objectId; // 保存 ObjectId 供后续使用
                                     
                                     // 设置骨骼位置
                                     if (boneData.PivotPoints && boneData.PivotPoints.length > 0) {
@@ -3365,26 +3447,39 @@
                             });
                             
                             // 设置骨骼层次结构
+                            const hierarchyInfo = [];
                             bonesData.forEach((boneData, index) => {
                                 const bone = boneMap.get(index);
-                                let parentIndex = -1;
+                                let parentObjectId = -1;
                                 
-                                // 尝试获取父骨骼索引
+                                // 尝试获取父骨骼的 ObjectId (MDX 中 parent 是 ObjectId，不是数组索引)
                                 if (boneData.parent !== undefined) {
-                                    // 小写parent
-                                    parentIndex = boneData.parent;
+                                    parentObjectId = boneData.parent;
                                 } else if (boneData.Parent !== undefined) {
-                                    // 大写Parent
-                                    parentIndex = boneData.Parent;
+                                    parentObjectId = boneData.Parent;
                                 }
                                 
-                                if (parentIndex >= 0 && parentIndex < bones.length && bone && validBoneIndices.includes(parentIndex)) {
-                                    const parentBone = boneMap.get(parentIndex);
+                                // 将 ObjectId 转换为 boneIndex
+                                const parentBoneIndex = objectIdToBoneIndex.get(parentObjectId);
+                                const hasValidParent = parentBoneIndex !== undefined && boneMap.has(parentBoneIndex);
+                                
+                                hierarchyInfo.push({
+                                    boneIndex: index,
+                                    boneName: bone ? bone.name : 'unknown',
+                                    objectId: bone.userData.objectId,
+                                    parentObjectId: parentObjectId,
+                                    parentBoneIndex: parentBoneIndex,
+                                    hasValidParent: hasValidParent
+                                });
+                                
+                                if (hasValidParent && bone) {
+                                    const parentBone = boneMap.get(parentBoneIndex);
                                     if (parentBone && parentBone !== bone) {
                                         parentBone.add(bone);
                                     }
                                 }
                             });
+                            console.log('骨骼层级信息:', hierarchyInfo);
                             
                             // 过滤掉无效骨骼
                             const validBones = bones.filter(bone => bone !== null && bone !== undefined);
@@ -3393,6 +3488,18 @@
                             const skeleton = new THREE.Skeleton(validBones);
                             console.log('骨骼系统创建成功:', skeleton.bones.length, '个骨骼');
                             console.log('有效骨骼索引:', validBoneIndices);
+                            
+                            // 发送日志记录骨骼创建结果
+                            sendLog('skeleton_created', '骨骼系统创建成功', {
+                                boneCount: skeleton.bones.length,
+                                boneNames: skeleton.bones.map(b => ({
+                                    name: b.name,
+                                    parentName: b.parent ? b.parent.name : null,
+                                    parentType: b.parent ? b.parent.type : null
+                                })),
+                                hierarchyInfo: hierarchyInfo,
+                                validBoneIndices: validBoneIndices
+                            });
                             
                             return skeleton;
                         }
@@ -3688,6 +3795,179 @@
                             console.log('=== 开始执行导出 ===');
                             const animCount = window.exportAnimations ? window.exportAnimations.length : 0;
                             console.log('导出动画数量:', animCount);
+                            sendLog('export_start', '开始执行导出', { animCount: animCount });
+                            
+                            // 内部函数：将 Three.js AnimationClip 转换为 GLTF 动画格式
+                            function convertThreeAnimationsToGltf(threeAnimations, gltf) {
+                                const animations = [];
+                                const accessors = gltf.accessors || [];
+                                const bufferViews = gltf.bufferViews || [];
+                                const buffers = gltf.buffers || [];
+                                
+                                // 收集所有动画数据到一个 ArrayBuffer
+                                let totalByteLength = 0;
+                                const animationDataArrays = [];
+                                
+                                threeAnimations.forEach((clip) => {
+                                    clip.tracks.forEach((track) => {
+                                        // 时间数据
+                                        const timesArray = new Float32Array(track.times);
+                                        animationDataArrays.push({
+                                            type: 'times',
+                                            array: timesArray,
+                                            componentType: 5126,
+                                            count: track.times.length,
+                                            valueType: 'SCALAR'
+                                        });
+                                        totalByteLength += timesArray.byteLength;
+                                        
+                                        // 值数据
+                                        const valuesArray = new Float32Array(track.values);
+                                        const componentCount = track.name.includes('quaternion') ? 4 : 3;
+                                        animationDataArrays.push({
+                                            type: 'values',
+                                            array: valuesArray,
+                                            componentType: 5126,
+                                            count: track.values.length / componentCount,
+                                            valueType: track.name.includes('quaternion') ? 'VEC4' : 'VEC3',
+                                            componentCount: componentCount
+                                        });
+                                        totalByteLength += valuesArray.byteLength;
+                                    });
+                                });
+                                
+                                if (totalByteLength === 0) {
+                                    return [];
+                                }
+                                
+                                // 创建合并的 ArrayBuffer
+                                const mergedBuffer = new ArrayBuffer(totalByteLength);
+                                const mergedView = new Uint8Array(mergedBuffer);
+                                let currentOffset = 0;
+                                
+                                // 复制数据到合并 buffer
+                                animationDataArrays.forEach((data) => {
+                                    const view = new Uint8Array(data.array.buffer);
+                                    mergedView.set(view, currentOffset);
+                                    data.byteOffset = currentOffset;
+                                    currentOffset += data.array.byteLength;
+                                });
+                                
+                                // 将 buffer 转换为 base64
+                                let binaryString = '';
+                                const bytes = new Uint8Array(mergedBuffer);
+                                for (let i = 0; i < bytes.byteLength; i++) {
+                                    binaryString += String.fromCharCode(bytes[i]);
+                                }
+                                const base64String = btoa(binaryString);
+                                
+                                // 添加新的 buffer
+                                const animBufferIndex = buffers.length;
+                                buffers.push({
+                                    uri: `data:application/octet-stream;base64,${base64String}`,
+                                    byteLength: totalByteLength
+                                });
+                                
+                                // 创建 accessors 和 animations
+                                let dataArrayIndex = 0;
+                                
+                                threeAnimations.forEach((clip, clipIndex) => {
+                                    const animation = {
+                                        name: clip.name,
+                                        channels: [],
+                                        samplers: []
+                                    };
+                                    
+                                    clip.tracks.forEach((track) => {
+                                        const targetName = track.name.split('.')[0];
+                                        const property = track.name.split('.')[1];
+                                        
+                                        // 找到对应的 node 索引
+                                        let nodeIndex = -1;
+                                        if (gltf.nodes) {
+                                            nodeIndex = gltf.nodes.findIndex(n => n.name === targetName);
+                                        }
+                                        
+                                        if (nodeIndex < 0) {
+                                            console.warn(`未找到动画目标节点: ${targetName}`);
+                                            dataArrayIndex += 2; // 跳过 times 和 values
+                                            return;
+                                        }
+                                        
+                                        // 映射属性名
+                                        let gltfProperty;
+                                        switch (property) {
+                                            case 'position': gltfProperty = 'translation'; break;
+                                            case 'quaternion': gltfProperty = 'rotation'; break;
+                                            case 'scale': gltfProperty = 'scale'; break;
+                                            default: gltfProperty = property;
+                                        }
+                                        
+                                        // times accessor
+                                        const timesData = animationDataArrays[dataArrayIndex++];
+                                        const timesBufferViewIndex = bufferViews.length;
+                                        bufferViews.push({
+                                            buffer: animBufferIndex,
+                                            byteOffset: timesData.byteOffset,
+                                            byteLength: timesData.array.byteLength
+                                        });
+                                        const timesAccessorIndex = accessors.length;
+                                        accessors.push({
+                                            bufferView: timesBufferViewIndex,
+                                            componentType: 5126,
+                                            count: timesData.count,
+                                            type: 'SCALAR',
+                                            min: [Math.min(...track.times)],
+                                            max: [Math.max(...track.times)]
+                                        });
+                                        
+                                        // values accessor
+                                        const valuesData = animationDataArrays[dataArrayIndex++];
+                                        const valuesBufferViewIndex = bufferViews.length;
+                                        bufferViews.push({
+                                            buffer: animBufferIndex,
+                                            byteOffset: valuesData.byteOffset,
+                                            byteLength: valuesData.array.byteLength
+                                        });
+                                        const valuesAccessorIndex = accessors.length;
+                                        accessors.push({
+                                            bufferView: valuesBufferViewIndex,
+                                            componentType: 5126,
+                                            count: valuesData.count,
+                                            type: valuesData.valueType
+                                        });
+                                        
+                                        // 创建 sampler
+                                        const samplerIndex = animation.samplers.length;
+                                        animation.samplers.push({
+                                            input: timesAccessorIndex,
+                                            interpolation: 'LINEAR',
+                                            output: valuesAccessorIndex
+                                        });
+                                        
+                                        // 创建 channel
+                                        animation.channels.push({
+                                            sampler: samplerIndex,
+                                            target: {
+                                                node: nodeIndex,
+                                                path: gltfProperty
+                                            }
+                                        });
+                                    });
+                                    
+                                    if (animation.channels.length > 0) {
+                                        animations.push(animation);
+                                    }
+                                });
+                                
+                                // 更新 gltf 的 accessors 和 bufferViews
+                                gltf.accessors = accessors;
+                                gltf.bufferViews = bufferViews;
+                                gltf.buffers = buffers;
+                                
+                                return animations;
+                            }
+                            
                             try {
                                 // 检查场景是否有效
                                 if (!scene) {
@@ -3708,24 +3988,108 @@
                                     exportAnimations = animSource;
                                     console.log('包含动画:', animSource.length, '个动画');
                                     // 打印动画轨迹信息（简化）
-                                    animSource.forEach((clip, i) => {
+                                    const animDetails = animSource.map((clip, i) => {
                                         const trackNames = clip.tracks ? clip.tracks.map(t => t.name.split('.')[0]) : [];
                                         const uniqueNodes = [...new Set(trackNames)];
-                                        console.log(`  [${i}] ${clip.name}: ${clip.tracks ? clip.tracks.length : 0} 条轨迹, 节点: ${uniqueNodes.join(', ')}`);
+                                        return {
+                                            index: i,
+                                            name: clip.name,
+                                            trackCount: clip.tracks ? clip.tracks.length : 0,
+                                            nodes: uniqueNodes
+                                        };
+                                    });
+                                    console.log('动画详情:', animDetails);
+                                    sendLog('export_animations', '导出动画信息', { 
+                                        animCount: animSource.length, 
+                                        animations: animDetails 
                                     });
                                 } else {
                                     console.log('不包含动画或动画数组无效');
+                                    sendLog('export_no_animations', '没有可导出的动画', { animSource: animSource });
                                 }
                                 
-                                // 打印场景中的骨骼节点名称
-                                console.log('=== 场景中的骨骼节点 ===');
+                                // 验证动画数据
+                                if (exportAnimations && exportAnimations.length > 0) {
+                                    console.log('=== 验证动画数据 ===');
+                                    const validation = exportAnimations.map((clip, i) => {
+                                        const trackValidation = clip.tracks ? clip.tracks.map(t => ({
+                                            name: t.name,
+                                            hasTimes: t.times && t.times.length > 0,
+                                            hasValues: t.values && t.values.length > 0,
+                                            timesLength: t.times ? t.times.length : 0,
+                                            valuesLength: t.values ? t.values.length : 0,
+                                            targetName: t.name.split('.')[0],
+                                            property: t.name.split('.')[1]
+                                        })) : [];
+                                        return {
+                                            clipIndex: i,
+                                            clipName: clip.name,
+                                            trackCount: clip.tracks ? clip.tracks.length : 0,
+                                            tracks: trackValidation
+                                        };
+                                    });
+                                    console.log('动画验证:', validation);
+                                    sendLog('animation_validation', '动画数据验证', { validation: validation });
+                                }
+                                
+                                // 打印场景中的所有对象
+                                console.log('=== 场景中的所有对象 ===');
                                 const boneNodes = [];
+                                const allObjects = [];
+                                const skinnedMeshes = [];
                                 scene.traverse((obj) => {
+                                    allObjects.push({
+                                        name: obj.name,
+                                        type: obj.type,
+                                        isBone: obj.isBone,
+                                        isSkinnedMesh: obj.isSkinnedMesh,
+                                        isMesh: obj.isMesh,
+                                        visible: obj.visible,
+                                        parent: obj.parent ? obj.parent.name : null
+                                    });
                                     if (obj.isBone && obj.name) {
                                         boneNodes.push(obj.name);
                                     }
+                                    if (obj.isSkinnedMesh) {
+                                        skinnedMeshes.push({
+                                            name: obj.name,
+                                            hasSkeleton: !!obj.skeleton,
+                                            boneCount: obj.skeleton ? obj.skeleton.bones.length : 0
+                                        });
+                                    }
                                 });
                                 console.log('骨骼节点:', boneNodes.join(', '));
+                                console.log('蒙皮网格:', skinnedMeshes);
+                                
+                                // 检查动画轨迹是否能匹配到场景中的对象
+                                const trackMatching = [];
+                                if (exportAnimations) {
+                                    exportAnimations.forEach((clip, clipIndex) => {
+                                        clip.tracks.forEach(track => {
+                                            const targetName = track.name.split('.')[0];
+                                            const targetObj = scene.getObjectByName(targetName);
+                                            trackMatching.push({
+                                                clipIndex: clipIndex,
+                                                clipName: clip.name,
+                                                trackName: track.name,
+                                                targetName: targetName,
+                                                found: !!targetObj,
+                                                targetType: targetObj ? targetObj.type : null,
+                                                targetIsBone: targetObj ? targetObj.isBone : false
+                                            });
+                                        });
+                                    });
+                                }
+                                console.log('动画轨迹匹配:', trackMatching);
+                                
+                                sendLog('export_scene_objects', '场景对象', { 
+                                    boneCount: boneNodes.length, 
+                                    boneNodes: boneNodes,
+                                    skinnedMeshes: skinnedMeshes,
+                                    allObjectsCount: allObjects.length,
+                                    allObjects: allObjects.slice(0, 50), // 只记录前50个避免日志过大
+                                    trackMatching: trackMatching
+                                });
                                 
                                 // 导出选项
                                 const textureFormat = document.getElementById('texture-format').value;
@@ -3734,7 +4098,7 @@
                                     embedImages: embedTextures,
                                     includeCustomExtensions: false,
                                     truncateDrawRange: true,
-                                    onlyVisible: true,
+                                    onlyVisible: false,
                                     maxTextureSize: 4096,
                                     animations: exportAnimations,
                                     // 添加优化选项
@@ -3749,6 +4113,11 @@
                                 console.log('是否嵌入纹理:', embedTextures);
                                 console.log('纹理格式:', textureFormat);
                                 console.log('是否启用纹理压缩:', exportOptions.textureCompression);
+                                sendLog('export_options', '导出选项配置', { 
+                                    exportOptions: exportOptions,
+                                    hasAnimations: !!exportAnimations,
+                                    animCount: exportAnimations ? exportAnimations.length : 0
+                                });
                                 
                                 // 执行导出
                                 console.log('开始执行GLTF导出...');
@@ -3757,6 +4126,12 @@
                                     (gltf) => {
                                         try {
                                             console.log('导出成功，开始处理结果...');
+                                            sendLog('export_callback_success', 'GLTF导出回调成功', {
+                                                resultType: typeof gltf,
+                                                hasAnimations: gltf && !!gltf.animations,
+                                                animCount: gltf && gltf.animations ? gltf.animations.length : 0
+                                            });
+                                            
                                             // 生成下载链接
                                             const downloadLink = document.getElementById('download-button');
                                             
@@ -3774,6 +4149,18 @@
                                                 // 优化模型结构
                                                 console.log('优化模型结构...');
                                                 
+                                                // 检查 GLTF 结构
+                                                const gltfInfo = {
+                                                    hasAsset: !!gltf.asset,
+                                                    nodesCount: gltf.nodes ? gltf.nodes.length : 0,
+                                                    meshesCount: gltf.meshes ? gltf.meshes.length : 0,
+                                                    skinsCount: gltf.skins ? gltf.skins.length : 0,
+                                                    animationsCount: gltf.animations ? gltf.animations.length : 0,
+                                                    nodeNames: gltf.nodes ? gltf.nodes.map(n => n.name).filter(n => n) : []
+                                                };
+                                                console.log('GLTF结构:', gltfInfo);
+                                                sendLog('gltf_structure', 'GLTF导出结构', gltfInfo);
+                                                
                                                 // 移除不必要的属性
                                                 if (gltf.asset) {
                                                     gltf.asset.generator = 'War3 Model Viewer GLTF Exporter';
@@ -3787,6 +4174,21 @@
                                                 // 优化动画数据
                                                 if (gltf.animations && Array.isArray(gltf.animations)) {
                                                     console.log('优化动画数据:', gltf.animations.length, '个动画');
+                                                }
+                                                
+                                                // 如果 GLTF 没有动画但我们应该有动画，手动注入动画数据
+                                                if ((!gltf.animations || gltf.animations.length === 0) && exportAnimations && exportAnimations.length > 0) {
+                                                    console.log('GLTFExporter 未导出动画，手动注入动画数据...');
+                                                    gltf.animations = convertThreeAnimationsToGltf(exportAnimations, gltf);
+                                                    console.log('手动注入动画完成:', gltf.animations.length, '个动画');
+                                                    sendLog('animations_injected', '手动注入动画', {
+                                                        animCount: gltf.animations.length,
+                                                        animations: gltf.animations.map(a => ({
+                                                            name: a.name,
+                                                            channels: a.channels ? a.channels.length : 0,
+                                                            samplers: a.samplers ? a.samplers.length : 0
+                                                        }))
+                                                    });
                                                 }
                                                 
                                                 // 转换为字符串
@@ -3822,10 +4224,20 @@
                                             console.log('=== 自动加载 GLTF 预览 ===');
                                             
                                             // 验证 GLTF 动画数据
-                                            if (optimizedGltf && optimizedGltf.animations) {
+                                            if (optimizedGltf && optimizedGltf.animations && optimizedGltf.animations.length > 0) {
                                                 console.log(`✅ GLTF 包含 ${optimizedGltf.animations.length} 个动画`);
-                                                optimizedGltf.animations.forEach((anim, i) => {
-                                                    console.log(`   [${i}] ${anim.name}: ${anim.channels ? anim.channels.length : 0} channels, ${anim.samplers ? anim.samplers.length : 0} samplers`);
+                                                const gltfAnimSummary = optimizedGltf.animations.map((anim, i) => ({
+                                                    index: i,
+                                                    name: anim.name,
+                                                    channels: anim.channels ? anim.channels.length : 0,
+                                                    samplers: anim.samplers ? anim.samplers.length : 0
+                                                }));
+                                                console.log('GLTF动画摘要:', gltfAnimSummary);
+                                                
+                                                sendLog('export_gltf_animations', 'GLTF包含动画', {
+                                                    modelName: selectedModel.name,
+                                                    animCount: optimizedGltf.animations.length,
+                                                    animations: gltfAnimSummary
                                                 });
                                                 
                                                 // 保存 GLTF 动画数据供分析
@@ -3850,6 +4262,13 @@
                                                 }
                                             } else {
                                                 console.warn('⚠️ GLTF 中没有动画数据');
+                                                sendLog('export_gltf_no_animations', 'GLTF中没有动画数据', {
+                                                    modelName: selectedModel.name,
+                                                    hasGltf: !!optimizedGltf,
+                                                    hasAnimationsProperty: optimizedGltf ? !!optimizedGltf.animations : false,
+                                                    animationsLength: optimizedGltf && optimizedGltf.animations ? optimizedGltf.animations.length : 0,
+                                                    gltfKeys: optimizedGltf ? Object.keys(optimizedGltf) : []
+                                                });
                                             }
                                             
                                             try {
@@ -3869,6 +4288,10 @@
                                     },
                                     (error) => {
                                         console.error('导出失败:', error);
+                                        sendLog('export_callback_error', 'GLTF导出回调失败', {
+                                            error: error.message,
+                                            stack: error.stack
+                                        });
                                         showStatus(`导出失败: ${error.message}`, 'error');
                                         console.error('导出错误:', error);
                                     },
