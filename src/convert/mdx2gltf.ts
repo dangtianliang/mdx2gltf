@@ -117,15 +117,30 @@ function createThreeMaterial(model: any, material: any, blpBaseDir: string): THR
         const texInfo = resolveTexturePath(model, textureId, blpBaseDir);
         
         if (texInfo.isReplaceable) {
-            // 团队色/选择圈等，使用纯色代替
-            const colors: Record<number, number> = {
-                1: 0xff0000, // 团队色1（红）
-                2: 0x00ff00, // 团队色2（绿）
-                11: 0x0000ff // 选择圈（蓝）
-            };
+            // 团队色/选择圈等处理
             const replaceableId = texInfo.replaceableId || 0;
-            mat.color.setHex(colors[replaceableId] || 0x808080);
-            mat.map = null;
+            
+            if (replaceableId === 1) {
+                // 团队色1 - 实现正确的队伍颜色混合
+                // 这里设置为默认红色，实际队伍颜色会在运行时通过材质 uniforms 控制
+                mat.color.setHex(0xff0000);
+                mat.map = null;
+                
+                // 标记为队伍色材质，用于后续处理
+                (mat as any).isTeamColorMaterial = true;
+            } else if (replaceableId === 2) {
+                // 团队色2（绿）
+                mat.color.setHex(0x00ff00);
+                mat.map = null;
+            } else if (replaceableId === 11) {
+                // 选择圈（蓝）
+                mat.color.setHex(0x0000ff);
+                mat.map = null;
+            } else {
+                // 其他可替换纹理，使用灰色
+                mat.color.setHex(0x808080);
+                mat.map = null;
+            }
         } else if (texInfo.path && fs.existsSync(texInfo.path)) {
             // 加载 BLP 并转换为 Data URL
             const blpBuffer = fs.readFileSync(texInfo.path);
@@ -403,6 +418,12 @@ function createGeosetMesh(
         mesh.bind(skeleton, new THREE.Matrix4());
     }
     
+    // 为队伍色材质添加特殊标记
+    if ((material as any).isTeamColorMaterial) {
+        mesh.userData['isTeamColorMesh'] = true;
+        console.log(`📦 标记为队伍色网格: ${mesh.name}`);
+    }
+    
     return mesh;
 }
 
@@ -469,7 +490,29 @@ export async function convertMDX2GLTF(
             clips.push(...createAnimationClips(model));
         }
         
-        // 6. 导出 GLTF
+        // 6. 处理队伍色材质
+        console.log(`📦 检查队伍色材质...`);
+        let hasTeamColorMaterials = false;
+        
+        scene.traverse((object: THREE.Object3D) => {
+            if (object instanceof THREE.Mesh && object.material) {
+                if ((object.material as any).isTeamColorMaterial || object.userData['isTeamColorMesh']) {
+                    hasTeamColorMaterials = true;
+                    console.log(`✅ 找到队伍色网格: ${object.name}`);
+                    
+                    // 为队伍色网格添加自定义属性，以便在运行时识别
+                    object.userData['teamColorIndex'] = 1; // 默认红色队伍
+                }
+            }
+        });
+        
+        if (hasTeamColorMaterials) {
+            console.log(`📦 模型包含队伍色材质，将在运行时支持队伍颜色切换`);
+        } else {
+            console.log(`📦 模型不包含队伍色材质`);
+        }
+        
+        // 7. 导出 GLTF
         console.log(`📝 导出中... (${clips.length} 个动画片段)`);
         console.log(`📝 输出路径: ${outputPath}`);
         

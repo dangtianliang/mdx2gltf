@@ -1,0 +1,25 @@
+{
+  "name": "HumanMage",
+  "vertices": 441,
+  "bones": 31,
+  "materials": 3,
+  "textures": 4,
+  "sequences": 8,
+  "geosets": 4,
+  "texturePaths": [
+    "units\\Creeps\\HumanMage\\HumanMage.blp",
+    "Textures\\Yellow_Star_Dim.blp",
+    "Unknown",
+    "Textures\\gutz.blp"
+  ],
+  "sequenceNames": [
+    "Stand",
+    "Walk",
+    "Death",
+    "Decay Flesh",
+    "Stand - 4",
+    "Spell Attack",
+    "Stand - 2",
+    "Decay Bone"
+  ]
+}

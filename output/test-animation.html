@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动画测试</title>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; font-family: Arial, sans-serif; }
+        #info { position: absolute; top: 10px; left: 10px; color: white; }
+        #animation-list { margin-top: 10px; }
+        #animation-list button { margin: 5px; padding: 5px 10px; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>动画测试</h1>
+        <div id="status">加载中...</div>
+        <div id="animation-list"></div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        let scene, camera, renderer, controls;
+        let mixer, currentAction;
+        let animations = [];
+        let clock = new THREE.Clock();
+
+        init();
+        animate();
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            camera.position.z = 5;
+
+            const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+            scene.add(light);
+
+            loadModel();
+        }
+
+        function loadModel() {
+            const loader = new GLTFLoader();
+            loader.load('export.gltf', (gltf) => {
+                console.log('Model loaded:', gltf);
+                document.getElementById('status').textContent = '模型加载成功！';
+
+                const model = gltf.scene;
+                scene.add(model);
+
+                if (gltf.animations.length > 0) {
+                    animations = gltf.animations;
+                    mixer = new THREE.AnimationMixer(model);
+
+                    // 创建动画按钮
+                    const listEl = document.getElementById('animation-list');
+                    animations.forEach((anim, index) => {
+                        const btn = document.createElement('button');
+                        btn.textContent = anim.name;
+                        btn.onclick = () => playAnimation(index);
+                        listEl.appendChild(btn);
+                    });
+
+                    // 自动播放第一个动画
+                    playAnimation(0);
+                }
+
+                // 调整相机位置
+                const box = new THREE.Box3().setFromObject(model);
+                const size = box.getSize(new THREE.Vector3());
+                const maxSize = Math.max(size.x, size.y, size.z);
+                const scale = 5 / maxSize;
+                model.scale.setScalar(scale);
+                camera.position.z = 5;
+            }, undefined, (error) => {
+                console.error('Error loading model:', error);
+                document.getElementById('status').textContent = '加载失败: ' + error.message;
+            });
+        }
+
+        function
