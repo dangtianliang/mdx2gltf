@@ -3831,14 +3831,14 @@
         {
           "sampler": 0,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "translation"
           }
         },
         {
           "sampler": 1,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "rotation"
           }
         },
@@ -3886,14 +3886,14 @@
         {
           "sampler": 0,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "translation"
           }
         },
         {
           "sampler": 1,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "rotation"
           }
         },
@@ -3941,14 +3941,14 @@
         {
           "sampler": 0,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "translation"
           }
         },
         {
           "sampler": 1,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "rotation"
           }
         },
@@ -3996,14 +3996,14 @@
         {
           "sampler": 0,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "translation"
           }
         },
         {
           "sampler": 1,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "rotation"
           }
         },
@@ -4051,14 +4051,14 @@
         {
           "sampler": 0,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "translation"
           }
         },
         {
           "sampler": 1,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "rotation"
           }
         },
@@ -4106,14 +4106,14 @@
         {
           "sampler": 0,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "translation"
           }
         },
         {
           "sampler": 1,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "rotation"
           }
         },
@@ -4161,14 +4161,14 @@
         {
           "sampler": 0,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "translation"
           }
         },
         {
           "sampler": 1,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "rotation"
           }
         },
@@ -4216,14 +4216,14 @@
         {
           "sampler": 0,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "translation"
           }
         },
         {
           "sampler": 1,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "rotation"
           }
         },
@@ -4271,14 +4271,14 @@
         {
           "sampler": 0,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "translation"
           }
         },
         {
           "sampler": 1,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "rotation"
           }
         },
@@ -4326,14 +4326,14 @@
         {
           "sampler": 0,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "translation"
           }
         },
         {
           "sampler": 1,
           "target": {
-            "node": 22,
+            "node": 0,
             "path": "rotation"
           }
         },

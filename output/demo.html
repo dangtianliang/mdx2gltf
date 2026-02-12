@@ -38,6 +38,12 @@
         <p>模型: export.gltf</p>
         <p id="status">加载中...</p>
         <div id="animation-list"></div>
+        <hr style="border-color: rgba(255,255,255,0.2); margin: 10px 0;">
+        <div id="debug-info" style="font-size: 12px; font-family: monospace;">
+            <p>Object06 pos: <span id="obj06-pos">-</span></p>
+            <p>Object06 rot: <span id="obj06-rot">-</span></p>
+            <p>gutz00 pos: <span id="gutz00-pos">-</span></p>
+        </div>
     </div>
 
     <script type="module">
@@ -101,8 +107,6 @@
             const loader = new GLTFLoader();
             
             loader.load('export.gltf', (gltf) => {
-                console.log('Model loaded successfully:', gltf);
-                
                 statusEl.innerHTML = '<span class="success">模型加载成功！</span>';
                 
                 // Remove old model
@@ -116,11 +120,14 @@
                     statusEl.innerHTML += '<br><span class="success">发现 ' + gltf.animations.length + ' 个动画</span>';
                     
                     mixer = new THREE.AnimationMixer(model);
-                    animations = gltf.animations.map((clip, idx) => ({
-                        name: clip.name || `Animation ${idx + 1}`,
-                        duration: clip.duration,
-                        clip: clip
-                    }));
+                    
+                    animations = gltf.animations.map((clip, idx) => {
+                        return {
+                            name: clip.name || `Animation ${idx + 1}`,
+                            duration: clip.duration,
+                            clip: clip
+                        };
+                    });
                     
                     renderAnimationList();
                     
@@ -144,7 +151,6 @@
             }, undefined, (error) => {
                 console.error('Error loading model:', error);
                 statusEl.innerHTML = '<span class="error">加载失败: ' + error.message + '</span>';
-                statusEl.innerHTML += '<br><span class="error">检查控制台获取详细信息</span>';
             });
         }
 
@@ -161,6 +167,8 @@
         function playAnimation(index) {
             if (!animations[index]) return;
 
+            const animName = animations[index].name;
+
             // Update UI
             document.querySelectorAll('#animation-list button').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('#animation-list button')[index].classList.add('active');
@@ -173,11 +181,11 @@
             // Play the animation
             const clip = animations[index].clip;
             currentAction = mixer.clipAction(clip);
+            
             currentAction.setLoop(isLooping ? THREE.LoopRepeat : THREE.LoopOnce);
             currentAction.clampWhenFinished = !isLooping;
-            currentAction.play();
             
-            console.log('Playing animation:', animations[index].name);
+            currentAction.play();
         }
 
         function onWindowResize() {
@@ -196,6 +204,25 @@
             
             if (mixer) {
                 mixer.update(cappedDelta * playbackSpeed);
+                
+                // Update debug display for key objects
+                const obj06 = model.getObjectByName('Object06');
+                const gutz00 = model.getObjectByName('gutz00');
+                
+                if (obj06) {
+                    const pos = obj06.position;
+                    const rot = obj06.rotation;
+                    document.getElementById('obj06-pos').textContent = 
+                        `${pos.x.toFixed(2)}, ${pos.y.toFixed(2)}, ${pos.z.toFixed(2)}`;
+                    document.getElementById('obj06-rot').textContent = 
+                        `${rot.x.toFixed(2)}, ${rot.y.toFixed(2)}, ${rot.z.toFixed(2)}`;
+                }
+                
+                if (gutz00) {
+                    const pos = gutz00.position;
+                    document.getElementById('gutz00-pos').textContent = 
+                        `${pos.x.toFixed(2)}, ${pos.y.toFixed(2)}, ${pos.z.toFixed(2)}`;
+                }
             }
 
             controls.update();
