@@ -1,0 +1,101 @@
+[
+  {
+    "timestamp": "2026-02-13T05:43:21.050Z",
+    "type": "skeleton_creation",
+    "message": "骨骼系统创建完成",
+    "data": {
+      "totalBones": 34,
+      "validBones": 34,
+      "hierarchyInfo": [
+        {
+          "boneIndex": 0,
+          "boneName": "gutz00",
+          "objectId": 0,
+          "parentObjectId": null,
+          "hasValidParent": false,
+          "depth": 0
+        },
+        {
+          "boneIndex": 1,
+          "boneName": "splat",
+          "objectId": 1,
+          "parentObjectId": null,
+          "hasValidParent": false,
+          "depth": 0
+        },
+        {
+          "boneIndex": 2,
+          "boneName": "Mesh24",
+          "objectId": 2,
+          "parentObjectId": 35,
+          "hasValidParent": false,
+          "depth": 0
+        },
+        {
+          "boneIndex": 3,
+          "boneName": "Mesh04",
+          "objectId": 3,
+          "parentObjectId": 36,
+          "hasValidParent": false,
+          "depth": 0
+        },
+        {
+          "boneIndex": 4,
+          "boneName": "Mesh05",
+          "objectId": 4,
+          "parentObjectId": 37,
+          "hasValidParent": false,
+          "depth": 0
+        },
+        {
+          "boneIndex": 5,
+          "boneName": "Body Texture",
+          "objectId": 5,
+          "parentObjectId": 38,
+          "hasValidParent": false,
+          "depth": 0
+        },
+        {
+          "boneIndex": 6,
+          "boneName": "Mesh06",
+          "objectId": 6,
+          "parentObjectId": 39,
+          "hasValidParent": false,
+          "depth": 0
+        },
+        {
+          "boneIndex": 7,
+          "boneName": "Object01",
+          "objectId": 7,
+          "parentObjectId": 40,
+          "hasValidParent": false,
+          "depth": 0
+        },
+        {
+          "boneIndex": 8,
+          "boneName": "Legs",
+          "objectId": 8,
+          "parentObjectId": 41,
+          "hasValidParent": false,
+          "depth": 0
+        },
+        {
+          "boneIndex": 9,
+          "boneName": "Mesh14",
+          "objectId": 9,
+          "parentObjectId": 42,
+          "hasValidParent": false,
+          "depth": 0
+        }
+      ],
+      "maxDepth": 0
+    },
+    "url": "http://localhost:8080/clients/model-viewer/exporter.html",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+    "environment": {
+      "nodeVersion": "v24.12.0",
+      "platform": "win32",
+      "arch": "x64"
+    }
+  }
+]

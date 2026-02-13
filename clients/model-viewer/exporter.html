@@ -3275,9 +3275,9 @@
                             const boneMap = new Map();
                             const validBoneIndices = [];
                             const objectIdToBoneIndex = new Map(); // 映射 ObjectId 到 boneIndex
+                            const nameToBoneIndex = new Map(); // 映射骨骼名称到 boneIndex
                             
-                            
-                            // 第一遍：创建骨骼并建立 ObjectId 映射
+                            // 第一遍：创建骨骼并建立映射
                             bonesData.forEach((boneData, index) => {
                                 try {
                                     const bone = new THREE.Bone();
@@ -3291,6 +3291,7 @@
                                     const objectId = boneData.ObjectId !== undefined ? boneData.ObjectId : 
                                                      (boneData.objectId !== undefined ? boneData.objectId : index);
                                     objectIdToBoneIndex.set(objectId, index);
+                                    nameToBoneIndex.set(boneName, index);
                                     bone.userData.objectId = objectId; // 保存 ObjectId 供后续使用
                                     
                                     // 设置骨骼位置
@@ -3316,22 +3317,65 @@
                                 }
                             });
                             
+                            // 获取全局 Nodes 数据
+                            const globalNodes = window.modelNodesForExport || [];
+                            const nodesMap = new Map();
+                            if (globalNodes.length > 0) {
+                                globalNodes.forEach((node, index) => {
+                                    if (node.objectId !== undefined) {
+                                        nodesMap.set(node.objectId, node);
+                                    }
+                                    if (node.name) {
+                                        nodesMap.set(node.name, node);
+                                    }
+                                });
+                            }
+                            
                             // 设置骨骼层次结构
                             const hierarchyInfo = [];
                             bonesData.forEach((boneData, index) => {
                                 const bone = boneMap.get(index);
                                 let parentObjectId = -1;
+                                let parentBoneIndex = -1;
+                                let hasValidParent = false;
                                 
-                                // 尝试获取父骨骼的 ObjectId (MDX 中 parent 是 ObjectId，不是数组索引)
+                                // 尝试获取父骨骼的 ObjectId
                                 if (boneData.parent !== undefined) {
                                     parentObjectId = boneData.parent;
                                 } else if (boneData.Parent !== undefined) {
                                     parentObjectId = boneData.Parent;
+                                } else if (boneData.ParentId !== undefined) {
+                                    parentObjectId = boneData.ParentId;
+                                } else if (boneData.parentId !== undefined) {
+                                    parentObjectId = boneData.parentId;
                                 }
                                 
-                                // 将 ObjectId 转换为 boneIndex
-                                const parentBoneIndex = objectIdToBoneIndex.get(parentObjectId);
-                                const hasValidParent = parentBoneIndex !== undefined && boneMap.has(parentBoneIndex);
+                                // 多层次父节点搜索
+                                if (parentObjectId !== -1) {
+                                    // 1. 首先尝试直接通过 ObjectId 查找
+                                    parentBoneIndex = objectIdToBoneIndex.get(parentObjectId);
+                                    if (parentBoneIndex !== undefined && boneMap.has(parentBoneIndex)) {
+                                        hasValidParent = true;
+                                    } else {
+                                        // 2. 尝试通过全局 Nodes 数据查找
+                                        const parentNode = nodesMap.get(parentObjectId);
+                                        if (parentNode && parentNode.name) {
+                                            parentBoneIndex = nameToBoneIndex.get(parentNode.name);
+                                            if (parentBoneIndex !== undefined && boneMap.has(parentBoneIndex)) {
+                                                hasValidParent = true;
+                                            }
+                                        }
+                                        
+                                        // 3. 尝试通过名称匹配查找
+                                        if (!hasValidParent) {
+                                            const parentName = `Bone_${parentObjectId}`;
+                                            parentBoneIndex = nameToBoneIndex.get(parentName);
+                                            if (parentBoneIndex !== undefined && boneMap.has(parentBoneIndex)) {
+                                                hasValidParent = true;
+                                            }
+                                        }
+                                    }
+                                }
                                 
                                 hierarchyInfo.push({
                                     boneIndex: index,
@@ -3339,7 +3383,8 @@
                                     objectId: bone.userData.objectId,
                                     parentObjectId: parentObjectId,
                                     parentBoneIndex: parentBoneIndex,
-                                    hasValidParent: hasValidParent
+                                    hasValidParent: hasValidParent,
+                                    depth: 0 // 后续计算深度
                                 });
                                 
                                 if (hasValidParent && bone) {
@@ -3350,6 +3395,25 @@
                                 }
                             });
                             
+                            // 计算骨骼层次深度
+                            function calculateBoneDepth(boneIndex) {
+                                const info = hierarchyInfo[boneIndex];
+                                if (info.depth > 0 || !info.hasValidParent) {
+                                    return info.depth;
+                                }
+                                
+                                const parentDepth = calculateBoneDepth(info.parentBoneIndex);
+                                info.depth = parentDepth + 1;
+                                return info.depth;
+                            }
+                            
+                            // 计算所有骨骼的深度
+                            hierarchyInfo.forEach((info, index) => {
+                                if (info.hasValidParent) {
+                                    calculateBoneDepth(index);
+                                }
+                            });
+                            
                             // 过滤掉无效骨骼
                             const validBones = bones.filter(bone => bone !== null && bone !== undefined);
                             
@@ -3357,6 +3421,12 @@
                             const skeleton = new THREE.Skeleton(validBones);
                             
                             // 发送日志记录骨骼创建结果
+                            sendLog('skeleton_creation', '骨骼系统创建完成', {
+                                totalBones: bonesData.length,
+                                validBones: validBones.length,
+                                hierarchyInfo: hierarchyInfo.slice(0, 10), // 只发送前10个骨骼的信息
+                                maxDepth: Math.max(...hierarchyInfo.map(info => info.depth))
+                            });
                             
                             return skeleton;
                         }
@@ -4200,9 +4270,9 @@
                                                     const gltfAnimBlob = new Blob([JSON.stringify(gltfAnimData, null, 2)], { type: 'application/json' });
                                                     const gltfAnimUrl = URL.createObjectURL(gltfAnimBlob);
                                                     const gltfAnimLink = document.createElement('a');
-                                                    gltfAnimLink.href = gltfAnimUrl;
-                                                    gltfAnimLink.download = `${selectedModel.name}_gltf_animations.json`;
-                                                    setTimeout(() => gltfAnimLink.click(), 2000);
+                                                    // gltfAnimLink.href = gltfAnimUrl;
+                                                    // gltfAnimLink.download = `${selectedModel.name}_gltf_animations.json`;
+                                                    // setTimeout(() => gltfAnimLink.click(), 2000);
                                                 } catch (e) {
                                                 }
                                                 
@@ -4213,10 +4283,10 @@
                                                     const fullGltfBlob = new Blob([truncatedGltf], { type: 'application/json' });
                                                     const fullGltfUrl = URL.createObjectURL(fullGltfBlob);
                                                     const fullGltfLink = document.createElement('a');
-                                                    fullGltfLink.href = fullGltfUrl;
-                                                    fullGltfLink.download = `${selectedModel.name}_debug.gltf`;
-                                                    setTimeout(() => fullGltfLink.click(), 2500);
-                                                } catch (e) {
+                                                //     fullGltfLink.href = fullGltfUrl;
+                                                //     fullGltfLink.download = `${selectedModel.name}_debug.gltf`;
+                                                //     setTimeout(() => fullGltfLink.click(), 2500);
+                                                // } catch (e) {
                                                 }
                                             } else {
                                             }
