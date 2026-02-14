@@ -1,371 +1,11 @@
+<!-- convertAnimationsToThreeJS -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MDX 转 GLTF 转换器</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-        }
-        
-        .exporter-container {
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        /* 左侧模型选择区域 */
-        .model-selection {
-            width: 300px;
-            background-color: #fff;
-            border-right: 1px solid #ddd;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .model-selection h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        
-        .race-category {
-            margin-bottom: 20px;
-        }
-        
-        .race-category h3 {
-            margin-bottom: 10px;
-            color: #555;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .model-list {
-            list-style: none;
-        }
-        
-        .model-item {
-            padding: 10px;
-            margin-bottom: 5px;
-            background-color: #f9f9f9;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .model-item:hover {
-            background-color: #e3f2fd;
-            transform: translateX(5px);
-        }
-        
-        .model-item.selected {
-            background-color: #2196f3;
-            color: white;
-        }
-        
-        /* 右侧转换和预览区域 */
-        .conversion-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: #f9f9f9;
-        }
-        
-        /* 转换选项 */
-        .conversion-options {
-            padding: 20px;
-            background-color: white;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .conversion-options h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .option-group {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .option-group label {
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: #555;
-        }
-        
-        .option-group select,
-        .option-group input[type="checkbox"] {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .option-group input[type="checkbox"] {
-            width: auto;
-            align-self: flex-start;
-            margin-top: 5px;
-        }
-        
-        .conversion-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .btn-primary {
-            background-color: #4caf50;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background-color: #f1f1f1;
-            color: #333;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #e0e0e0;
-        }
-        
-        /* 预览和结果区域 */
-        .preview-results {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-        
-        /* 3D预览 */
-        .preview-panel {
-            flex: 1;
-            padding: 20px;
-            background-color: #f9f9f9;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .preview-panel h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-        
-        .preview-container {
-            flex: 1;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        #preview-canvas {
-            width: 100%;
-            height: 100%;
-            background-color: #f0f0f0;
-        }
-        
-        /* GLTF 预览 */
-        #gltf-preview-canvas {
-            width: 100%;
-            height: 100%;
-            background-color: #e8f4f8;
-        }
-        
-        #gltf-preview-container {
-            position: relative;
-        }
-        
-        #gltf-loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-            background: rgba(255,255,255,0.9);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        /* 动画控制 */
-        #animation-controls {
-            padding: 12px;
-            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-            border-top: 1px solid #dee2e6;
-        }
-        
-        #animation-controls button {
-            transition: all 0.2s ease;
-        }
-        
-        #animation-controls button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        #anim-selector {
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            background: white;
-        }
-        
-        #anim-info {
-            font-size: 11px;
-            color: #6c757d;
-        }
-        
-        /* 结果信息 */
-        .results-panel {
-            width: 300px;
-            padding: 20px;
-            background-color: white;
-            border-left: 1px solid #ddd;
-            overflow-y: auto;
-        }
-        
-        .results-panel h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-        
-        .result-info {
-            margin-bottom: 20px;
-        }
-        
-        .info-item {
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        
-        .info-label {
-            font-weight: bold;
-            color: #555;
-        }
-        
-        .download-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        
-        .download-button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: #2196f3;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            transition: all 0.2s ease;
-        }
-        
-        .download-button:hover {
-            background-color: #1976d2;
-            transform: translateY(-2px);
-        }
-        
-        .download-button:disabled {
-            background-color: #bdbdbd;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        /* 状态消息 */
-        .status-message {
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .status-success {
-            background-color: #e8f5e8;
-            color: #2e7d32;
-            border: 1px solid #c8e6c9;
-        }
-        
-        .status-error {
-            background-color: #ffebee;
-            color: #c62828;
-            border: 1px solid #ffcdd2;
-        }
-        
-        .status-info {
-            background-color: #e3f2fd;
-            color: #1565c0;
-            border: 1px solid #bbdefb;
-        }
-        
-        /* 加载动画 */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(0,0,0,0.1);
-            border-radius: 50%;
-            border-top-color: #2196f3;
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .exporter-container {
-                flex-direction: column;
-            }
-            
-            .model-selection {
-                width: 100%;
-                max-height: 300px;
-            }
-            
-            .preview-results {
-                flex-direction: column;
-            }
-            
-            .results-panel {
-                width: 100%;
-                max-height: 300px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="exporter.css">
 </head>
 <body>
     <div class="exporter-container">
@@ -437,8 +77,6 @@
                 </div>
                 <div class="conversion-buttons">
                     <button class="btn btn-primary" id="convert-btn">开始转换</button>
-                    <button class="btn btn-secondary" id="preview-btn">预览模型</button>
-                    <button class="btn btn-secondary" id="clear-btn">清空</button>
                 </div>
             </div>
             
@@ -1192,12 +830,6 @@
             // 转换按钮
             document.getElementById('convert-btn').addEventListener('click', startConversion);
             
-            // 预览按钮
-            document.getElementById('preview-btn').addEventListener('click', previewModel);
-            
-            // 清空按钮
-            document.getElementById('clear-btn').addEventListener('click', clearAll);
-            
             // 窗口大小变化
             window.addEventListener('resize', onWindowResize);
         }
@@ -1218,595 +850,6 @@
                 gltfCamera.updateProjectionMatrix();
                 gltfRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
             }
-        }
-        
-        // 预览模型
-        function previewModel() {
-            if (!selectedModel) {
-                showStatus('请先选择一个模型', 'error');
-                return;
-            }
-            
-            showStatus('正在加载模型...', 'info', true);
-            
-            // 清空之前的模型
-            if (modelMesh) {
-                scene.remove(modelMesh);
-                modelMesh = null;
-            }
-            
-            // 使用war3-model库加载模型
-            fetch(selectedModel.path)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('模型文件加载失败');
-                    }
-                    
-                    // 添加进度显示
-                    const contentLength = response.headers.get('content-length');
-                    const total = parseInt(contentLength, 10);
-                    let loaded = 0;
-                    
-                    const reader = response.body.getReader();
-                    const chunks = [];
-                    
-                    return new Promise((resolve, reject) => {
-                        function read() {
-                            reader.read().then(({ done, value }) => {
-                                if (done) {
-                                    // 在浏览器环境中使用正确的方法处理二进制数据
-                                    const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-                                    const result = new Uint8Array(totalLength);
-                                    let offset = 0;
-                                    for (const chunk of chunks) {
-                                        result.set(chunk, offset);
-                                        offset += chunk.length;
-                                    }
-                                    resolve(result.buffer);
-                                    return;
-                                }
-                                
-                                chunks.push(value);
-                                loaded += value.length;
-                                
-                                // 更新进度
-                                if (total) {
-                                    const progress = Math.round((loaded / total) * 100);
-                                    showStatus(`正在加载模型... ${progress}%`, 'info', true);
-                                }
-                                
-                                read();
-                            }).catch(reject);
-                        }
-                        
-                        read();
-                    });
-                })
-                .then(buffer => {
-                    try {
-                        // 解析MDX模型
-                        // 使用war3-model库的正确导出方式
-                        const model = window.war3model.parseMDX(buffer);
-                        console.log('MDX模型解析成功', model);
-                        
-                        // 立即分析MDX结构并打印
-                        if (model.Nodes) {
-                            const nodesArray = Object.values(model.Nodes);
-                            console.log('=== MDX Nodes 结构 ===');
-                            const nodeHierarchy = [];
-                            nodesArray.forEach(node => {
-                                const name = node.name || node.Name || 'unnamed';
-                                const objId = node.ObjectId !== undefined ? node.ObjectId : node.objectId;
-                                const parentId = node.ParentId !== undefined ? node.ParentId : (node.parentId !== undefined ? node.parentId : -1);
-                                const flags = node.Flags || node.flags || 0;
-                                const isBone = (flags & 256) !== 0;
-                                const hasAnim = !!(node.Translation || node.Rotation || node.translation || node.rotation);
-                                console.log(`${name} (ID:${objId}) parent:${parentId} bone:${isBone} anim:${hasAnim}`);
-                                nodeHierarchy.push({name, objectId: objId, parentId, isBone, hasAnim});
-                            });
-                            
-                            // 找出有动画的节点
-                            const nodesWithAnim = nodesArray.filter(n => 
-                                (n.Translation && n.Translation.Keys && n.Translation.Keys.length > 0) ||
-                                (n.Rotation && n.Rotation.Keys && n.Rotation.Keys.length > 0)
-                            );
-                            
-                            // 发送关键数据到日志
-                            sendLog('mdx_structure', 'MDX模型结构分析', {
-                                totalNodes: nodesArray.length,
-                                boneCount: nodesArray.filter(n => (n.Flags & 256) !== 0).length,
-                                animatedNodes: nodesWithAnim.map(n => ({
-                                    name: n.name || n.Name,
-                                    objectId: n.ObjectId || n.objectId,
-                                    parentId: n.ParentId || n.parentId,
-                                    hasTranslation: !!(n.Translation && n.Translation.Keys),
-                                    hasRotation: !!(n.Rotation && n.Rotation.Keys)
-                                })),
-                                hierarchy: nodeHierarchy.slice(0, 10) // 只发送前10个节点
-                            });
-                        }
-                        
-                        // 声明变量
-                        let bonesData = [];
-                        let animationsData = [];
-                        let materialsData = [];
-                        let texturesData = [];
-                        
-
-                        
-                        if (model.Bones) {
-                            bonesData = model.Bones;
-                        } else if (model.bones) {
-                            bonesData = model.bones;
-                        } else if (model.Nodes) {
-                            // 从Nodes中提取骨骼 - 关键修复：提取所有有动画的节点，而不仅限于有骨骼标志的节点
-                            const nodes = Object.values(model.Nodes);
-                            // 优先使用有动画的节点（新的骨骼系统如 BONE ROOT）
-                            const animatedNodes = nodes.filter(node => 
-                                (node.Translation && node.Translation.Keys && node.Translation.Keys.length > 0) ||
-                                (node.Rotation && node.Rotation.Keys && node.Rotation.Keys.length > 0)
-                            );
-                            if (animatedNodes.length > 0) {
-                                bonesData = animatedNodes;
-                            } else {
-                                // 回退到旧的骨骼检测方式
-                                bonesData = nodes.filter(node => node.Flags & 256);
-                            }
-                        }
-                        
-                        const boneNamesList = bonesData.map((b, i) => ({index: i, name: b.name || b.Name || 'unnamed', objectId: b.ObjectId || b.objectId, parent: b.Parent || b.parent}));
-                        
-                        // 研究 MDX Nodes 层级结构和动画绑定
-                        if (model.Nodes) {
-                            const nodesArray = Object.values(model.Nodes);
-                            
-                            // 打印所有节点的层级关系
-                            console.log('=== MDX Nodes 层级结构 ===');
-                            const nodeHierarchy = [];
-                            nodesArray.forEach(node => {
-                                const name = node.name || node.Name || 'unnamed';
-                                const objId = node.ObjectId !== undefined ? node.ObjectId : node.objectId;
-                                const parentId = node.ParentId !== undefined ? node.ParentId : (node.parentId !== undefined ? node.parentId : -1);
-                                const flags = node.Flags || node.flags || 0;
-                                const isBone = (flags & 256) !== 0;
-                                const hasAnim = !!(node.Translation || node.Rotation || node.translation || node.rotation);
-                                
-                                const parentNode = parentId >= 0 ? nodesArray.find(n => {
-                                    const nid = n.ObjectId !== undefined ? n.ObjectId : n.objectId;
-                                    return nid === parentId;
-                                }) : null;
-                                const parentName = parentNode ? (parentNode.name || parentNode.Name || `ID:${parentId}`) : 'root';
-                                
-                                console.log(`${name} (ID:${objId}) -> parent: ${parentName}, bone:${isBone}, anim:${hasAnim}`);
-                                nodeHierarchy.push({name, objectId: objId, parentId, parentName, isBone, hasAnim});
-                            });
-                            
-                            // 将MDX结构保存到全局变量以便查看
-                            window.mdxHierarchy = nodeHierarchy;
-                            console.log('MDX结构已保存到 window.mdxHierarchy');
-                            
-                            // 关键修复：从所有有动画的节点提取动画，而不仅限于bonesData
-                            const animatedNodes = nodesArray.filter(n => 
-                                (n.Translation && n.Translation.Keys && n.Translation.Keys.length > 0) ||
-                                (n.Rotation && n.Rotation.Keys && n.Rotation.Keys.length > 0) ||
-                                (n.translation && n.translation.Keys && n.translation.Keys.length > 0) ||
-                                (n.rotation && n.rotation.Keys && n.rotation.Keys.length > 0)
-                            );
-                            
-                            if (animatedNodes.length > 0) {
-                                console.log(`发现 ${animatedNodes.length} 个有动画的节点，将用于动画提取`);
-                                // 将 animatedNodes 保存到全局，供 convertAnimationsToThreeJS 使用
-                                window.animatedNodesForExport = animatedNodes;
-                                
-                                // 详细分析每个有动画的节点的关键帧数据
-                                const keyframeAnalysis = [];
-                                animatedNodes.forEach(node => {
-                                    const name = node.name || node.Name || 'unnamed';
-                                    const objId = node.ObjectId || node.objectId;
-                                    const trans = node.Translation || node.translation;
-                                    const rot = node.Rotation || node.rotation;
-                                    
-                                    const nodeAnalysis = {
-                                        name,
-                                        objectId: objId,
-                                        translation: null,
-                                        rotation: null
-                                    };
-                                    
-                                    if (trans && trans.Keys && trans.Keys.length > 0) {
-                                        nodeAnalysis.translation = {
-                                            keyCount: trans.Keys.length,
-                                            firstKey: { frame: trans.Keys[0].Frame, value: trans.Keys[0].Value },
-                                            lastKey: { frame: trans.Keys[trans.Keys.length - 1].Frame, value: trans.Keys[trans.Keys.length - 1].Value }
-                                        };
-                                    }
-                                    
-                                    if (rot && rot.Keys && rot.Keys.length > 0) {
-                                        nodeAnalysis.rotation = {
-                                            keyCount: rot.Keys.length,
-                                            firstKey: { frame: rot.Keys[0].Frame, value: rot.Keys[0].Value },
-                                            lastKey: { frame: rot.Keys[rot.Keys.length - 1].Frame, value: rot.Keys[rot.Keys.length - 1].Value }
-                                        };
-                                    }
-                                    
-                                    keyframeAnalysis.push(nodeAnalysis);
-                                });
-                                
-                                // 发送关键帧分析到日志
-                                sendLog('keyframe_analysis', '关键帧数据分析', {
-                                    animatedNodeCount: animatedNodes.length,
-                                    nodes: keyframeAnalysis.slice(0, 5) // 只发送前5个节点的详细数据
-                                });
-                            }
-                        }
-                        
-
-                        
-                        if (model.Materials) {
-                            materialsData = model.Materials;
-                        } else if (model.materials) {
-                            materialsData = model.materials;
-                        }
-                        
-                        if (model.Textures) {
-                            texturesData = model.Textures;
-                        } else if (model.textures) {
-                            texturesData = model.textures;
-                        }
-                        
-
-                        
-                        if (model.Animations) {
-                            animationsData = model.Animations;
-                        } else if (model.animations) {
-                            animationsData = model.animations;
-                        } else if (model.Sequences) {
-                            animationsData = model.Sequences;
-                        } else if (model.Sequence) {
-                            animationsData = [model.Sequence];
-                        }
-                        
-                        // 提取骨骼数据
-                        // 关键修复：提取所有有动画的节点作为骨骼，而不仅限于有骨骼标志的节点
-                        if (model.Bones) {
-                            bonesData = model.Bones;
-                        } else if (model.bones) {
-                            bonesData = model.bones;
-                        } else if (model.Nodes) {
-                            const nodes = Object.values(model.Nodes);
-                            // 优先使用有动画的节点（新的骨骼系统如 BONE ROOT）
-                            const animatedNodes = nodes.filter(node => 
-                                (node.Translation && node.Translation.Keys && node.Translation.Keys.length > 0) ||
-                                (node.Rotation && node.Rotation.Keys && node.Rotation.Keys.length > 0)
-                            );
-                            if (animatedNodes.length > 0) {
-                                bonesData = animatedNodes;
-                            } else {
-                                bonesData = nodes.filter(node => node.Flags & 256);
-                            }
-                        }
-                        
-                        // 提取骨骼数据
-                        
-                        
-                        // 更新模型信息（根据实际数据结构调整）
-                        let verticesCount = 0;
-                        let facesCount = 0;
-                        let bonesCount = 0;
-                        let materialsCount = 0;
-                        
-                        // 检查不同可能的数据结构
-                        if (model.vertices) {
-                            verticesCount = model.vertices.length;
-                        } else if (model.Geosets && model.Geosets.length > 0) {
-                            // 尝试从Geosets中获取顶点数
-                            for (const geoset of model.Geosets) {
-                                if (geoset.Vertices) {
-                                    verticesCount += geoset.Vertices.length / 3; // 假设每个顶点有3个坐标
-                                }
-                                if (geoset.Faces) {
-                                    facesCount += geoset.Faces.length / 3; // 假设每个面有3个顶点
-                                }
-                            }
-                        }
-                        
-                        if (model.faces) {
-                            facesCount = model.faces.length;
-                        }
-                        
-                        if (model.bones) {
-                            bonesCount = model.bones.length;
-                        } else if (model.Bones) {
-                            bonesCount = model.Bones.length;
-                        } else if (model.Nodes) {
-                            // 尝试从Nodes中获取骨骼数
-                            bonesCount = Object.values(model.Nodes).filter(node => node.Flags & 256).length; // 256是Bone类型的标志
-                        }
-                        
-                        if (model.materials) {
-                            materialsCount = model.materials.length;
-                        } else if (model.Materials) {
-                            materialsCount = model.Materials.length;
-                        }
-                        
-                        document.getElementById('model-vertices').textContent = verticesCount;
-                        document.getElementById('model-faces').textContent = facesCount;
-                        document.getElementById('model-bones').textContent = bonesCount;
-                        document.getElementById('model-materials').textContent = materialsCount;
-                        
-                        // 根据MDX模型数据创建真实的几何体
-                        let geometry, material;
-                        let hasGeometryData = false;
-                        
-                        // 尝试处理不同可能的数据结构
-                        if (model.vertices && model.faces) {
-                            // 小写属性名结构
-                            hasGeometryData = true;
-                            // 创建BufferGeometry
-                            geometry = new THREE.BufferGeometry();
-                            
-                            // 处理顶点数据
-                            const vertices = [];
-                            for (let i = 0; i < model.vertices.length; i += 3) {
-                                vertices.push(model.vertices[i], model.vertices[i + 1], model.vertices[i + 2]);
-                            }
-                            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-                            
-                            // 处理面数据
-                            const indices = [];
-                            for (let i = 0; i < model.faces.length; i += 3) {
-                                indices.push(model.faces[i], model.faces[i + 1], model.faces[i + 2]);
-                            }
-                            geometry.setIndex(indices);
-                            
-                            // 计算法线
-                            geometry.computeVertexNormals();
-                        } else if (model.Geosets && model.Geosets.length > 0) {
-                            // 大写属性名结构（Geosets）
-                            hasGeometryData = true;
-                            // 创建BufferGeometry
-                            geometry = new THREE.BufferGeometry();
-                            
-                            // 处理顶点数据（合并所有Geosets的顶点）
-                            const vertices = [];
-                            const indices = [];
-                            const uvs = [];
-                            let vertexOffset = 0;
-                            
-                            for (const geoset of model.Geosets) {
-                                if (geoset.Vertices) {
-                                    // 添加顶点
-                                    for (let i = 0; i < geoset.Vertices.length; i += 3) {
-                                        vertices.push(geoset.Vertices[i], geoset.Vertices[i + 1], geoset.Vertices[i + 2]);
-                                    }
-                                    
-                                    // 添加面（需要调整索引）
-                                    if (geoset.Faces) {
-                                        for (let i = 0; i < geoset.Faces.length; i += 3) {
-                                            indices.push(
-                                                geoset.Faces[i] + vertexOffset,
-                                                geoset.Faces[i + 1] + vertexOffset,
-                                                geoset.Faces[i + 2] + vertexOffset
-                                            );
-                                        }
-                                    }
-                                    
-                                    // 添加UV坐标（如果有）
-                                    // 尝试多种可能的UV数据属性名
-                                    let uvData = null;
-                                    let uvSource = '';
-                                    
-                                    // 检查各种可能的UV数据源（按优先级排序）
-                                    if (geoset.uvSets && geoset.uvSets.length > 0) {
-                                        // 标准MDLX解析器格式 - 第一个UV集
-                                        uvData = geoset.uvSets[0];
-                                        uvSource = 'uvSets[0]';
-                                    } else if (geoset.UVSets && geoset.UVSets.length > 0) {
-                                        // 大写格式
-                                        uvData = geoset.UVSets[0];
-                                        uvSource = 'UVSets[0]';
-                                    } else if (geoset.tVertices && geoset.tVertices.length > 0) {
-                                        // 小写tVertices格式
-                                        uvData = geoset.tVertices[0];
-                                        uvSource = 'tVertices[0]';
-                                    } else if (geoset.TVertices && geoset.TVertices.length > 0) {
-                                        // 大写TVertices格式
-                                        uvData = geoset.TVertices[0];
-                                        uvSource = 'TVertices[0]';
-                                    } else if (geoset.UVs) {
-                                        // 直接的UVs属性
-                                        uvData = geoset.UVs;
-                                        uvSource = 'UVs';
-                                    } else if (geoset.uv) {
-                                        // 小写uv属性
-                                        uvData = geoset.uv;
-                                        uvSource = 'uv';
-                                    } else if (geoset.texCoords) {
-                                        // texCoords属性
-                                        uvData = geoset.texCoords;
-                                        uvSource = 'texCoords';
-                                    }
-                                    
-                                    if (uvData && uvData.length > 0) {
-                                        for (let i = 0; i < uvData.length; i += 2) {
-                                            // War3纹理需要翻转Y轴
-                                            const u = uvData[i];
-                                            const v = 1.0 - uvData[i + 1];
-                                            uvs.push(u, v);
-                                        }
-                                    } else {
-                                        // 如果没有UV坐标，生成默认UV
-                                        const vertexCount = geoset.Vertices.length / 3;
-                                        for (let i = 0; i < vertexCount; i++) {
-                                            // 生成简单的平面UV
-                                            const u = (i % 16) / 15;
-                                            const v = Math.floor(i / 16) / 15;
-                                            uvs.push(u, v);
-                                        }
-                                    }
-                                    
-                                    // 更新顶点偏移
-                                    vertexOffset += geoset.Vertices.length / 3;
-                                }
-                            }
-                            
-                            // 设置顶点和面数据
-                            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-                            geometry.setIndex(indices);
-                            
-                            // 添加UV坐标
-                            if (uvs.length > 0) {
-                                geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-                            } else {
-                                // 生成默认UV
-                                const defaultUvs = [];
-                                const vertexCount = vertices.length / 3;
-                                for (let i = 0; i < vertexCount; i++) {
-                                    const u = (i % 16) / 15;
-                                    const v = Math.floor(i / 16) / 15;
-                                    defaultUvs.push(u, v);
-                                }
-                                geometry.setAttribute('uv', new THREE.Float32BufferAttribute(defaultUvs, 2));
-                            }
-                            
-                            // 计算法线
-                            geometry.computeVertexNormals();
-                        }
-                        
-                        // 创建材质
-                        if (hasGeometryData) {
-                            // 尝试创建带纹理的材质
-                            if (materialsData.length > 0 && texturesData.length > 0) {
-                                // 处理所有纹理路径
-                                let texturePaths = [];
-                                texturesData.forEach((texture, index) => {
-                                    let texturePath = '';
-                                    
-                                    // 提取纹理路径
-                                    if (texture.FileName) {
-                                        texturePath = texture.FileName;
-                                    } else if (texture.fileName) {
-                                        texturePath = texture.fileName;
-                                    }
-                                    
-                                    if (texturePath) {
-                                        // 构建纹理的完整路径
-                                        const modelDir = selectedModel.path.substring(0, selectedModel.path.lastIndexOf('/'));
-                                        
-                                        // 处理不同的路径格式
-                                        let fullTexturePath = '';
-                                        if (texturePath.startsWith('..')) {
-                                            // 相对路径
-                                            fullTexturePath = texturePath;
-                                        } else if (texturePath.includes('/')) {
-                                            // 绝对路径或包含目录的路径
-                                            fullTexturePath = modelDir + '/' + texturePath;
-                                        } else {
-                                            // 只文件名
-                                            // 尝试多种可能的路径
-                                            fullTexturePath = modelDir + '/' + texturePath;
-                                        }
-                                        
-                                        texturePaths.push(fullTexturePath);
-                                        
-                                        // 添加额外的路径尝试
-                                        const normalizedTexturePath = texturePath.replace(/\\/g, '/');
-                                        const fileName = normalizedTexturePath.split('/').pop();
-                                        if (fileName) {
-                                            // 同目录下的文件
-                                            const sameDirPath = modelDir + '/' + fileName;
-                                            if (!texturePaths.includes(sameDirPath)) {
-                                                texturePaths.push(sameDirPath);
-                                            }
-                                        }
-                                    }
-                                });
-                                
-                                // 尝试加载第一个纹理
-                                if (texturePaths.length > 0) {
-                                    const firstTexturePath = texturePaths[0];
-                                
-                                    // 创建纹理加载器
-                                    const textureLoader = new THREE.TextureLoader();
-                                
-                                    // 尝试加载纹理
-                                    textureLoader.load(
-                                        firstTexturePath,
-                                        (texture) => {
-                                            // 创建带纹理的材质
-                                            material = new THREE.MeshStandardMaterial({ 
-                                                map: texture,
-                                                wireframe: false,
-                                                side: THREE.DoubleSide
-                                            });
-                                            
-                                            // 更新模型材质
-                                            if (modelMesh) {
-                                                modelMesh.material = material;
-                                            }
-                                        },
-                                        undefined,
-                                        (error) => {
-                                            console.error('纹理加载失败:', error);
-                                            // 如果纹理加载失败，使用默认材质
-                                            material = new THREE.MeshStandardMaterial({ 
-                                                color: 0x2196f3,
-                                                wireframe: false,
-                                                side: THREE.DoubleSide
-                                            });
-                                        }
-                                    );
-                                }
-                            }
-                            
-                            // 如果材质未创建（纹理加载异步），使用默认材质
-                            if (!material) {
-                                material = new THREE.MeshStandardMaterial({ 
-                                    color: 0x2196f3,
-                                    wireframe: false,
-                                    side: THREE.DoubleSide
-                                });
-                            }
-                        } else {
-                            // 如果没有模型数据，使用立方体作为占位符
-                            geometry = new THREE.BoxGeometry(1, 1, 1);
-                            material = new THREE.MeshStandardMaterial({ 
-                                color: 0x2196f3,
-                                wireframe: false 
-                            });
-                        }
-                        
-                        modelMesh = new THREE.Mesh(geometry, material);
-                        scene.add(modelMesh);
-                        
-                        // 添加鼠标滚轮缩放功能
-                        const previewContainer = document.querySelector('.preview-container');
-                        if (previewContainer) {
-                            previewContainer.addEventListener('wheel', (event) => {
-                                event.preventDefault();
-                                
-                                // 计算缩放因子
-                                const scaleFactor = event.deltaY > 0 ? 0.9 : 1.1;
-                                
-                                // 限制缩放范围
-                                const currentScale = modelMesh.scale.x;
-                                const newScale = Math.max(0.1, Math.min(10, currentScale * scaleFactor));
-                                
-                                // 应用缩放
-                                modelMesh.scale.set(newScale, newScale, newScale);
-                            });
-                        }
-                        
-                        showStatus('模型预览成功', 'success');
-                    } catch (error) {
-                        console.error('模型解析错误:', error);
-                        showStatus(`模型解析失败: ${error.message}`, 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('加载错误:', error);
-                    showStatus(`加载失败: ${error.message}`, 'error');
-                });
         }
         
         // 开始转换
@@ -1843,6 +886,7 @@
                         // 解析MDX模型
                         // 使用war3-model库的正确导出方式
                         const model = window.war3model.parseMDX(buffer);
+                        console.log('模型解析结果:---------》', model);
                         
                         // 添加详细的调试信息
                         
@@ -1915,15 +959,15 @@
                         // 提取动画数据并转换为Three.js格式
                         let animations = [];
                         
-                        if (model.Animations) {
-                            animationsData = model.Animations;
-                        } else if (model.animations) {
-                            animationsData = model.animations;
-                        } else if (model.Sequences) {
+                        // if (model.Animations) {
+                        //     animationsData = model.Animations;
+                        // } else if (model.animations) {
+                        //     animationsData = model.animations;
+                        // } else if (model.Sequences) {
                             animationsData = model.Sequences;
-                        } else if (model.Sequence) {
-                            animationsData = [model.Sequence];
-                        }
+                        // } else if (model.Sequence) {
+                        //     animationsData = [model.Sequence];
+                        // }
                         
                         // 提取骨骼数据
                         if (model.Bones) {
@@ -2020,80 +1064,127 @@
                         function parseMdxAnimation(mdxAnim, startFrame, endFrame, fps, valueSize) {
                             const times = [];
                             const values = [];
+                            const inTans = [];  // Hermite 插值用
+                            const outTans = []; // Hermite 插值用
                             
                             if (!mdxAnim) {
                                 return { times, values, interpolationType: 0 };
                             }
                             
                             // 获取插值类型 (0=None, 1=Linear, 2=Hermite, 3=Bezier)
-                            const lineType = mdxAnim.LineType !== undefined ? mdxAnim.LineType : 
-                                             mdxAnim.lineType !== undefined ? mdxAnim.lineType : 1;
+                            // 注意：MDX LineType: 0=None, 1=Linear, 2=Hermite, 3=Bezier
+                            const lineType = mdxAnim.LineType !== undefined ? mdxAnim.LineType :
+                                             mdxAnim.lineType !== undefined ? mdxAnim.lineType : 0; // 默认为 None (Step)
                             
                             // ═══════════════════════════════════════════════════════════
-                            // 处理新格式: Keys 数组
+                            // 处理新格式: Keys 数组 (这是主要格式)
                             // ═══════════════════════════════════════════════════════════
-                            if (mdxAnim.Keys && Array.isArray(mdxAnim.Keys) && mdxAnim.Keys.length > 0) {
-                                const totalKeys = mdxAnim.Keys.length;
-                                const firstKeyFrame = mdxAnim.Keys[0].Frame;
-                                const lastKeyFrame = mdxAnim.Keys[totalKeys - 1].Frame;
-                                let keysInRange = 0;
+                            if (mdxAnim.Keys && Array.isArray(mdxAnim.Keys)) {
+                                const keys = mdxAnim.Keys;
+                                if (keys.length === 0) return { times, values, interpolationType: 0 };
+
+                                // 找到范围内的关键帧
+                                // 逻辑优化：
+                                // 1. 找到 startFrame 之前的最后一个关键帧 (preKey)
+                                // 2. 找到 endFrame 之后的第一个关键帧 (postKey)
+                                // 3. 收集 [startFrame, endFrame] 之间的所有关键帧
+                                // 这样可以确保动画首尾衔接正确
                                 
-                                // 检查关键帧时间是否在动画序列范围内
-                                const hasKeysInRange = mdxAnim.Keys.some(key => key.Frame >= startFrame && key.Frame <= endFrame);
+                                let validKeys = [];
                                 
-                                // 如果没有关键帧在范围内，但关键帧时间在合理范围内，使用所有关键帧
-                                // 这种情况发生在 War3 模型的关键帧时间是全局时间，但动画序列的 Interval 不匹配
-                                if (!hasKeysInRange && firstKeyFrame >= 0 && lastKeyFrame <= 200000) {
+                                // 简单的遍历筛选
+                                for (let i = 0; i < keys.length; i++) {
+                                    const key = keys[i];
+                                    const frame = key.Frame;
                                     
-                                    // 使用所有关键帧，时间相对于关键帧的最小时间
-                                    const baseFrame = firstKeyFrame;
-                                    for (const key of mdxAnim.Keys) {
-                                        const frame = key.Frame;
-                                        const time = (frame - baseFrame) / fps;
-                                        times.push(time);
-                                        
-                                        // 提取 Vector 值 (x,y,z 或 x,y,z,w)
-                                        const vec = key.Vector;
-                                        if (vec && typeof vec === 'object') {
-                                            const vecValues = [];
-                                            for (let i = 0; i < valueSize; i++) {
-                                                vecValues.push(vec[i] !== undefined ? vec[i] : 0);
-                                            }
-                                            values.push(...vecValues);
-                                        }
-                                    }
-                                } else {
-                                    // 正常处理：只使用在动画序列范围内的关键帧
-                                    for (const key of mdxAnim.Keys) {
-                                        const frame = key.Frame;
-                                        
-                                        // 过滤在动画范围内的关键帧
-                                        if (frame >= startFrame && frame <= endFrame) {
-                                            keysInRange++;
-                                            const time = (frame - startFrame) / fps;
-                                            times.push(time);
-                                            
-                                            // 提取 Vector 值 (x,y,z 或 x,y,z,w)
-                                            const vec = key.Vector;
-                                            if (vec && typeof vec === 'object') {
-                                                // Vector 格式: {"0": x, "1": y, "2": z, "3": w}
-                                                const vecValues = [];
-                                                for (let i = 0; i < valueSize; i++) {
-                                                    vecValues.push(vec[i] !== undefined ? vec[i] : 0);
-                                                }
-                                                values.push(...vecValues);
-                                            }
-                                        }
-                                    }
-                                    
-                                    if (times.length === 0 && totalKeys > 0) {
+                                    // 只要在范围内
+                                    if (frame >= startFrame && frame <= endFrame) {
+                                        validKeys.push(key);
                                     }
                                 }
                                 
+                                // 如果范围内没有关键帧，但动画是循环的，可能需要取最近的关键帧值
+                                // 这里简化处理：如果没有关键帧，就不输出动画
+                                if (validKeys.length === 0) {
+                                     // 尝试找最近的一个关键帧作为静态值
+                                     // 比如 Stand 动画在 333-1833，但只有 frame 0 的关键帧
+                                     // 应该应用 frame 0 的值
+                                     if (keys.length > 0) {
+                                        // 找 startFrame 之前的最近一个
+                                        let nearestKey = keys[0];
+                                        for(let k of keys) {
+                                            if (k.Frame <= startFrame) nearestKey = k;
+                                            else break;
+                                        }
+                                        
+                                        // 构造一个静态帧
+                                        // start frame = 0s
+                                        times.push(0);
+                                        const vec = nearestKey.Vector || {};
+                                        for (let i = 0; i < valueSize; i++) values.push(vec[i] || 0);
+                                        
+                                        // end frame = duration
+                                        times.push((endFrame - startFrame) / fps);
+                                        for (let i = 0; i < valueSize; i++) values.push(vec[i] || 0);
+                                        
+                                        return { times, values, interpolationType: 1 }; // Linear
+                                     }
+                                     return { times, values, interpolationType: 0 };
+                                }
+                                
+                                // 提取数据
+                                for (const key of validKeys) {
+                                    const time = (key.Frame - startFrame) / fps;
+                                    times.push(time);
+                                    
+                                    // Vector
+                                    const vec = key.Vector || {};
+                                    for (let i = 0; i < valueSize; i++) values.push(vec[i] !== undefined ? vec[i] : 0);
+                                    
+                                    // InTan / OutTan (Hermite)
+                                    if (lineType === 2) {
+                                        const inTan = key.InTan || {};
+                                        const outTan = key.OutTan || {};
+                                        const inTanVal = [];
+                                        const outTanVal = [];
+                                        for (let i = 0; i < valueSize; i++) {
+                                            inTanVal.push(inTan[i] || 0);
+                                            outTanVal.push(outTan[i] || 0);
+                                        }
+                                        inTans.push(inTanVal);
+                                        outTans.push(outTanVal);
+                                    }
+                                }
+                                
+                                // 确保首尾帧存在 (对于循环动画很重要)
+                                // 如果第一个关键帧不在 0s，补一个
+                                if (times[0] > 0.001) {
+                                    // 复制第一个关键帧的值到 0s
+                                    times.unshift(0);
+                                    const firstVals = values.slice(0, valueSize);
+                                    values.unshift(...firstVals);
+                                    if (lineType === 2) {
+                                        inTans.unshift(inTans[0]);
+                                        outTans.unshift(outTans[0]);
+                                    }
+                                }
+                                
+                                // 如果最后一个关键帧不在 duration，补一个
+                                const duration = (endFrame - startFrame) / fps;
+                                if (times[times.length - 1] < duration - 0.001) {
+                                    times.push(duration);
+                                    const lastVals = values.slice(values.length - valueSize);
+                                    values.push(...lastVals);
+                                    if (lineType === 2) {
+                                        inTans.push(inTans[inTans.length - 1]);
+                                        outTans.push(outTans[outTans.length - 1]);
+                                    }
+                                }
+
                                 // Hermite/Bezier 插值需要采样转换为 Linear
-                                // 因为 GLTF 只支持 Linear 插值
+                                // 因为 GLTF 只支持 Linear, Step, CubicSpline (这里简化转 Linear)
                                 if (lineType === 2 || lineType === 3) {
-                                    return sampleHermiteToLinear(times, values, valueSize, fps);
+                                    return sampleHermiteToLinear(times, values, valueSize, fps, inTans, outTans);
                                 }
                                 
                                 return { times, values, interpolationType: lineType };
@@ -2160,7 +1251,7 @@
                          * Hermite 插值采样为 Linear
                          * GLTF 不支持 Hermite 插值，需要密集采样转换为 Linear
                          */
-                        function sampleHermiteToLinear(times, values, valueSize, fps) {
+                        function sampleHermiteToLinear(times, values, valueSize, fps, inTans, outTans) {
                             if (times.length < 2) {
                                 return { times, values, interpolationType: 1 };
                             }
@@ -2168,24 +1259,46 @@
                             const newTimes = [];
                             const newValues = [];
                             
-                            // 每两个关键帧之间采样 4 个点
-                            const samplesPerSegment = 4;
+                            // 每两个关键帧之间采样 (提高采样密度以获得更平滑的曲线)
+                            const samplesPerSegment = 8;
                             
                             for (let i = 0; i < times.length - 1; i++) {
                                 const t0 = times[i];
                                 const t1 = times[i + 1];
                                 const duration = t1 - t0;
                                 
+                                // 获取切线数据
+                                const p0 = [];
+                                const p1 = [];
+                                const m0 = [];
+                                const m1 = [];
+                                
+                                for (let j = 0; j < valueSize; j++) {
+                                    p0.push(values[i * valueSize + j]);
+                                    p1.push(values[(i + 1) * valueSize + j]);
+                                    // 注意: War3 MDX 的切线是 "InTan" 和 "OutTan"
+                                    // Hermite 插值公式: p(t) = (2t^3 - 3t^2 + 1)p0 + (t^3 - 2t^2 + t)m0 + (-2t^3 + 3t^2)p1 + (t^3 - t^2)m1
+                                    // m0 是这一帧的 OutTan, m1 是下一帧的 InTan
+                                    m0.push(outTans && outTans.length > i ? outTans[i][j] : 0);
+                                    m1.push(inTans && inTans.length > i + 1 ? inTans[i + 1][j] : 0);
+                                }
+                                
                                 for (let s = 0; s < samplesPerSegment; s++) {
-                                    const t = t0 + (duration * s / samplesPerSegment);
-                                    newTimes.push(t);
+                                    const t = s / samplesPerSegment; // 归一化时间 0-1
+                                    const time = t0 + (duration * t);
+                                    newTimes.push(time);
                                     
-                                    // 简单的线性插值 (实际应该用 Hermite 插值公式)
-                                    const alpha = s / samplesPerSegment;
+                                    // Hermite 插值基函数
+                                    const t2 = t * t;
+                                    const t3 = t2 * t;
+                                    const h1 = 2 * t3 - 3 * t2 + 1;
+                                    const h2 = t3 - 2 * t2 + t;
+                                    const h3 = -2 * t3 + 3 * t2;
+                                    const h4 = t3 - t2;
+                                    
                                     for (let j = 0; j < valueSize; j++) {
-                                        const v0 = values[i * valueSize + j];
-                                        const v1 = values[(i + 1) * valueSize + j];
-                                        newValues.push(v0 + (v1 - v0) * alpha);
+                                        const val = h1 * p0[j] + h2 * m0[j] + h3 * p1[j] + h4 * m1[j];
+                                        newValues.push(val);
                                     }
                                 }
                             }
@@ -2220,16 +1333,22 @@
                         function extractBoneAnimations(bone, startFrame, endFrame, fps) {
                             const tracks = [];
                             // 命名优先级必须与 createSkeleton 中完全一致！
-                            let boneName = bone.name || bone.Name || 
-                                          (bone.ObjectId !== undefined ? `Bone_${bone.ObjectId}` : 
-                                           (bone.objectId !== undefined ? `Bone_${bone.objectId}` : `bone_0`));
+                            // 统一使用 ObjectId 作为最可靠的标识符
+                            const objectId = bone.ObjectId !== undefined ? bone.ObjectId : (bone.objectId !== undefined ? bone.objectId : -1);
+                            let boneName = `Bone_${objectId}`; // 默认名称
                             
-                            // War3 MDX 动画修复：将辅助对象的动画重定向到根骨骼
-                            // Object06 等对象的动画应该应用到 gutz00（根骨骼）
-                            const originalName = boneName;
-                            if (boneName === 'Object06' || boneName === 'Object01' || boneName === 'Object02' || boneName === 'Object03') {
-                                boneName = 'gutz00'; // 重定向到根骨骼
-                            }
+                            // 尝试获取更友好的名称，但要确保和 Skeleton 里的名字匹配
+                            // 这里的逻辑必须和 createSkeleton 函数里的命名逻辑保持绝对一致
+                            if (bone.Name) boneName = bone.Name;
+                            else if (bone.name) boneName = bone.name;
+                            
+                            // 无论如何，如果这是 Helper/Bone/Attachment 等节点，我们都按名字来匹配
+                            // 注意：在 createSkeleton 中我们可能给 Bone_${ObjectId} 这样的名字
+                            // 为了保险，我们可以同时尝试两种命名方式，或者确保 createSkeleton 那边也用 Name
+                            // 最佳实践：使用 Name 如果有，否则用 Bone_ID
+                            
+                            // 特殊处理：如果知道根骨骼名字
+                            // MDX数据中，通常会有根骨骼，比如 "Bone_34" 或 "gutz00"
                             
                             // 获取骨骼动画数据
                             const translationAnim = bone.Translation || bone.translation;
@@ -2240,12 +1359,10 @@
                             if (translationAnim) {
                                 const posData = parseMdxAnimation(translationAnim, startFrame, endFrame, fps, 3);
                                 if (posData.times.length > 0 && posData.values.length >= posData.times.length * 3) {
-                                    // 确保值数组长度正确
-                                    const validValues = posData.values.slice(0, posData.times.length * 3);
                                     tracks.push(new THREE.VectorKeyframeTrack(
                                         `${boneName}.position`,
                                         posData.times,
-                                        validValues
+                                        posData.values
                                     ));
                                 }
                             }
@@ -2254,12 +1371,10 @@
                             if (rotationAnim) {
                                 const rotData = parseMdxAnimation(rotationAnim, startFrame, endFrame, fps, 4);
                                 if (rotData.times.length > 0 && rotData.values.length >= rotData.times.length * 4) {
-                                    const validValues = rotData.values.slice(0, rotData.times.length * 4);
-                                    // War3 四元数直接使用
                                     tracks.push(new THREE.QuaternionKeyframeTrack(
                                         `${boneName}.quaternion`,
                                         rotData.times,
-                                        validValues
+                                        rotData.values
                                     ));
                                 }
                             }
@@ -2268,12 +1383,40 @@
                             if (scalingAnim) {
                                 const scaleData = parseMdxAnimation(scalingAnim, startFrame, endFrame, fps, 3);
                                 if (scaleData.times.length > 0 && scaleData.values.length >= scaleData.times.length * 3) {
-                                    const validValues = scaleData.values.slice(0, scaleData.times.length * 3);
                                     tracks.push(new THREE.VectorKeyframeTrack(
                                         `${boneName}.scale`,
                                         scaleData.times,
-                                        validValues
+                                        scaleData.values
                                     ));
+                                }
+                            }
+                            
+                            // 4. 可见性动画 (Visibility -> scale 0/1)
+                            const visibilityAnim = bone.Visibility || bone.visibility;
+                            if (visibilityAnim) {
+                                const visData = parseMdxAnimation(visibilityAnim, startFrame, endFrame, fps, 1);
+                                if (visData.times.length > 0) {
+                                    // 将可见性转换为缩放 (0 = 隐藏 = scale 0, 1 = 显示 = scale 1)
+                                    // 注意：如果已有缩放动画，这里会有冲突。通常可见性控制用于 Attachment/Particle
+                                    // 如果没有缩放动画，我们可以用 scale 模拟可见性
+                                    if (!scalingAnim) {
+                                        const scaleValues = [];
+                                        for (let v of visData.values) {
+                                            // MDX Visibility: 0=隐藏, 1=显示 (或者 >0 显示)
+                                            // 有时是 0/1，有时是 float。通常 0 是不可见。
+                                            // 注意：MDX 中 Visibility 往往是 alpha 通道？不，是显隐。
+                                            // 文档说：Visibility keys, vector[0] = visibility value.
+                                            // 实际 MDX 中，Visibility 往往是 "是否渲染"。
+                                            // 为了 GLTF 兼容，用 scale=0 隐藏
+                                            const s = v > 0.1 ? 1 : 0;
+                                            scaleValues.push(s, s, s);
+                                        }
+                                        tracks.push(new THREE.VectorKeyframeTrack(
+                                            `${boneName}.scale`,
+                                            visData.times,
+                                            scaleValues
+                                        ));
+                                    }
                                 }
                             }
                             
@@ -2296,39 +1439,35 @@
                             const clips = [];
                             const fps = 30; // War3 默认 30fps
                             
+                            // 遍历每个动画序列 (Sequence)
                             sequences.forEach((seq, seqIndex) => {
                                 const seqName = seq.name || seq.Name || `Sequence_${seqIndex}`;
+                                // MDX Interval: [startFrame, endFrame]
                                 const interval = seq.interval || seq.Interval || [0, 100];
                                 const startFrame = interval[0];
                                 const endFrame = interval[1];
                                 const duration = (endFrame - startFrame) / fps;
                                 
-                                
                                 const allTracks = [];
-                                let totalBoneTracksChecked = 0;
                                 
-                                // 为每个骨骼提取动画
+                                // 为每个节点 (Bone/Helper/Attachment/Particle) 提取动画
+                                // 关键点：MDX 动画分散在所有这些节点中，不仅是 bones
                                 bones.forEach((bone, boneIndex) => {
-                                    const boneName = bone.name || bone.Name || `Bone_${boneIndex}`;
-                                    const hasTranslation = !!(bone.Translation || bone.translation);
-                                    const hasRotation = !!(bone.Rotation || bone.rotation);
-                                    const hasScaling = !!(bone.Scaling || bone.scaling);
-                                    
-                                    if (hasTranslation || hasRotation || hasScaling) {
-                                        totalBoneTracksChecked++;
-                                    }
-                                    
+                                    // extractBoneAnimations 内部处理了帧过滤和时间平移
+                                    // 自动将 [startFrame, endFrame] 映射到 [0, duration]
                                     const boneTracks = extractBoneAnimations(bone, startFrame, endFrame, fps);
                                     if (boneTracks.length > 0) {
+                                        allTracks.push(...boneTracks);
                                     }
-                                    allTracks.push(...boneTracks);
                                 });
                                 
-                                
+                                // 如果该序列有对应的动画轨道，创建 AnimationClip
                                 if (allTracks.length > 0) {
                                     const clip = new THREE.AnimationClip(seqName, duration, allTracks);
                                     clips.push(clip);
                                 } else {
+                                    // 即使没有轨道，为了保留动画列表，也可以创建一个空 Clip
+                                    // 或者检查是否有默认姿态需要保持
                                 }
                             });
                             
@@ -2342,7 +1481,7 @@
                         
                         try {
                             if (includeAnimations) {
-                                // 关键修复：使用所有有动画的节点，而不仅限于bonesData
+                                // 关键修复：使用所有有动画的节点，而不仅限于bonesData 
                                 const animatedNodes = window.animatedNodesForExport || bonesData;
                                 animations = convertAnimationsToThreeJS(animationsData, animatedNodes);
                                 // 存储到全局变量，确保异步回调中可以访问
@@ -4348,26 +3487,6 @@
         }
         
         // 清空所有
-        function clearAll() {
-            // 移除选中状态
-            document.querySelectorAll('.model-item').forEach(item => {
-                item.classList.remove('selected');
-            });
-            
-            // 清空选中信息
-            selectedModel = null;
-            document.getElementById('selected-model-name').textContent = '未选择';
-            document.getElementById('selected-model-path').textContent = '-';
-            
-            // 清空结果
-            clearResults();
-            
-            // 清空预览
-            if (modelMesh) {
-                scene.remove(modelMesh);
-                modelMesh = null;
-            }
-        }
         
         // 显示状态消息
         function showStatus(message, type = 'info', showLoading = false) {

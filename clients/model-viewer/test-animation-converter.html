@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDX动画转换器测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MDX动画转换器测试工具</h1>
+        
+        <div class="test-section">
+            <h3>测试新的动画转换器</h3>
+            <button onclick="loadTestData()">加载测试数据</button>
+            <button onclick="testAnimationConverter()">测试动画转换</button>
+            <button onclick="testInterpolation()">测试插值算法</button>
+            <button onclick="compareWithOldConverter()">与旧转换器对比</button>
+            
+            <div id="test-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>动画数据预览</h3>
+            <div id="animation-preview"></div>
+        </div>
+    </div>
+
+    <!-- 引入必要的库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="mdx-animation-converter.js"></script>
+    
+    <script>
+        let testMdxData = null;
+        
+        // 加载测试数据
+        function loadTestData() {
+            fetch('mdx.json')
+                .then(response => response.json())
+                .then(data => {
+                    testMdxData = data;
+                    showResult('success', '测试数据加载成功', {
+                        sequences: data.Sequences ? data.Sequences.length : 0,
+                        bones: data.Bones ? data.Bones.length : 0,
+                        helpers: data.Helpers ? data.Helpers.length : 0,
+                        attachments: data.Attachments ? data.Attachments.length : 0,
+                        particleEmitters: data.ParticleEmitters2 ? data.ParticleEmitters2.length : 0
+                    });
+                })
+                .catch(error => {
+                    showResult('error', '测试数据加载失败', error);
+                });
+        }
+        
+        // 测试动画转换器
+        function testAnimationConverter() {
+            if (!testMdxData) {
+                showResult('error', '请先加载测试数据');
+                return;
+            }
+            
+            try {
+                console.log('开始测试新的动画转换器...');
+                
+                // 创建转换器实例
+                const extractor = new MdxAnimationExtractor(testMdxData);
+                const generator = new GltfAnimationGenerator();
+                
+                showResult('info', '动画提取器创建成功', {
+                    totalNodes: extractor.nodes.length,
+                    sequences: extractor.sequences.length
+                });
+                
+                // 测试每个序列的转换
+                const results = [];
+                extractor.sequences.forEach((sequence, index) => {
+                    try {
+                        console.log(`处理序列 ${index}: ${sequence.Name || 'Unknown'}`);
+                        
+                        const animatedNodes = extractor.getAnimatedNodesForSequence(sequence);
+                        const gltfAnimation = generator.convertAnimation(sequence, animatedNodes, extractor);
+                        
+                        results.push({
+                            sequenceName: sequence.Name || `Sequence_${index}`,
+                            duration: gltfAnimation.duration,
+                            trackCount: gltfAnimation.tracks.length,
+                            animatedNodes: animatedNodes.length,
+                            tracks: gltfAnimation.tracks.map(track => ({
+                                name: track.name,
+                                type: track.type,
+                                keyframeCount: track.times.length
+                            }))
+                        });
+                        
+                        showResult('success', `序列 ${sequence.Name || index} 转换成功`, {
+                            duration: gltfAnimation.duration.toFixed(2) + '秒',
+                            tracks: gltfAnimation.tracks.length,
+                            animatedNodes: animatedNodes.length
+                        });
+                        
+                    } catch (seqError) {
+                        showResult('error', `序列 ${sequence.Name || index} 转换失败`, seqError.message);
+                    }
+                });
+                
+                // 显示总体统计
+                const totalTracks = results.reduce((sum, r) => sum + r.trackCount, 0);
+                const totalKeyframes = results.reduce((sum, r) => 
+                    sum + r.tracks.reduce((tSum, t) => tSum + t.keyframeCount, 0), 0
+                );
+                
+                showResult('info', '转换完成统计', {
+                    totalSequences: results.length,
+                    totalTracks: totalTracks,
+                    totalKeyframes: totalKeyframes,
+                    averageTracksPerSequence: (totalTracks / results.length).toFixed(1)
+                });
+                
+                // 显示详细结果
+                displayAnimationPreview(results);
+                
+            } catch (error) {
+                showResult('error', '动画转换器测试失败', error);
+                console.error('转换器错误:', error);
+            }
+        }
+        
+        // 测试插值算法
+        function testInterpolation() {
+            if (!testMdxData) {
+                showResult('error', '请先加载测试数据');
+                return;
+            }
+            
+            try {
+                const parser = new MdxKeyframeParser();
+                const interpolator = new MdxInterpolationCalculator();
+                
+                // 找到有Hermite插值的数据进行测试
+                const testBone = testMdxData.Helpers && testMdxData.Helpers[0];
+                if (testBone && testBone.Translation && testBone.Translation.Keys) {
+                    const transData = parser.parseKeyframes(testBone.Translation, 333, 1833, 3);
+                    
+                    if (transData && transData.keyframes.length > 1) {
+                        showResult('info', '找到Hermite插值数据', {
+                            originalKeyframes: transData.keyframes.length,
+                            interpolationType: transData.interpolationType
+                        });
+                        
+                        // 测试插值
+                        const interpolated = interpolator.interpolateHermite(transData.keyframes, 3);
+                        
+                        showResult('success', 'Hermite插值计算成功', {
+                            originalKeyframes: transData.keyframes.length,
+                            interpolatedKeyframes: interpolated.length,
+                            samplesPerSegment: interpolator.samplesPerSegment
+                        });
+                        
+                        // 显示插值结果示例
+                        const sampleResults = interpolated.slice(0, 5).map(k => ({
+                            time: k.time.toFixed(3),
+                            values: k.values.map(v => v.toFixed(3))
+                        }));
+                        
+                        showResult('info', '插值结果示例', sampleResults);
+                    } else {
+                        showResult('warning', '未找到适合测试的Hermite插值数据');
+                    }
+                } else {
+                    showResult('warning', '测试数据中没有找到Hermite插值');
+                }
+                
+            } catch (error) {
+                showResult('error', '插值算法测试失败', error);
+            }
+        }
+        
+        // 与旧转换器对比
+        function compareWithOldConverter() {
+            if (!testMdxData) {
+                showResult('error', '请先加载测试数据');
+                return;
+            }
+            
+            showResult('info', '对比功能开发中', '将比较新旧转换器的结果差异');
+            // 这里可以添加与旧转换器的对比逻辑
+        }
+        
+        // 显示动画预览
+        function displayAnimationPreview(results) {
+            const previewDiv = document.getElementById('animation-preview');
+            let html = '<h4>动画序列详情</h4>';
+            
+            results.forEach(result => {
+                html += `
+                    <div style="margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 3px;">
+                        <strong>${result.sequenceName}</strong><br>
+                        持续时间: ${result.duration.toFixed(2)}秒<br>
+                        轨道数: ${result.trackCount}<br>
+                        动画节点: ${result.animatedNodes}<br>
+                        <details>
+                            <summary>轨道详情</summary>
+                            <ul>
+                                ${result.tracks.map(track => 
+                                    `<li>${track.name} (${track.type}): ${track.keyframeCount} 关键帧</li>`
+                                ).join('')}
+                            </ul>
+                        </details>
+                    </div>
+                `;
+            });
+            
+            previewDiv.innerHTML = html;
+        }
+        
+        // 显示结果
+        function showResult(type, message, data = null) {
+            const resultsDiv = document.getElementById('test-results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${type}`;
+            
+            let html = `<strong>${message}</strong>`;
+            if (data) {
+                html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+            
+            resultDiv.innerHTML = html;
+            resultsDiv.appendChild(resultDiv);
+            
+            // 滚动到最新结果
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            showResult('info', 'MDX动画转换器测试工具已加载', {
+                converterVersion: '1.0.0',
+                features: [
+                    '完整的MDX动画数据提取',
+                    'Hermite/Bezier插值支持',
+                    '所有节点类型动画',
+                    '几何体透明度动画',
+                    '粒子系统动画'
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

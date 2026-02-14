@@ -15,10 +15,7 @@
   ],
   "rules": {
     "eol-last": "error",
-    "@typescript-eslint/indent": [
-      "error",
-      2
-    ],
+    "@typescript-eslint/indent": "off",
     "no-tabs": "error",
     "@typescript-eslint/semi": "error",
     "@typescript-eslint/no-extra-semi": 2,

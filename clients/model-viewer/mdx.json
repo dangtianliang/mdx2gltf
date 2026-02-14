@@ -1,0 +1,633 @@
+{
+    "Version": 800,
+    "Info": {
+        "Name": "Archnathid_Range",
+        "MinimumExtent": {
+            "0": -154.51199340820312,
+            "1": -115.25700378417969,
+            "2": -274.34100341796875
+        },
+        "MaximumExtent": {
+            "0": 195.10499572753906,
+            "1": 154.8820037841797,
+            "2": 242.927001953125
+        },
+        "BoundsRadius": 0,
+        "BlendTime": 150,
+        "NumGeosets": 7,
+        "NumGeosetAnims": 7,
+        "NumBones": 34,
+        "NumLights": 0,
+        "NumAttachments": 11,
+        "NumEvents": 11,
+        "NumParticleEmitters": 0,
+        "NumParticleEmitters2": 6,
+        "NumRibbonEmitters": 0
+    },
+    "Sequences": [
+        {
+            "Name": "Stand",
+            "Interval": {
+                "0": 333,
+                "1": 1833
+            },
+            "MoveSpeed": 0,
+            "NonLooping": false,
+            "Rarity": 0,
+            "BoundsRadius": 117.28900146484375,
+            "MinimumExtent": {
+                "0": -76.17610168457031,
+                "1": -74.1364974975586,
+                "2": -6.441559791564941
+            },
+            "MaximumExtent": {
+                "0": 118.93599700927734,
+                "1": 65.90290069580078,
+                "2": 139.2949981689453
+            }
+        },
+        {
+            "Name": "Walk",
+            "Interval": {
+                "0": 2333,
+                "1": 3133
+            },
+            "MoveSpeed": 140,
+            "NonLooping": false,
+            "Rarity": 0,
+            "BoundsRadius": 132.46099853515625,
+            "MinimumExtent": {
+                "0": -89.82499694824219,
+                "1": -75.85669708251953,
+                "2": -17.0757999420166
+            },
+            "MaximumExtent": {
+                "0": 119.04499816894531,
+                "1": 79.60310363769531,
+                "2": 149.75999450683594
+            }
+        },
+        {
+            "Name": "Attack",
+            "Interval": {
+                "0": 3667,
+                "1": 4667
+            },
+            "MoveSpeed": 0,
+            "NonLooping": true,
+            "Rarity": 0,
+            "BoundsRadius": 170.93099975585938,
+            "MinimumExtent": {
+                "0": -134.3459930419922,
+                "1": -89.30039978027344,
+                "2": -24.49690055847168
+            },
+            "MaximumExtent": {
+                "0": 168.1280059814453,
+                "1": 111.7239990234375,
+                "2": 204.19500732421875
+            }
+        },
+        {
+            "Name": "DEATH",
+            "Interval": {
+                "0": 10000,
+                "1": 13000
+            },
+            "MoveSpeed": 0,
+            "NonLooping": true,
+            "Rarity": 0,
+            "BoundsRadius": 160.97799682617188,
+            "MinimumExtent": {
+                "0": -151.59100341796875,
+                "1": -74.6458969116211,
+                "2": -28.838600158691406
+            },
+            "MaximumExtent": {
+                "0": 118.87200164794922,
+                "1": 154.8820037841797,
+                "2": 142.63499450683594
+            }
+        },
+        {
+            "Name": "Spell",
+            "Interval": {
+                "0": 13333,
+                "1": 14400
+            },
+            "MoveSpeed": 0,
+            "NonLooping": true,
+            "Rarity": 0,
+            "BoundsRadius": 206.08200073242188,
+            "MinimumExtent": {
+                "0": -154.51199340820312,
+                "1": -85.93460083007812,
+                "2": -12.676400184631348
+            },
+            "MaximumExtent": {
+                "0": 195.10499572753906,
+                "1": 79.04209899902344,
+                "2": 242.927001953125
+            }
+        },
+        {
+            "Name": "Decay Flesh",
+            "Interval": {
+                "0": 33333,
+                "1": 93333
+            },
+            "MoveSpeed": 0,
+            "NonLooping": true,
+            "Rarity": 0,
+            "BoundsRadius": 119.99500274658203,
+            "MinimumExtent": {
+                "0": -151.1959991455078,
+                "1": -10.461400032043457,
+                "2": -116.66400146484375
+            },
+            "MaximumExtent": {
+                "0": -19.69890022277832,
+                "1": 130.26300048828125,
+                "2": 93.74600219726562
+            }
+        },
+        {
+            "Name": "Decay BONE",
+            "Interval": {
+                "0": 106667,
+                "1": 166667
+            },
+            "MoveSpeed": 0,
+            "NonLooping": true,
+            "Rarity": 0,
+            "BoundsRadius": 70.3479995727539,
+            "MinimumExtent": {
+                "0": -141.5780029296875,
+                "1": -3.51311993598938,
+                "2": -1.5493700504302979
+            },
+            "MaximumExtent": {
+                "0": -24.714099884033203,
+                "1": 122.2030029296875,
+                "2": 20.26460075378418
+            }
+        },
+        {
+            "Name": "Morph",
+            "Interval": {
+                "0": 173333,
+                "1": 174333
+            },
+            "MoveSpeed": 0,
+            "NonLooping": true,
+            "Rarity": 0,
+            "BoundsRadius": 228.80599975585938,
+            "MinimumExtent": {
+                "0": -95.30329895019531,
+                "1": -115.25700378417969,
+                "2": -274.34100341796875
+            },
+            "MaximumExtent": {
+                "0": 118.78399658203125,
+                "1": 124.5780029296875,
+                "2": 134.48399353027344
+            }
+        },
+        {
+            "Name": "Stand Alternate",
+            "Interval": {
+                "0": 175667,
+                "1": 176667
+            },
+            "MoveSpeed": 0,
+            "NonLooping": false,
+            "Rarity": 0,
+            "BoundsRadius": 93.38020324707031,
+            "MinimumExtent": {
+                "0": 3.402820018375656e+38,
+                "1": 3.402820018375656e+38,
+                "2": 3.402820018375656e+38
+            },
+            "MaximumExtent": {
+                "0": -3.402820018375656e+38,
+                "1": -3.402820018375656e+38,
+                "2": -3.402820018375656e+38
+            }
+        },
+        {
+            "Name": "Morph ALTERNATE",
+            "Interval": {
+                "0": 177000,
+                "1": 178000
+            },
+            "MoveSpeed": 0,
+            "NonLooping": true,
+            "Rarity": 0,
+            "BoundsRadius": 196.16400146484375,
+            "MinimumExtent": {
+                "0": -102.8479995727539,
+                "1": -80.77310180664062,
+                "2": -159.28700256347656
+            },
+            "MaximumExtent": {
+                "0": 168.11000061035156,
+                "1": 75.24520111083984,
+                "2": 169.24099731445312
+            }
+        }
+    ],
+    "GlobalSequences": [],
+    "Textures": [
+        {
+            "ReplaceableId": 0,
+            "Image": "units\\Creeps\\Archnathid\\Arachnathid.blp",
+            "Flags": 0
+        }
+    ],
+    "Materials": [
+        {
+            "Layers": [
+                {
+                    "FilterMode": 0,
+                    "Shading": 0,
+                    "TextureID": 0,
+                    "TVertexAnimId": null,
+                    "CoordId": 0,
+                    "Alpha": 1
+                }
+            ],
+            "PriorityPlane": 0,
+            "RenderMode": 0
+        }
+    ],
+    "TextureAnims": [],
+    "Geosets": [
+        {
+            "Vertices": {},
+            "Normals": {},
+            "Faces": {},
+            "VertexGroup": {},
+            "Groups": [
+                [
+                    2
+                ]
+            ],
+            "TotalGroupsCount": 90,
+            "MaterialID": 0,
+            "SelectionGroup": 0,
+            "Unselectable": false,
+            "BoundsRadius": 263.7650146484375,
+            "MinimumExtent": {
+                "0": -154.51199340820312,
+                "1": -115.25700378417969,
+                "2": -271.72698974609375
+            },
+            "MaximumExtent": {
+                "0": 181.54200744628906,
+                "1": 154.8820037841797,
+                "2": 204.19500732421875
+            },
+            "Anims": [
+                {
+                    "BoundsRadius": 110.68800354003906,
+                    "MinimumExtent": {
+                        "0": -76.17610168457031,
+                        "1": -74.1364974975586,
+                        "2": -6.441559791564941
+                    },
+                    "MaximumExtent": {
+                        "0": 116.13300323486328,
+                        "1": 65.90290069580078,
+                        "2": 139.2949981689453
+                    }
+                }
+            ],
+            "TVertices": [
+                {
+                    "0": 0.7722880244255066,
+                    "1": 0.9303079843521118,
+                    "2": 0.7819690108299255,
+                }
+            ]
+        }
+    ],
+    "GeosetAnims": [
+        {
+            "Alpha": {
+                "Keys": [
+                    {
+                        "Frame": 106667,
+                        "Vector": {
+                            "0": 0
+                        }
+                    }
+                ],
+                "LineType": 0,
+                "GlobalSeqId": null
+            },
+            "Flags": 0,
+            "Color": {
+                "0": 1,
+                "1": 1,
+                "2": 1
+            },
+            "GeosetId": 0
+        }
+    ],
+    "Bones": [
+        {
+            "Name": "gutz00",
+            "ObjectId": 0,
+            "Parent": null,
+            "Flags": 256,
+            "GeosetId": 3,
+            "GeosetAnimId": 3,
+            "PivotPoint": {
+                "0": -127.10900115966797,
+                "1": 45.30950164794922,
+                "2": 5.471970081329346
+            }
+        }
+    ],
+    "Helpers": [
+        {
+            "Name": "BONE ROOT",
+            "ObjectId": 34,
+            "Parent": null,
+            "Flags": 0,
+            "Translation": {
+                "Keys": [
+                    {
+                        "Frame": 333,
+                        "Vector": {
+                            "0": 0,
+                            "1": 0,
+                            "2": 0
+                        },
+                        "InTan": {
+                            "0": 0,
+                            "1": 0,
+                            "2": 0
+                        },
+                        "OutTan": {
+                            "0": 0,
+                            "1": 6.744679927825928,
+                            "2": -10.597000122070312
+                        }
+                    }
+                ],
+                "LineType": 2,
+                "GlobalSeqId": null
+            },
+            "Rotation": {
+                "Keys": [
+                    {
+                        "Frame": 333,
+                        "Vector": {
+                            "0": 0,
+                            "1": 0,
+                            "2": 0,
+                            "3": 1
+                        },
+                        "InTan": {
+                            "0": 0,
+                            "1": 0,
+                            "2": 0,
+                            "3": 1
+                        },
+                        "OutTan": {
+                            "0": 0,
+                            "1": 0,
+                            "2": 0,
+                            "3": 1
+                        }
+                    }
+                ],
+                "LineType": 2,
+                "GlobalSeqId": null
+            },
+            "Scaling": {
+                "Keys": [
+                    {
+                        "Frame": 177000,
+                        "Vector": {
+                            "0": 0.775193989276886,
+                            "1": 0.775193989276886,
+                            "2": 0.775193989276886
+                        },
+                        "InTan": {
+                            "0": -0.265049010515213,
+                            "1": -0.265049010515213,
+                            "2": -0.265049010515213
+                        },
+                        "OutTan": {
+                            "0": -0.1060200035572052,
+                            "1": -0.1060200035572052,
+                            "2": -0.1060200035572052
+                        }
+                    }
+                ],
+                "LineType": 2,
+                "GlobalSeqId": null
+            },
+            "PivotPoint": {
+                "0": 1.0026999711990356,
+                "1": 0.017421700060367584,
+                "2": -4.1479997634887695
+            }
+        }
+    ],
+    "Attachments": [
+        {
+            "Name": "Weapon - Ref",
+            "ObjectId": 65,
+            "Parent": 40,
+            "Flags": 2048,
+            "Path": "",
+            "AttachmentID": 0,
+            "Visibility": {
+                "Keys": [
+                    {
+                        "Frame": 106667,
+                        "Vector": {
+                            "0": 0
+                        }
+                    }
+                ],
+                "LineType": 0,
+                "GlobalSeqId": null
+            },
+            "PivotPoint": {
+                "0": -14.318099975585938,
+                "1": -0.29203999042510986,
+                "2": 134.75599670410156
+            }
+        }
+    ],
+    "EventObjects": [
+        {
+            "Name": "FPTyFKR0",
+            "ObjectId": 82,
+            "Parent": null,
+            "Flags": 1024,
+            "EventTrack": {
+                "0": 2400
+            },
+            "PivotPoint": {
+                "0": -87.71610260009766,
+                "1": -53.632598876953125,
+                "2": 9.170149803161621
+            }
+        }
+    ],
+    "ParticleEmitters": [],
+    "ParticleEmitters2": [
+        {
+            "Name": "BlizParticle05standdust",
+            "ObjectId": 76,
+            "Parent": null,
+            "Flags": 102400,
+            "Translation": {
+                "Keys": [
+                    {
+                        "Frame": 1233,
+                        "Vector": {
+                            "0": 41.92530059814453,
+                            "1": 0,
+                            "2": 0
+                        },
+                        "InTan": {
+                            "0": 41.92530059814453,
+                            "1": 0,
+                            "2": 0
+                        },
+                        "OutTan": {
+                            "0": 41.92530059814453,
+                            "1": 0,
+                            "2": 0
+                        }
+                    }
+                ],
+                "LineType": 3,
+                "GlobalSeqId": null
+            },
+            "Speed": 100,
+            "Variation": 0.7200000286102295,
+            "Latitude": 5,
+            "Gravity": 0,
+            "LifeSpan": 1.5,
+            "EmissionRate": 20,
+            "Width": 200,
+            "Length": 200,
+            "FilterMode": 0,
+            "Rows": 1,
+            "Columns": 1,
+            "FrameFlags": 1,
+            "TailLength": 1,
+            "Time": 0.5,
+            "SegmentColor": [
+                {
+                    "0": 0.3215689957141876,
+                    "1": 0.2784309983253479,
+                    "2": 0.09803920239210129
+                }
+            ],
+            "Alpha": {
+                "0": 255,
+                "1": 255,
+                "2": 0
+            },
+            "ParticleScaling": {
+                "0": 40,
+                "1": 60,
+                "2": 80
+            },
+            "LifeSpanUVAnim": {
+                "0": 0,
+                "1": 32,
+                "2": 1
+            },
+            "DecayUVAnim": {
+                "0": 33,
+                "1": 63,
+                "2": 1
+            },
+            "TailUVAnim": {
+                "0": 0,
+                "1": 0,
+                "2": 1
+            },
+            "TailDecayUVAnim": {
+                "0": 0,
+                "1": 0,
+                "2": 1
+            },
+            "TextureID": 3,
+            "Squirt": false,
+            "PriorityPlane": 0,
+            "ReplaceableId": 0,
+            "Visibility": {
+                "Keys": [
+                    {
+                        "Frame": 333,
+                        "Vector": {
+                            "0": 0
+                        }
+                    }
+                ],
+                "LineType": 0,
+                "GlobalSeqId": null
+            },
+            "PivotPoint": {
+                "0": -7.187729835510254,
+                "1": -6.985109806060791,
+                "2": 13.810400009155273
+            }
+        }
+    ],
+    "Cameras": [],
+    "Lights": [],
+    "RibbonEmitters": [],
+    "CollisionShapes": [
+        {
+            "Name": "Collision 2",
+            "ObjectId": 93,
+            "Parent": null,
+            "Flags": 8192,
+            "Shape": 2,
+            "Vertices": {
+                "0": 57.75310134887695,
+                "1": 0.29322201013565063,
+                "2": 45.23970031738281
+            },
+            "BoundsRadius": 81.943603515625,
+            "PivotPoint": {
+                "0": 57.75310134887695,
+                "1": 0.29322201013565063,
+                "2": 45.23970031738281
+            }
+        }
+    ],
+    "PivotPoints": [
+        {
+            "0": -127.10900115966797,
+            "1": 45.30950164794922,
+            "2": 5.471970081329346
+        }
+    ],
+    "Nodes": [
+        {
+            "Name": "gutz00",
+            "ObjectId": 0,
+            "Parent": null,
+            "Flags": 256,
+            "GeosetId": 3,
+            "GeosetAnimId": 3,
+            "PivotPoint": {
+                "0": -127.10900115966797,
+                "1": 45.30950164794922,
+                "2": 5.471970081329346
+            }
+        }
+    ]
+}
