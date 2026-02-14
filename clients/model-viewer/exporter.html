@@ -83,12 +83,12 @@
             <!-- 预览和结果 -->
             <div class="preview-results">
                 <!-- 左侧：原始 MDX 预览 -->
-                <div class="preview-panel" style="flex: 1;">
+                <!-- <div class="preview-panel" style="flex: 1;">
                     <h3>原始 MDX 预览</h3>
                     <div class="preview-container">
                         <canvas id="preview-canvas"></canvas>
                     </div>
-                </div>
+                </div> -->
                 
                 <!-- 中间：GLTF 转换预览 -->
                 <div class="preview-panel" style="flex: 1; border-left: 1px solid #ddd; border-right: 1px solid #ddd;">
@@ -221,7 +221,7 @@
         // 初始化函数
         function init() {
             // 初始化3D预览场景
-            initPreviewScene();
+            // initPreviewScene();
             
             // 初始化GLTF预览场景
             initGltfPreviewScene();
@@ -979,6 +979,34 @@
                             const nodes = Object.values(model.Nodes);
                             bonesData = nodes.filter(node => node.Flags & 256); // 256是Bone类型的标志
                         }
+                        
+                        // ------------------------------------------------------------------
+                        // 关键修复：收集所有可能有动画的节点，而不仅仅是 Bones
+                        // ------------------------------------------------------------------
+                        let allNodes = [];
+                        if (model.Bones) allNodes.push(...model.Bones);
+                        if (model.Helpers) allNodes.push(...model.Helpers);
+                        if (model.Attachments) allNodes.push(...model.Attachments);
+                        if (model.ParticleEmitters2) allNodes.push(...model.ParticleEmitters2);
+                        if (model.Nodes) allNodes.push(...Object.values(model.Nodes));
+                        
+                        // 去重 (如果有 Nodes 字段，可能包含了重复的 Bone/Helper)
+                        const uniqueNodesMap = new Map();
+                        allNodes.forEach(node => {
+                            const id = node.ObjectId !== undefined ? node.ObjectId :
+                                      (node.objectId !== undefined ? node.objectId : null);
+                            if (id !== null) {
+                                uniqueNodesMap.set(id, node);
+                            }
+                        });
+                        
+                        // 如果有唯一ID，使用去重后的列表；否则使用原始收集的列表
+                        if (uniqueNodesMap.size > 0) {
+                            window.animatedNodesForExport = Array.from(uniqueNodesMap.values());
+                        } else {
+                            window.animatedNodesForExport = allNodes.length > 0 ? allNodes : bonesData;
+                        }
+                        // ------------------------------------------------------------------
                         
                         // ==================== MDX 动画数据分析和转换 ====================
                         
@@ -2416,19 +2444,42 @@
                             const objectIdToBoneIndex = new Map(); // 映射 ObjectId 到 boneIndex
                             const nameToBoneIndex = new Map(); // 映射骨骼名称到 boneIndex
                             
-                            // 第一遍：创建骨骼并建立映射
-                            bonesData.forEach((boneData, index) => {
+                            // ------------------------------------------------------------------
+                            // 关键修复：确保处理所有节点，不仅仅是 Bones
+                            // ------------------------------------------------------------------
+                            // 使用之前收集的 window.animatedNodesForExport，如果不存在则退回到 bonesData
+                            // 但这里要注意，createSkeleton 通常只处理 Bones 用于蒙皮
+                            // 非蒙皮节点（Helpers等）应该作为普通 Object3D 添加到骨架中
+                            // 为了简化，我们把所有这些节点都视为 "Bone" (在 Three.js 中 Bone 继承自 Object3D)
+                            // 这样它们都能参与层级变换和动画
+                            
+                            const nodesToProcess = window.animatedNodesForExport && window.animatedNodesForExport.length > 0
+                                                  ? window.animatedNodesForExport
+                                                  : bonesData;
+
+                            // 第一遍：创建骨骼/节点并建立映射
+                            nodesToProcess.forEach((boneData, index) => {
                                 try {
+                                    // 只有 Flags & 256 才是真正的蒙皮骨骼，但为了动画层级，全部创建为 Bone 或 Group
+                                    // 为了兼容性，统一用 Bone，虽然语义上有些不准，但在 Three.js 里 Bone 就是个 Object3D
                                     const bone = new THREE.Bone();
-                                    // 命名优先级: name > Name > Bone_ObjectId > bone_index
-                                    const boneName = boneData.name || boneData.Name || 
-                                                     (boneData.ObjectId !== undefined ? `Bone_${boneData.ObjectId}` : 
-                                                      (boneData.objectId !== undefined ? `Bone_${boneData.objectId}` : `bone_${index}`));
+                                    
+                                    // ------------------------------------------------------------
+                                    // 关键修复：命名必须与 extractBoneAnimations 中的命名逻辑完全一致
+                                    // 统一使用 ObjectId 作为最可靠的标识符
+                                    // ------------------------------------------------------------
+                                    const objectId = boneData.ObjectId !== undefined ? boneData.ObjectId :
+                                                     (boneData.objectId !== undefined ? boneData.objectId : index);
+                                    
+                                    let boneName = `Bone_${objectId}`; // 默认名称
+                                    
+                                    if (boneData.Name) boneName = boneData.Name;
+                                    else if (boneData.name) boneName = boneData.name;
+                                    
+                                    // 设置骨骼名称
                                     bone.name = boneName;
                                     
                                     // 记录 ObjectId 到索引的映射
-                                    const objectId = boneData.ObjectId !== undefined ? boneData.ObjectId : 
-                                                     (boneData.objectId !== undefined ? boneData.objectId : index);
                                     objectIdToBoneIndex.set(objectId, index);
                                     nameToBoneIndex.set(boneName, index);
                                     bone.userData.objectId = objectId; // 保存 ObjectId 供后续使用
@@ -2472,8 +2523,13 @@
                             
                             // 设置骨骼层次结构
                             const hierarchyInfo = [];
-                            bonesData.forEach((boneData, index) => {
+                            nodesToProcess.forEach((boneData, index) => {
                                 const bone = boneMap.get(index);
+                                // 注意：如果 nodesToProcess 包含非骨骼节点，它们可能在 boneMap 中找不到（如果之前只遍历了 bonesData）
+                                // 但现在我们遍历的是同一个列表，所以应该没问题
+                                
+                                if (!bone) return;
+
                                 let parentObjectId = -1;
                                 let parentBoneIndex = -1;
                                 let hasValidParent = false;
