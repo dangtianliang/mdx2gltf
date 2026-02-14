@@ -1006,6 +1006,14 @@
                         } else {
                             window.animatedNodesForExport = allNodes.length > 0 ? allNodes : bonesData;
                         }
+
+                        // 确保 bonesData 包含所有节点，因为 Helpers 等也参与骨骼层级
+                        // 并按照 ObjectId 排序，以尽量保持顺序（尽管我们会使用映射来修复索引）
+                        bonesData = [...window.animatedNodesForExport].sort((a, b) => {
+                            const idA = a.ObjectId !== undefined ? a.ObjectId : (a.objectId !== undefined ? a.objectId : -1);
+                            const idB = b.ObjectId !== undefined ? b.ObjectId : (b.objectId !== undefined ? b.objectId : -1);
+                            return idA - idB;
+                        });
                         // ------------------------------------------------------------------
                         
                         // ==================== MDX 动画数据分析和转换 ====================
@@ -1279,44 +1287,99 @@
                          * Hermite 插值采样为 Linear
                          * GLTF 不支持 Hermite 插值，需要密集采样转换为 Linear
                          */
-                        function sampleHermiteToLinear(times, values, valueSize, fps, inTans, outTans) {
-                            if (times.length < 2) {
-                                return { times, values, interpolationType: 1 };
+                        /**
+                         * 新策略：MDX动画核心处理
+                         * 过滤关键帧范围 -> 时间平移 -> 转换值 -> 生成轨道
+                         */
+                        function processMdxTrack(nodeName, propertyType, mdxAnimData, startFrame, endFrame, fps) {
+                            if (!mdxAnimData || !mdxAnimData.Keys || mdxAnimData.Keys.length === 0) return null;
+
+                            // 1. 过滤关键帧
+                            const validKeys = mdxAnimData.Keys.filter(key => key.Frame >= startFrame && key.Frame <= endFrame);
+                            
+                            if (validKeys.length === 0) {
+                                // 如果没有关键帧在范围内，尝试寻找最近的上一帧保持静态
+                                // 这对于循环动画很重要，防止模型"塌陷"
+                                return null;
                             }
+
+                            // 2. 转换数据
+                            const times = [];
+                            const values = [];
+                            const inTans = [];
+                            const outTans = [];
+                            const lineType = mdxAnimData.LineType !== undefined ? mdxAnimData.LineType : 1; // 默认 Linear
+
+                            validKeys.forEach(key => {
+                                // 时间平移：(Frame - StartFrame) / FPS
+                                times.push((key.Frame - startFrame) / fps);
+                                
+                                // 值提取
+                                const vec = key.Vector || [0, 0, 0];
+                                if (propertyType === 'quaternion') {
+                                    // Rotation: x,y,z,w
+                                    values.push(vec[0], vec[1], vec[2], vec[3]);
+                                } else if (propertyType === 'scalar') {
+                                    // Visibility/Alpha: scalar
+                                    values.push(vec[0]);
+                                } else {
+                                    // Vector3: x,y,z
+                                    values.push(vec[0], vec[1], vec[2]);
+                                }
+
+                                // 提取切线 (Hermite用)
+                                if (lineType === 2) {
+                                    const iTan = key.InTan || vec;
+                                    const oTan = key.OutTan || vec;
+                                    if (propertyType === 'quaternion') {
+                                        inTans.push([iTan[0], iTan[1], iTan[2], iTan[3]]);
+                                        outTans.push([oTan[0], oTan[1], oTan[2], oTan[3]]);
+                                    } else if (propertyType === 'scalar') {
+                                        inTans.push([iTan[0]]);
+                                        outTans.push([oTan[0]]);
+                                    } else {
+                                        inTans.push([iTan[0], iTan[1], iTan[2]]);
+                                        outTans.push([oTan[0], oTan[1], oTan[2]]);
+                                    }
+                                }
+                            });
+
+                            // 3. 处理 Hermite 插值 (LineType = 2)
+                            // glTF 标准通常需要 Linear，所以如果不是 Linear，我们需要采样
+                            // 尤其是 Hermite (2)，包含切线数据，如果不采样直接当 Linear 用会抖动
+                            if (lineType === 2) {
+                                // 复用之前的采样函数逻辑，但稍作适配
+                                return sampleHermiteToLinear(times, values, propertyType === 'quaternion' ? 4 : (propertyType === 'scalar' ? 1 : 3), fps, inTans, outTans);
+                            }
+
+                            return { times, values };
+                        }
+
+                        // 复用的采样函数 (保留原逻辑，稍作增强)
+                        function sampleHermiteToLinear(times, values, valueSize, fps, inTans, outTans) {
+                            if (times.length < 2) return { times, values };
                             
                             const newTimes = [];
                             const newValues = [];
-                            
-                            // 每两个关键帧之间采样 (提高采样密度以获得更平滑的曲线)
-                            const samplesPerSegment = 8;
+                            const samplesPerSegment = 8; // 高密度采样保证平滑
                             
                             for (let i = 0; i < times.length - 1; i++) {
                                 const t0 = times[i];
                                 const t1 = times[i + 1];
                                 const duration = t1 - t0;
                                 
-                                // 获取切线数据
-                                const p0 = [];
-                                const p1 = [];
-                                const m0 = [];
-                                const m1 = [];
-                                
-                                for (let j = 0; j < valueSize; j++) {
-                                    p0.push(values[i * valueSize + j]);
-                                    p1.push(values[(i + 1) * valueSize + j]);
-                                    // 注意: War3 MDX 的切线是 "InTan" 和 "OutTan"
-                                    // Hermite 插值公式: p(t) = (2t^3 - 3t^2 + 1)p0 + (t^3 - 2t^2 + t)m0 + (-2t^3 + 3t^2)p1 + (t^3 - t^2)m1
-                                    // m0 是这一帧的 OutTan, m1 是下一帧的 InTan
-                                    m0.push(outTans && outTans.length > i ? outTans[i][j] : 0);
-                                    m1.push(inTans && inTans.length > i + 1 ? inTans[i + 1][j] : 0);
-                                }
-                                
+                                // 切线数据准备
+                                const p0 = values.slice(i * valueSize, (i + 1) * valueSize);
+                                const p1 = values.slice((i + 1) * valueSize, (i + 2) * valueSize);
+                                const m0 = outTans[i];
+                                const m1 = inTans[i + 1];
+
                                 for (let s = 0; s < samplesPerSegment; s++) {
-                                    const t = s / samplesPerSegment; // 归一化时间 0-1
+                                    const t = s / samplesPerSegment;
                                     const time = t0 + (duration * t);
                                     newTimes.push(time);
                                     
-                                    // Hermite 插值基函数
+                                    // Hermite 基函数
                                     const t2 = t * t;
                                     const t3 = t2 * t;
                                     const h1 = 2 * t3 - 3 * t2 + 1;
@@ -1330,178 +1393,85 @@
                                     }
                                 }
                             }
-                            
-                            // 添加最后一个点
+                            // 补上最后一个点
                             newTimes.push(times[times.length - 1]);
-                            for (let j = 0; j < valueSize; j++) {
-                                newValues.push(values[(times.length - 1) * valueSize + j]);
-                            }
+                            const lastVal = values.slice((times.length - 1) * valueSize);
+                            newValues.push(...lastVal);
                             
-                            return { times: newTimes, values: newValues, interpolationType: 1 };
+                            return { times: newTimes, values: newValues };
                         }
                         
-                        // 将 Warcraft 3 四元数 (x, y, z, w) 转换为 Three.js 格式
-                        // War3 使用 (x, y, z, w) 顺序，和 Three.js 相同
-                        function convertRotationValues(values) {
-                            // War3 四元数和 Three.js 兼容
-                            // 但 War3 使用左手坐标系，可能需要调整
-                            const result = [];
-                            for (let i = 0; i < values.length; i += 4) {
-                                result.push(
-                                    values[i],     // x
-                                    values[i + 1], // y  
-                                    values[i + 2], // z
-                                    values[i + 3]  // w
-                                );
-                            }
-                            return result;
-                        }
-                        
-                        // 从骨骼数据中提取动画关键帧
-                        function extractBoneAnimations(bone, startFrame, endFrame, fps) {
-                            const tracks = [];
-                            // 命名优先级必须与 createSkeleton 中完全一致！
-                            // 统一使用 ObjectId 作为最可靠的标识符
-                            const objectId = bone.ObjectId !== undefined ? bone.ObjectId : (bone.objectId !== undefined ? bone.objectId : -1);
-                            let boneName = `Bone_${objectId}`; // 默认名称
-                            
-                            // 尝试获取更友好的名称，但要确保和 Skeleton 里的名字匹配
-                            // 这里的逻辑必须和 createSkeleton 函数里的命名逻辑保持绝对一致
-                            if (bone.Name) boneName = bone.Name;
-                            else if (bone.name) boneName = bone.name;
-                            
-                            // 无论如何，如果这是 Helper/Bone/Attachment 等节点，我们都按名字来匹配
-                            // 注意：在 createSkeleton 中我们可能给 Bone_${ObjectId} 这样的名字
-                            // 为了保险，我们可以同时尝试两种命名方式，或者确保 createSkeleton 那边也用 Name
-                            // 最佳实践：使用 Name 如果有，否则用 Bone_ID
-                            
-                            // 特殊处理：如果知道根骨骼名字
-                            // MDX数据中，通常会有根骨骼，比如 "Bone_34" 或 "gutz00"
-                            
-                            // 获取骨骼动画数据
-                            const translationAnim = bone.Translation || bone.translation;
-                            const rotationAnim = bone.Rotation || bone.rotation;
-                            const scalingAnim = bone.Scaling || bone.scaling;
-                            
-                            // 1. 位置动画 (Vector3)
-                            if (translationAnim) {
-                                const posData = parseMdxAnimation(translationAnim, startFrame, endFrame, fps, 3);
-                                if (posData.times.length > 0 && posData.values.length >= posData.times.length * 3) {
-                                    tracks.push(new THREE.VectorKeyframeTrack(
-                                        `${boneName}.position`,
-                                        posData.times,
-                                        posData.values
-                                    ));
-                                }
-                            }
-                            
-                            // 2. 旋转动画 (Quaternion: x, y, z, w)
-                            if (rotationAnim) {
-                                const rotData = parseMdxAnimation(rotationAnim, startFrame, endFrame, fps, 4);
-                                if (rotData.times.length > 0 && rotData.values.length >= rotData.times.length * 4) {
-                                    tracks.push(new THREE.QuaternionKeyframeTrack(
-                                        `${boneName}.quaternion`,
-                                        rotData.times,
-                                        rotData.values
-                                    ));
-                                }
-                            }
-                            
-                            // 3. 缩放动画 (Vector3)
-                            if (scalingAnim) {
-                                const scaleData = parseMdxAnimation(scalingAnim, startFrame, endFrame, fps, 3);
-                                if (scaleData.times.length > 0 && scaleData.values.length >= scaleData.times.length * 3) {
-                                    tracks.push(new THREE.VectorKeyframeTrack(
-                                        `${boneName}.scale`,
-                                        scaleData.times,
-                                        scaleData.values
-                                    ));
-                                }
-                            }
-                            
-                            // 4. 可见性动画 (Visibility -> scale 0/1)
-                            const visibilityAnim = bone.Visibility || bone.visibility;
-                            if (visibilityAnim) {
-                                const visData = parseMdxAnimation(visibilityAnim, startFrame, endFrame, fps, 1);
-                                if (visData.times.length > 0) {
-                                    // 将可见性转换为缩放 (0 = 隐藏 = scale 0, 1 = 显示 = scale 1)
-                                    // 注意：如果已有缩放动画，这里会有冲突。通常可见性控制用于 Attachment/Particle
-                                    // 如果没有缩放动画，我们可以用 scale 模拟可见性
-                                    if (!scalingAnim) {
-                                        const scaleValues = [];
-                                        for (let v of visData.values) {
-                                            // MDX Visibility: 0=隐藏, 1=显示 (或者 >0 显示)
-                                            // 有时是 0/1，有时是 float。通常 0 是不可见。
-                                            // 注意：MDX 中 Visibility 往往是 alpha 通道？不，是显隐。
-                                            // 文档说：Visibility keys, vector[0] = visibility value.
-                                            // 实际 MDX 中，Visibility 往往是 "是否渲染"。
-                                            // 为了 GLTF 兼容，用 scale=0 隐藏
-                                            const s = v > 0.1 ? 1 : 0;
-                                            scaleValues.push(s, s, s);
-                                        }
-                                        tracks.push(new THREE.VectorKeyframeTrack(
-                                            `${boneName}.scale`,
-                                            visData.times,
-                                            scaleValues
-                                        ));
-                                    }
-                                }
-                            }
-                            
-                            return tracks;
-                        }
-                        
-                        // 转换 MDX 动画数据为 Three.js AnimationClip
-                        function convertAnimationsToThreeJS(sequences, bones) {
-                            
-                            // 发送日志记录输入数据
-                            
-                            if (!sequences || !Array.isArray(sequences) || sequences.length === 0) {
-                                return [];
-                            }
-                            
-                            if (!bones || !Array.isArray(bones) || bones.length === 0) {
-                                return [];
-                            }
-                            
+                        /**
+                         * 核心转换入口：将 MDX 数据转换为 Three.js AnimationClips
+                         * 对应新策略文档中的 "mdxToGltfAnimation"
+                         */
+                        function convertAnimationsToThreeJS(sequences, allNodes) {
+                            if (!sequences || sequences.length === 0) return [];
+                            if (!allNodes || allNodes.length === 0) return [];
+
+                            const fps = 30;
                             const clips = [];
-                            const fps = 30; // War3 默认 30fps
-                            
-                            // 遍历每个动画序列 (Sequence)
+
                             sequences.forEach((seq, seqIndex) => {
-                                const seqName = seq.name || seq.Name || `Sequence_${seqIndex}`;
-                                // MDX Interval: [startFrame, endFrame]
-                                const interval = seq.interval || seq.Interval || [0, 100];
+                                const seqName = seq.Name || seq.name || `Anim_${seqIndex}`;
+                                const interval = seq.Interval || seq.interval || [0, 0];
                                 const startFrame = interval[0];
                                 const endFrame = interval[1];
                                 const duration = (endFrame - startFrame) / fps;
                                 
-                                const allTracks = [];
-                                
-                                // 为每个节点 (Bone/Helper/Attachment/Particle) 提取动画
-                                // 关键点：MDX 动画分散在所有这些节点中，不仅是 bones
-                                bones.forEach((bone, boneIndex) => {
-                                    // extractBoneAnimations 内部处理了帧过滤和时间平移
-                                    // 自动将 [startFrame, endFrame] 映射到 [0, duration]
-                                    const boneTracks = extractBoneAnimations(bone, startFrame, endFrame, fps);
-                                    if (boneTracks.length > 0) {
-                                        allTracks.push(...boneTracks);
+                                const tracks = [];
+
+                                // 遍历所有节点 (Bones, Helpers, Attachments, etc.)
+                                allNodes.forEach((node, nodeIndex) => {
+                                    // 确定节点名称：必须与 createSkeleton 中的命名逻辑完全一致
+                                    // createSkeleton 逻辑：Name || `Bone_${ObjectId}`
+                                    const objectId = node.ObjectId !== undefined ? node.ObjectId : (node.objectId !== undefined ? node.objectId : nodeIndex);
+                                    let nodeName = `Bone_${objectId}`;
+                                    if (node.Name) nodeName = node.Name;
+                                    else if (node.name) nodeName = node.name;
+
+                                    // 1. Translation -> .position
+                                    const transData = processMdxTrack(nodeName, 'vector3', node.Translation || node.translation, startFrame, endFrame, fps);
+                                    if (transData) {
+                                        tracks.push(new THREE.VectorKeyframeTrack(`${nodeName}.position`, transData.times, transData.values));
+                                    }
+
+                                    // 2. Rotation -> .quaternion
+                                    const rotData = processMdxTrack(nodeName, 'quaternion', node.Rotation || node.rotation, startFrame, endFrame, fps);
+                                    if (rotData) {
+                                        tracks.push(new THREE.QuaternionKeyframeTrack(`${nodeName}.quaternion`, rotData.times, rotData.values));
+                                    }
+
+                                    // 3. Scaling -> .scale
+                                    const scaleData = processMdxTrack(nodeName, 'vector3', node.Scaling || node.scaling, startFrame, endFrame, fps);
+                                    if (scaleData) {
+                                        tracks.push(new THREE.VectorKeyframeTrack(`${nodeName}.scale`, scaleData.times, scaleData.values));
+                                    }
+
+                                    // 4. Visibility -> .scale (特殊处理: 0=缩放0, 1=缩放1)
+                                    // 只有当没有 Scaling 动画时才应用，否则会冲突
+                                    if (!scaleData) {
+                                        const visAnim = node.Visibility || node.visibility;
+                                        const visData = processMdxTrack(nodeName, 'scalar', visAnim, startFrame, endFrame, fps);
+                                        if (visData) {
+                                            // 转换 scalar (0/1) 为 Vector3 scale
+                                            const scaleValues = [];
+                                            visData.values.forEach(v => {
+                                                const s = v > 0.1 ? 1 : 0; // 阈值判定
+                                                scaleValues.push(s, s, s);
+                                            });
+                                            tracks.push(new THREE.VectorKeyframeTrack(`${nodeName}.scale`, visData.times, scaleValues));
+                                        }
                                     }
                                 });
-                                
-                                // 如果该序列有对应的动画轨道，创建 AnimationClip
-                                if (allTracks.length > 0) {
-                                    const clip = new THREE.AnimationClip(seqName, duration, allTracks);
+
+                                // 如果有轨道，创建 Clip
+                                if (tracks.length > 0) {
+                                    const clip = new THREE.AnimationClip(seqName, duration, tracks);
                                     clips.push(clip);
-                                } else {
-                                    // 即使没有轨道，为了保留动画列表，也可以创建一个空 Clip
-                                    // 或者检查是否有默认姿态需要保持
                                 }
                             });
-                            
-                            
-                            // 发送日志记录转换完成的详细结果
-                            
+
                             return clips;
                         }
                         
@@ -2719,6 +2689,15 @@
                                     groupOffsets.push(groupOffsets[i] + matrixGroups[i]);
                                 }
                                 
+                                // 建立 ObjectId 到 bonesData 索引的映射
+                                const objectIdToBoneIndex = new Map();
+                                bonesData.forEach((bone, idx) => {
+                                    const id = bone.ObjectId !== undefined ? bone.ObjectId : (bone.objectId !== undefined ? bone.objectId : -1);
+                                    if (id !== -1) {
+                                        objectIdToBoneIndex.set(id, idx);
+                                    }
+                                });
+
                                 for (let i = 0; i < vertexCount; i++) {
                                     let boneIndex1 = 0, boneIndex2 = 0, boneIndex3 = 0, boneIndex4 = 0;
                                     let weight1 = 1, weight2 = 0, weight3 = 0, weight4 = 0;
@@ -2730,24 +2709,33 @@
                                             const groupSize = matrixGroups[groupIndex];
                                             const groupOffset = groupOffsets[groupIndex];
                                             
+                                            // 辅助函数：将 MatrixIndex (ObjectId) 映射为实际的 Bone Index
+                                            const getBoneIndex = (matrixIdx) => {
+                                                if (objectIdToBoneIndex.has(matrixIdx)) {
+                                                    return objectIdToBoneIndex.get(matrixIdx);
+                                                }
+                                                // 如果找不到映射，尝试直接使用索引（兼容旧行为）
+                                                return matrixIdx;
+                                            };
+
                                             // 根据矩阵组大小分配骨骼索引和权重
                                             if (groupSize >= 1 && groupOffset < matrixIndices.length) {
-                                                boneIndex1 = matrixIndices[groupOffset];
+                                                boneIndex1 = getBoneIndex(matrixIndices[groupOffset]);
                                                 weight1 = 1.0;
                                             }
                                             if (groupSize >= 2 && (groupOffset + 1) < matrixIndices.length) {
-                                                boneIndex2 = matrixIndices[groupOffset + 1];
+                                                boneIndex2 = getBoneIndex(matrixIndices[groupOffset + 1]);
                                                 weight1 = 0.5;
                                                 weight2 = 0.5;
                                             }
                                             if (groupSize >= 3 && (groupOffset + 2) < matrixIndices.length) {
-                                                boneIndex3 = matrixIndices[groupOffset + 2];
+                                                boneIndex3 = getBoneIndex(matrixIndices[groupOffset + 2]);
                                                 weight1 = 0.33;
                                                 weight2 = 0.33;
                                                 weight3 = 0.34;
                                             }
                                             if (groupSize >= 4 && (groupOffset + 3) < matrixIndices.length) {
-                                                boneIndex4 = matrixIndices[groupOffset + 3];
+                                                boneIndex4 = getBoneIndex(matrixIndices[groupOffset + 3]);
                                                 weight1 = 0.25;
                                                 weight2 = 0.25;
                                                 weight3 = 0.25;
@@ -3221,7 +3209,7 @@
                                 // 导出选项
                                 const textureFormat = document.getElementById('texture-format').value;
                                 const exportOptions = {
-                                    binary: true, // 使用 GLB 格式，确保 buffer 数据被嵌入
+                                    binary: false, // 改为 GLTF 格式 (JSON)
                                     embedImages: embedTextures,
                                     includeCustomExtensions: false,
                                     truncateDrawRange: true,
@@ -3426,9 +3414,9 @@
                                             
                                             const url = URL.createObjectURL(blob);
                                             downloadLink.href = url;
-                                            downloadLink.download = `${selectedModel.name}.glb`;
+                                            downloadLink.download = `${selectedModel.name}.gltf`;
                                             
-                                            downloadLink.textContent = `下载 ${selectedModel.name}.glb`;
+                                            downloadLink.textContent = `下载 ${selectedModel.name}.gltf`;
                                             downloadLink.disabled = false;
                                             
                                             // 启用预览按钮
