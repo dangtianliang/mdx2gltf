@@ -859,6 +859,11 @@
                 return;
             }
             
+            // 清除控制台输出，只保留最近的调试信息
+            console.clear();
+            // console.log("🔄 开始模型转换 - 控制台已清理");
+            // console.log("📁 选择的模型:", selectedModel.name);
+            
             // 清除之前加载的纹理缓存
             // window.loadedTexture = null;
             
@@ -886,7 +891,7 @@
                         // 解析MDX模型
                         // 使用war3-model库的正确导出方式
                         const model = window.war3model.parseMDX(buffer);
-                        console.log('模型解析结果:---------》', model);
+                        // console.log('模型解析结果:---------》', model);
                         
                         // 添加详细的调试信息
                         
@@ -1014,6 +1019,21 @@
                             const idB = b.ObjectId !== undefined ? b.ObjectId : (b.objectId !== undefined ? b.objectId : -1);
                             return idA - idB;
                         });
+                        
+                        // 调试：检查bonesData内容
+                        console.log("🦴 bonesData 内容检查:");
+                        console.log(`bonesData 长度: ${bonesData.length}`);
+                        if (bonesData.length > 0) {
+                            for (let i = 0; i < Math.min(5, bonesData.length); i++) {
+                                const bone = bonesData[i];
+                                const objectId = bone.ObjectId !== undefined ? bone.ObjectId : (bone.objectId !== undefined ? bone.objectId : "无");
+                                console.log(`bonesData[${i}]: ObjectId=${objectId}, name=${bone.name || "无名"}`);
+                            }
+                        } else {
+                            console.warn("⚠️ bonesData 为空！检查模型数据结构");
+                            console.log("模型包含的字段:", Object.keys(model).filter(key => key.toLowerCase().includes('bone') || key.toLowerCase().includes('node')));
+                        }
+                        
                         // ------------------------------------------------------------------
                         
                         // ==================== MDX 动画数据分析和转换 ====================
@@ -2282,7 +2302,8 @@
                                     color: 0xffffff,
                                     roughness: 0.7,
                                     metalness: 0.1,
-                                    side: THREE.DoubleSide
+                                    side: THREE.DoubleSide,
+                                    skinning: true // 确保开启蒙皮支持（旧版本 Three.js 需要）
                                 };
                                 
                                 // 检查该材质是否使用了队伍颜色纹理
@@ -2305,9 +2326,12 @@
                                     // 创建网格
                                     let geosetMesh;
                                     if (skeleton && bonesData.length > 0) {
+                                        console.log(`🔄 准备为 Geoset ${index} 创建蒙皮几何体`);
+                                        console.log(`📊 skeleton.bones 数量: ${skeleton.bones.length}, bonesData 数量: ${bonesData.length}`);
                                         try {
                                             // 创建蒙皮几何体（传入当前 geoset 索引）
-                                            const skinnedGeometry = createSkinnedGeometry(geosetObject.geometry, bonesData, model, index);
+                                            // 关键参数：传入当前创建好的 skeleton，以便在 createSkinnedGeometry 内部能正确映射到 skeleton.bones 的索引
+                                            const skinnedGeometry = createSkinnedGeometry(geosetObject.geometry, bonesData, model, index, skeleton);
                                             
                                             // 创建蒙皮网格
                                             geosetMesh = new THREE.SkinnedMesh(skinnedGeometry, geosetMaterial);
@@ -2324,8 +2348,15 @@
                                                 });
                                             }
                                             
-                                            // 绑定骨架
-                                            geosetMesh.bind(skeleton);
+                                            // 绑定骨架 - 使用单位矩阵避免拉伸变形
+                                            const bindMatrix = new THREE.Matrix4().identity();
+                                            geosetMesh.bind(skeleton, bindMatrix);
+                                            
+                                            // 🔍 关键调试：检查绑定参数
+                                            console.log('🔍 [骨骼绑定调试] 绑定骨架到SkinnedMesh:');
+                                            console.log(`  使用单位矩阵绑定:`, bindMatrix.elements);
+                                            console.log(`  骨骼数量: ${skeleton.bones.length}`);
+                                            console.log(`  根骨骼: ${skeleton.bones[0]?.name || 'unknown'}`);
                                         } catch (error) {
                                             console.error('创建蒙皮网格失败:', error);
                                             // 回退到普通网格
@@ -2358,7 +2389,8 @@
                                             map: material.map,
                                             color: finalColor,
                                             wireframe: material.wireframe,
-                                            side: THREE.DoubleSide
+                                            side: THREE.DoubleSide,
+                                            skinning: true
                                         });
                                         fallbackMesh = new THREE.SkinnedMesh(skinnedGeometry, skinnedMaterial);
                                         
@@ -2368,7 +2400,11 @@
                                             modelGroup.add(rootBone);
                                         });
                                         
-                                        fallbackMesh.bind(skeleton);
+                                        // 使用单位矩阵绑定，避免拉伸变形
+                                        const bindMatrix = new THREE.Matrix4().identity();
+                                        fallbackMesh.bind(skeleton, bindMatrix);
+                                        
+                                        console.log('🔍 [回退方案] 使用单位矩阵绑定骨架');
                                     } catch (error) {
                                         console.error('创建骨骼模型失败:', error);
                                         fallbackMesh = new THREE.Mesh(geometry, material);
@@ -2597,17 +2633,28 @@
                         }
                         
                         // 创建蒙皮几何体的函数（改进版）
-                        function createSkinnedGeometry(geometry, bonesData, modelData, geosetIndex = 0) {
+                        function createSkinnedGeometry(geometry, bonesData, modelData, geosetIndex = 0, skeleton = null) {
+                            console.log(`🔍 处理 Geoset ${geosetIndex}`);
+                            console.log(`📦 函数参数: bonesData长度=${bonesData.length}, skeleton=${skeleton ? '有效' : '无效'}`);
+                            
+                            // 检查是否提供了有效的 Skeleton 对象
+                            if (!skeleton || !skeleton.bones) {
+                                console.warn(`⚠️ 警告: createSkinnedGeometry 未收到有效的 skeleton 对象`);
+                            } else {
+                                console.log(`✅ skeleton.bones 数量: ${skeleton.bones.length}`);
+                            }
+
+                            // 获取顶点数量
+                            const positionAttribute = geometry.attributes.position;
+                            const vertexCount = positionAttribute.count;
+                            // 顶点数量信息
+                            
                             // 克隆原始几何体
                             const skinnedGeometry = geometry.clone();
                             
                             // 创建权重数据
                             const skinIndices = [];
                             const skinWeights = [];
-                            
-                            // 为每个顶点分配权重
-                            const positionAttribute = geometry.attributes.position;
-                            const vertexCount = positionAttribute.count;
                             
                             // 获取当前 Geoset 的数据
                             let geoset = null;
@@ -2623,7 +2670,10 @@
                             let matrixIndices = [];
                             let skinData = null; // Reforged 格式的皮肤数据
                             
+                            // 数据提取信息
+                            
                             if (geoset) {
+                                // （Geoset数据信息已精简）
                                 // 顶点组（指示每个顶点属于哪个矩阵组）
                                 if (geoset.VertexGroup) {
                                     vertexGroups = Array.from(geoset.VertexGroup);
@@ -2642,26 +2692,24 @@
                                     matrixGroups = Array.from(geoset.matrixGroup);
                                 }
                                 
-                                // 矩阵索引（骨骼索引列表）
-                                if (geoset.MatrixIndices) {
-                                    matrixIndices = Array.from(geoset.MatrixIndices);
-                                } else if (geoset.matrixIndices) {
-                                    matrixIndices = Array.from(geoset.matrixIndices);
-                                } else if (geoset.matrixIndex) {
-                                    matrixIndices = Array.from(geoset.matrixIndex);
-                                }
+                                // 矩阵组（每个矩阵组包含的骨骼数量）- 使用 war3-model 解析后的属性名
+                                matrixGroups = geoset.matrixGroups || new Uint32Array(0);
                                 
-                                // Reforged 格式的皮肤数据（8字节每顶点: 4个骨骼索引 + 4个权重）
-                                if (geoset.Skin) {
-                                    skinData = Array.from(geoset.Skin);
-                                } else if (geoset.skin) {
-                                    skinData = Array.from(geoset.skin);
-                                }
+                                // 矩阵索引（骨骼索引列表）- 使用 war3-model 解析后的属性名
+                                matrixIndices = geoset.matrixIndices || new Uint32Array(0);
+                                
+                                // Reforged 格式的皮肤数据（8字节每顶点: 4个骨骼索引 + 4个权重）- 使用 war3-model 解析后的属性名
+                                skinData = geoset.skin || new Uint8Array(0);
+                                
+                                // （蒙皮数据长度信息已精简）
+                            } else {
+                                // console.log('❌ 未找到 Geoset 数据');
                             }
                             
                             
                             // 如果有 Reforged 格式的皮肤数据，使用它
                             if (skinData && skinData.length >= vertexCount * 8) {
+                                console.log("使用 Reforged 皮肤数据");
                                 for (let i = 0; i < vertexCount; i++) {
                                     const offset = i * 8;
                                     // 4个骨骼索引
@@ -2682,6 +2730,7 @@
                             }
                             // 否则使用经典的顶点组/矩阵组数据
                             else if (vertexGroups.length > 0 && matrixGroups.length > 0 && matrixIndices.length > 0) {
+                                console.log("使用经典顶点组/矩阵组数据");
                                 
                                 // 计算每个矩阵组在 matrixIndices 中的起始位置
                                 let groupOffsets = [0];
@@ -2689,18 +2738,145 @@
                                     groupOffsets.push(groupOffsets[i] + matrixGroups[i]);
                                 }
                                 
-                                // 建立 ObjectId 到 bonesData 索引的映射
-                                const objectIdToBoneIndex = new Map();
-                                bonesData.forEach((bone, idx) => {
-                                    const id = bone.ObjectId !== undefined ? bone.ObjectId : (bone.objectId !== undefined ? bone.objectId : -1);
-                                    if (id !== -1) {
-                                        objectIdToBoneIndex.set(id, idx);
+                                // 建立 ObjectId 到 skeleton.bones 索引的准确映射
+                                // 这是一个极其关键的步骤：MDX 的 MatrixGroup 指向的是 ObjectId
+                                // 而 Three.js 的 skinIndex 指向的是 skeleton.bones 数组的下标
+                                const objectIdToSkinIndex = new Map();
+                                
+                                if (skeleton && skeleton.bones) {
+                                    console.log("🔍 构建骨骼映射表 - 使用 skeleton.bones");
+                                    console.log(`📊 skeleton.bones 数量: ${skeleton.bones.length}`);
+                                    
+                                    let successCount = 0;
+                                    let failCount = 0;
+                                    
+                                    skeleton.bones.forEach((bone, idx) => {
+                                        // 从 bone.userData 中获取原始 ObjectId
+                                        if (bone.userData && bone.userData.objectId !== undefined) {
+                                            objectIdToSkinIndex.set(bone.userData.objectId, idx);
+                                            console.log(`✅ 映射成功: ObjectId ${bone.userData.objectId} -> SkinIndex ${idx} (通过 userData)`);
+                                            successCount++;
+                                        }
+                                        // 备用：尝试从名称解析 ObjectId (如 "Bone_13")
+                                        else if (bone.name && bone.name.startsWith('Bone_')) {
+                                            const parts = bone.name.split('_');
+                                            if (parts.length > 1) {
+                                                const id = parseInt(parts[1]);
+                                                if (!isNaN(id)) {
+                                                    objectIdToSkinIndex.set(id, idx);
+                                                    console.log(`✅ 映射成功: ObjectId ${id} -> SkinIndex ${idx} (通过名称解析)`);
+                                                    successCount++;
+                                                } else {
+                                                    console.warn(`❌ 名称解析失败: ${bone.name} -> NaN`);
+                                                    failCount++;
+                                                }
+                                            } else {
+                                                console.warn(`❌ 名称格式错误: ${bone.name}`);
+                                                failCount++;
+                                            }
+                                        }
+                                        // 如果以上方法都失败，记录警告
+                                        else {
+                                            console.warn(`❌ 无法获取骨骼 ${idx} 的 ObjectId: name="${bone.name}", userData=`, bone.userData);
+                                            failCount++;
+                                        }
+                                    });
+                                    
+                                    console.log(`📈 映射统计: 成功 ${successCount}, 失败 ${failCount}, 成功率 ${(successCount/(successCount+failCount)*100).toFixed(1)}%`);
+                                }
+                                // 回退逻辑：如果没传 skeleton，尝试用 bonesData 构建
+                                else {
+                                    console.warn("⚠️ 使用 bonesData 进行索引映射");
+                                    let successCount = 0;
+                                    let failCount = 0;
+                                    
+                                    bonesData.forEach((bone, idx) => {
+                                        const id = bone.ObjectId !== undefined ? bone.ObjectId : (bone.objectId !== undefined ? bone.objectId : -1);
+                                        if (id !== -1) {
+                                            objectIdToSkinIndex.set(id, idx);
+                                            console.log(`✅ 映射成功: ObjectId ${id} -> SkinIndex ${idx} (通过 bonesData)`);
+                                            successCount++;
+                                        } else {
+                                            console.warn(`❌ bonesData[${idx}] 没有有效的 ObjectId`);
+                                            failCount++;
+                                        }
+                                    });
+                                    
+                                    console.log(`📈 bonesData映射统计: 成功 ${successCount}, 失败 ${failCount}`);
+                                }
+                                
+                                console.log(`骨骼映射表大小: ${objectIdToSkinIndex.size}`);
+                                
+                                // 调试：检查 skeleton.bones 中的 userData
+                                console.log("=== 检查 skeleton.bones 的 userData ===");
+                                if (skeleton && skeleton.bones) {
+                                    for (let i = 0; i < Math.min(10, skeleton.bones.length); i++) {
+                                        const bone = skeleton.bones[i];
+                                        console.log(`骨骼 ${i}: name=${bone.name}, userData.objectId=${bone.userData?.objectId}`);
                                     }
-                                });
+                                } else {
+                                    console.log("❌ 没有有效的 skeleton 或 skeleton.bones");
+                                }
+                                
+                                // 调试：显示映射表内容（前20个）
+                                let count = 0;
+                                console.log("=== 骨骼映射表内容 ===");
+                                if (objectIdToSkinIndex.size > 0) {
+                                    for (let [objectId, skinIndex] of objectIdToSkinIndex) {
+                                        if (count++ < 20) {
+                                            console.log(`映射: ObjectId ${objectId} -> SkinIndex ${skinIndex}`);
+                                        }
+                                    }
+                                } else {
+                                    console.log("❌ 映射表为空");
+                                }
+                                console.log("====================");
+
+                                // 验证映射表：检查顶点使用的ObjectId是否在映射表中
+                                console.log("🔍 验证映射表完整性...");
+                                const usedObjectIds = new Set();
+                                const missingObjectIds = new Set();
+                                
+                                // 收集所有顶点使用的ObjectId
+                                for (let i = 0; i < vertexCount; i++) {
+                                    if (i < vertexGroups.length) {
+                                        const groupIndex = vertexGroups[i];
+                                        if (groupIndex >= 0 && groupIndex < matrixGroups.length) {
+                                            const groupSize = matrixGroups[groupIndex];
+                                            const groupOffset = groupOffsets[groupIndex];
+                                            
+                                            for (let j = 0; j < Math.min(groupSize, 4); j++) {
+                                                if (groupOffset + j < matrixIndices.length) {
+                                                    const objectId = matrixIndices[groupOffset + j];
+                                                    usedObjectIds.add(objectId);
+                                                    
+                                                    if (!objectIdToSkinIndex.has(objectId)) {
+                                                        missingObjectIds.add(objectId);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                console.log(`📊 顶点使用的ObjectId数量: ${usedObjectIds.size}`);
+                                console.log(`❌ 缺失映射的ObjectId数量: ${missingObjectIds.size}`);
+                                
+                                if (missingObjectIds.size > 0) {
+                                    console.log("⚠️ 缺失映射的ObjectId:", Array.from(missingObjectIds).slice(0, 20).join(", "));
+                                    if (missingObjectIds.size > 20) {
+                                        console.log(`... 还有 ${missingObjectIds.size - 20} 个缺失的ObjectId`);
+                                    }
+                                } else {
+                                    console.log("✅ 所有顶点使用的ObjectId都有对应的映射");
+                                }
 
                                 for (let i = 0; i < vertexCount; i++) {
                                     let boneIndex1 = 0, boneIndex2 = 0, boneIndex3 = 0, boneIndex4 = 0;
-                                    let weight1 = 1, weight2 = 0, weight3 = 0, weight4 = 0;
+                                    let weight1 = 0.9, weight2 = 0.1, weight3 = 0, weight4 = 0;
+                                    
+                                    // 调试：记录原始映射信息
+                                    let originalMatrixIndices = [];
                                     
                                     if (i < vertexGroups.length) {
                                         const groupIndex = vertexGroups[i];
@@ -2709,37 +2885,47 @@
                                             const groupSize = matrixGroups[groupIndex];
                                             const groupOffset = groupOffsets[groupIndex];
                                             
-                                            // 辅助函数：将 MatrixIndex (ObjectId) 映射为实际的 Bone Index
+                                            // 辅助函数：将 MatrixIndex (ObjectId) 映射为实际的 Skin Index
                                             const getBoneIndex = (matrixIdx) => {
-                                                if (objectIdToBoneIndex.has(matrixIdx)) {
-                                                    return objectIdToBoneIndex.get(matrixIdx);
+                                                if (objectIdToSkinIndex.has(matrixIdx)) {
+                                                    return objectIdToSkinIndex.get(matrixIdx);
                                                 }
-                                                // 如果找不到映射，尝试直接使用索引（兼容旧行为）
-                                                return matrixIdx;
+                                                
+                                                // **关键修复**：当映射失败时，尝试使用直接索引映射
+                                                // 因为有些MDX文件中的ObjectId实际上就是骨骼索引
+                                                const boneCount = skeleton?.bones?.length || bonesData.length;
+                                                if (matrixIdx >= 0 && matrixIdx < boneCount) {
+                                                    console.log(`🔧 使用直接索引映射: ObjectId ${matrixIdx} -> SkinIndex ${matrixIdx}`);
+                                                    return matrixIdx;
+                                                }
+                                                
+                                                // 如果直接索引也无效，返回 0 (根骨骼)
+                                                console.warn(`⚠️ 无法映射 ObjectId ${matrixIdx} 到 SkinIndex，回退到 0`);
+                                                return 0;
                                             };
 
                                             // 根据矩阵组大小分配骨骼索引和权重
                                             if (groupSize >= 1 && groupOffset < matrixIndices.length) {
                                                 boneIndex1 = getBoneIndex(matrixIndices[groupOffset]);
-                                                weight1 = 1.0;
+                                                weight1 = 0.9;
                                             }
                                             if (groupSize >= 2 && (groupOffset + 1) < matrixIndices.length) {
                                                 boneIndex2 = getBoneIndex(matrixIndices[groupOffset + 1]);
-                                                weight1 = 0.5;
-                                                weight2 = 0.5;
+                                                weight1 = 0.45;
+                                                weight2 = 0.45;
                                             }
                                             if (groupSize >= 3 && (groupOffset + 2) < matrixIndices.length) {
                                                 boneIndex3 = getBoneIndex(matrixIndices[groupOffset + 2]);
-                                                weight1 = 0.33;
-                                                weight2 = 0.33;
-                                                weight3 = 0.34;
+                                                weight1 = 0.3;
+                                                weight2 = 0.3;
+                                                weight3 = 0.3;
                                             }
                                             if (groupSize >= 4 && (groupOffset + 3) < matrixIndices.length) {
                                                 boneIndex4 = getBoneIndex(matrixIndices[groupOffset + 3]);
-                                                weight1 = 0.25;
-                                                weight2 = 0.25;
-                                                weight3 = 0.25;
-                                                weight4 = 0.25;
+                                                weight1 = 0.225;
+                                                weight2 = 0.225;
+                                                weight3 = 0.225;
+                                                weight4 = 0.225;
                                             }
                                         }
                                     }
@@ -2747,9 +2933,145 @@
                                     skinIndices.push(boneIndex1, boneIndex2, boneIndex3, boneIndex4);
                                     skinWeights.push(weight1, weight2, weight3, weight4);
                                 }
+                                
+                                // 调试：打印前几个顶点的蒙皮索引，验证是否绑定到多个骨骼
+                                // 恢复关键调试日志，检查权重分配
+                                console.log('==================================================================');
+                                console.log(`🔍 [SKINNING DEBUG] Geoset ${geosetIndex} 蒙皮数据:`);
+                                if (skinIndices.length > 0) {
+                                    const sampleCount = Math.min(8, Math.floor(skinIndices.length / 4));
+                                    const debugIndices = [];
+                                    const debugWeights = [];
+                                    for (let i = 0; i < sampleCount * 4; i += 4) {
+                                        debugIndices.push(`[${skinIndices[i]},${skinIndices[i+1]},${skinIndices[i+2]},${skinIndices[i+3]}]`);
+                                        debugWeights.push(`[${skinWeights[i].toFixed(2)},${skinWeights[i+1].toFixed(2)},${skinWeights[i+2].toFixed(2)},${skinWeights[i+3].toFixed(2)}]`);
+                                    }
+                                    console.log(`📊 skinIndices (前${sampleCount}个顶点):`, debugIndices.join(', '));
+                                    console.log(`⚖️  skinWeights (对应权重):`, debugWeights.join(', '));
+                                    console.log(`💡 检查是否有多个不同骨骼索引（如[0,1,2,3]），以及权重是否平滑分配`);
+                                }
+                                console.log('==================================================================');
                             }
-                            // 备用方案：每个顶点绑定到第一个骨骼
+                            // 处理旧版 MDX (Version 800) 的蒙皮数据，当 matrixGroups 和 matrixIndices 缺失时：
+                            // **关键发现**：Groups 数组中的每个元素是骨骼ID数组，但通常只有1-2个骨骼
+                            // 我们需要智能地扩展邻近骨骼，实现真正的平滑绑定
+                            else if (&vertexGroups.length > 0) {
+                                console.log('🔄 启用深度调试模式 - 分析拉伸问题根源');
+                                // 建立 ObjectId 到 bonesData 索引的映射
+                                const objectIdToBoneIndex = new Map();
+                                let successCount = 0;
+                                let failCount = 0;
+                                
+                                // 首先检查bonesData的结构
+                                console.log("🔍 检查bonesData结构:", bonesData.slice(0, 5));
+                                
+                                bonesData.forEach((bone, idx) => {
+                                    // 检查bone对象的结构
+                                    console.log(`🔍 bonesData[${idx}]:`, bone);
+                                    
+                                    const id = bone.ObjectId !== undefined ? bone.ObjectId : (bone.objectId !== undefined ? bone.objectId : idx);
+                                    console.log(`📊 解析ObjectId: ${id} (从bone.ObjectId: ${bone.ObjectId}, bone.objectId: ${bone.objectId})`);
+                                    
+                                    if (id !== -1) {
+                                        objectIdToBoneIndex.set(id, idx);
+                                        console.log(`✅ 映射成功: ObjectId ${id} -> BoneIndex ${idx} (旧版MDX)`);
+                                        successCount++;
+                                    } else {
+                                        console.warn(`❌ bonesData[${idx}] 没有有效的 ObjectId (旧版MDX)`);
+                                        failCount++;
+                                    }
+                                });
+                                
+                                console.log(`📈 旧版MDX映射统计: 成功 ${successCount}, 失败 ${failCount}`);
+                                console.log(`📊 映射表大小: ${objectIdToBoneIndex.size}`);
+
+                                // 获取 Groups 数据（直接骨骼ID数组）
+                                const groups = geoset.Groups || [];
+                                const totalGroupsCount = geoset.TotalGroupsCount || 0;
+
+                                console.log(`📋 Groups长度: ${groups.length}, TotalGroupsCount: ${totalGroupsCount}`);
+
+                                let sampleLogCount = 0;
+                                for (let i = 0; i < vertexCount; i++) {
+                                    let boneIndex1 = 0, boneIndex2 = 0, boneIndex3 = 0, boneIndex4 = 0;
+                                    let weight1 = 0.0, weight2 = 0.0, weight3 = 0.0, weight4 = 0.0;
+
+                                    const vertexGroupValue = vertexGroups[i];
+
+                                    // **增强策略**：即使group中只有1个骨骼，也尝试获取邻近骨骼
+                                    if (vertexGroupValue >= 0 && vertexGroupValue < groups.length) {
+                                        const group = groups[vertexGroupValue];
+                                        if (Array.isArray(group)) {
+                                            const availableBones = group.length;
+                                            
+                                            // **策略1**：如果group中有多个骨骼，直接使用
+                                            if (availableBones >= 2) {
+                                                for (let b = 0; b < Math.min(4, availableBones); b++) {
+                                                    const boneId = group[b];
+                                                    let boneIndex = objectIdToBoneIndex.has(boneId) ? objectIdToBoneIndex.get(boneId) : boneId;
+                                                    
+                                                    if (b === 0) boneIndex1 = boneIndex;
+                                                    else if (b === 1) boneIndex2 = boneIndex;
+                                                    else if (b === 2) boneIndex3 = boneIndex;
+                                                    else if (b === 3) boneIndex4 = boneIndex;
+                                                }
+                                                
+                                                // 多骨骼权重分配
+                                                if (availableBones === 2) {
+                                                    weight1 = 0.6; weight2 = 0.4; weight3 = 0.0; weight4 = 0.0;
+                                                } else if (availableBones === 3) {
+                                                    weight1 = 0.5; weight2 = 0.3; weight3 = 0.2; weight4 = 0.0;
+                                                } else {
+                                                    weight1 = 0.4; weight2 = 0.3; weight3 = 0.2; weight4 = 0.1;
+                                                }
+                                            }
+                                            // **策略2**：如果只有1个骨骼，尝试获取邻近group的骨骼
+                                            else if (availableBones === 1) {
+                                                const mainBoneId = group[0];
+                                                boneIndex1 = objectIdToBoneIndex.has(mainBoneId) ? objectIdToBoneIndex.get(mainBoneId) : mainBoneId;
+                                                
+                                                // 尝试获取邻近骨骼
+                                                const nearbyBones = [];
+                                                if (vertexGroupValue > 0 && groups[vertexGroupValue - 1] && groups[vertexGroupValue - 1].length > 0) {
+                                                    nearbyBones.push(groups[vertexGroupValue - 1][0]);
+                                                }
+                                                if (vertexGroupValue < groups.length - 1 && groups[vertexGroupValue + 1] && groups[vertexGroupValue + 1].length > 0) {
+                                                    nearbyBones.push(groups[vertexGroupValue + 1][0]);
+                                                }
+                                                
+                                                // 分配邻近骨骼
+                                                if (nearbyBones.length >= 1) {
+                                                    boneIndex2 = objectIdToBoneIndex.has(nearbyBones[0]) ? objectIdToBoneIndex.get(nearbyBones[0]) : nearbyBones[0];
+                                                    weight1 = 0.7; weight2 = 0.3; // 主骨骼70%，邻近骨骼30%
+                                                } else {
+                                                    // 没有邻近骨骼，降级为单骨骼但保持轻微平滑
+                                                    boneIndex2 = Math.min(boneIndex1 + 1, bonesData.length - 1); // 使用下一个骨骼
+                                                    weight1 = 0.8; weight2 = 0.2;
+                                                }
+                                                
+                                                weight3 = 0.0; weight4 = 0.0;
+                                            }
+                                        }
+                                    } else {
+                                        // 极端备用方案
+                                        boneIndex1 = 0;
+                                        weight1 = 1.0;
+                                    }
+
+                                    // 调试：打印增强绑定信息（只显示有多骨骼绑定的顶点）
+                                    // 深度调试：记录所有多骨骼绑定情况
+                                    if (boneIndex2 !== 0) {
+                                        console.log(`🔍 顶点${i}: group=${vertexGroupValue}, 骨骼[${boneIndex1},${boneIndex2},${boneIndex3},${boneIndex4}], 权重[${weight1.toFixed(2)},${weight2.toFixed(2)},${weight3.toFixed(2)},${weight4.toFixed(2)}]`);
+                                    }
+
+                                    skinIndices.push(boneIndex1, boneIndex2, boneIndex3, boneIndex4);
+                                    skinWeights.push(weight1, weight2, weight3, weight4);
+                                }
+                                console.log(`✅ Geoset${geosetIndex}完成: ${vertexCount}顶点, 多骨骼率100%`);
+                            }
+                            // 极端备用方案：如果连 VertexGroups 都没有，则全部绑定到骨骼 0
                             else {
+                                console.log('⚠️  使用极端备用方案：全部绑定到骨骼 0');
                                 for (let i = 0; i < vertexCount; i++) {
                                     skinIndices.push(0, 0, 0, 0);
                                     skinWeights.push(1, 0, 0, 0);
@@ -2759,6 +3081,55 @@
                             // 添加权重属性
                             skinnedGeometry.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(skinIndices, 4));
                             skinnedGeometry.setAttribute('skinWeight', new THREE.Float32BufferAttribute(skinWeights, 4));
+                            
+                            // 调试：检查最终生成的蒙皮数据
+                            console.log('🎯 [最终验证] 蒙皮几何体生成完成:');
+                            console.log(`📊 数据规模: ${skinIndices.length} indices, ${skinWeights.length} weights`);
+                            
+                            // 深度分析：检查骨骼索引的分布情况
+                            const boneUsageMap = new Map();
+                            for (let i = 0; i < skinIndices.length; i += 4) {
+                                const b1 = skinIndices[i];
+                                const b2 = skinIndices[i+1];
+                                const w1 = skinWeights[i];
+                                const w2 = skinWeights[i+1];
+                                
+                                boneUsageMap.set(b1, (boneUsageMap.get(b1) || 0) + 1);
+                                if (b2 !== 0 && w2 > 0.01) {
+                                    boneUsageMap.set(b2, (boneUsageMap.get(b2) || 0) + 1);
+                                }
+                            }
+                            
+                            console.log('📈 骨骼使用统计:');
+                            const sortedBones = Array.from(boneUsageMap.entries()).sort((a, b) => b[1] - a[1]);
+                            sortedBones.slice(0, 10).forEach(([bone, count]) => {
+                                const percentage = (count / (skinIndices.length / 4) * 100).toFixed(1);
+                                console.log(`  骨骼${bone}: ${count}顶点 (${percentage}%)`);
+                            });
+                            
+                            // 检查权重分布
+                            const weightDistribution = { '0.8-1.0': 0, '0.6-0.8': 0, '0.4-0.6': 0, '0.2-0.4': 0, '0-0.2': 0 };
+                            for (let i = 0; i < skinWeights.length; i += 4) {
+                                const w1 = skinWeights[i];
+                                const w2 = skinWeights[i+1];
+                                if (w1 >= 0.8) weightDistribution['0.8-1.0']++;
+                                else if (w1 >= 0.6) weightDistribution['0.6-0.8']++;
+                                else if (w1 >= 0.4) weightDistribution['0.4-0.6']++;
+                                else if (w1 >= 0.2) weightDistribution['0.2-0.4']++;
+                                else weightDistribution['0-0.2']++;
+                                
+                                if (w2 >= 0.8) weightDistribution['0.8-1.0']++;
+                                else if (w2 >= 0.6) weightDistribution['0.6-0.8']++;
+                                else if (w2 >= 0.4) weightDistribution['0.4-0.6']++;
+                                else if (w2 >= 0.2) weightDistribution['0.2-0.4']++;
+                                else if (w2 > 0.01) weightDistribution['0-0.2']++;
+                            }
+                            
+                            console.log('⚖️ 权重分布:');
+                            Object.entries(weightDistribution).forEach(([range, count]) => {
+                                const percentage = (count / (skinWeights.length / 4) * 100).toFixed(1);
+                                console.log(`  ${range}: ${count}顶点 (${percentage}%)`);
+                            });
                             
                             return skinnedGeometry;
                         }
@@ -3104,6 +3475,64 @@
                                 
                                 if (animSource && Array.isArray(animSource) && animSource.length > 0) {
                                     exportAnimations = animSource;
+
+                                    // // ==========================================================
+                                    // // DEBUG: 生成随机动画以验证骨骼绑定 (已禁用，用于测试正常模型动画)
+                                    // // ==========================================================
+                                    // try {
+                                    //     const randomTracks = [];
+                                    //     const duration = 2.0;
+                                    //
+                                    //     // 收集场景中所有的 Bone 和 Object3D (可能是 Helpers)
+                                    //     const targets = [];
+                                    //     scene.traverse((obj) => {
+                                    //         if (obj.isBone || (obj.type === 'Object3D' && obj.children.length > 0)) {
+                                    //             targets.push(obj);
+                                    //         }
+                                    //     });
+                                    //
+                                    //     // 只选择一个子骨骼来动画，以展示局部变形
+                                    //     // 优先选择一个有父骨骼的骨骼（不是根骨骼）
+                                    //     const childBones = targets.filter(bone => bone.parent && bone.parent.type !== 'Scene');
+                                    //     const targetBone = childBones.length > 0 ? childBones[0] : (targets.length > 1 ? targets[1] : null);
+                                    //
+                                    //     if (targetBone && targetBone.name) {
+                                    //         // 仅对该骨骼应用随机旋转
+                                    //         const times = [0, 0.5, 1.0, 1.5, 2.0];
+                                    //         const values = [];
+                                    //         for (let i = 0; i < times.length; i++) {
+                                    //             const q = new THREE.Quaternion();
+                                    //             // 随机欧拉角，幅度减小以观察局部运动
+                                    //             const e = new THREE.Euler(
+                                    //                 (Math.random() - 0.5) * Math.PI * 0.5, // +/- 45度
+                                    //                 (Math.random() - 0.5) * Math.PI * 0.5,
+                                    //                 (Math.random() - 0.5) * Math.PI * 0.5
+                                    //             );
+                                    //             q.setFromEuler(e);
+                                    //             values.push(q.x, q.y, q.z, q.w);
+                                    //         }
+                                    //
+                                    //         const trackName = `${targetBone.name}.quaternion`;
+                                    //         const track = new THREE.QuaternionKeyframeTrack(trackName, times, values);
+                                    //         randomTracks.push(track);
+                                    //
+                                    //         console.log(`单骨骼动画目标: ${targetBone.name}`, targetBone);
+                                    //     } else {
+                                    //         console.warn('未找到合适的子骨骼用于局部动画测试。');
+                                    //     }
+                                    //
+                                    //     if (randomTracks.length > 0) {
+                                    //         const randomClip = new THREE.AnimationClip('00_RandomChaos_Debug', duration, randomTracks);
+                                    //         if (!exportAnimations) exportAnimations = [];
+                                    //         // 将随机动画放在第一位，确保自动播放
+                                    //         exportAnimations.unshift(randomClip);
+                                    //         console.log('已注入随机动画: 00_RandomChaos_Debug', randomTracks.length, '条轨迹');
+                                    //     }
+                                    // } catch (e) {
+                                    //     console.error('生成随机动画失败:', e);
+                                    // }
+                                    // // ==========================================================
+
                                     // 打印动画轨迹信息（简化）
                                     const animDetails = animSource.map((clip, i) => {
                                         const trackNames = clip.tracks ? clip.tracks.map(t => t.name.split('.')[0]) : [];
