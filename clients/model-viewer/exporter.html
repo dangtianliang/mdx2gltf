@@ -2349,7 +2349,14 @@
                                             }
                                             
                                             // 绑定骨架 - 使用单位矩阵避免拉伸变形
-                                            const bindMatrix = new THREE.Matrix4().identity();
+                                            // 计算绑定矩阵，应用骨骼的初始变换（PivotPoint）
+                                            const rootBone = skeleton.bones[0];
+                                            const bindMatrix = new THREE.Matrix4();
+                                            if (rootBone) {
+                                                // 从根骨骼的初始变换中提取绑定矩阵
+                                                rootBone.updateMatrixWorld();
+                                                bindMatrix.copy(rootBone.matrixWorld).invert();
+                                            }
                                             geosetMesh.bind(skeleton, bindMatrix);
                                             
                                             // 🔍 关键调试：检查绑定参数
@@ -2401,7 +2408,14 @@
                                         });
                                         
                                         // 使用单位矩阵绑定，避免拉伸变形
-                                        const bindMatrix = new THREE.Matrix4().identity();
+                                        // 计算绑定矩阵，应用骨骼的初始变换（PivotPoint）
+                                        const rootBone = skeleton.bones[0];
+                                        const bindMatrix = new THREE.Matrix4();
+                                        if (rootBone) {
+                                            // 从根骨骼的初始变换中提取绑定矩阵
+                                            rootBone.updateMatrixWorld();
+                                            bindMatrix.copy(rootBone.matrixWorld).invert();
+                                        }
                                         fallbackMesh.bind(skeleton, bindMatrix);
                                         
                                         console.log('🔍 [回退方案] 使用单位矩阵绑定骨架');
@@ -2490,20 +2504,28 @@
                                     nameToBoneIndex.set(boneName, index);
                                     bone.userData.objectId = objectId; // 保存 ObjectId 供后续使用
                                     
-                                    // 设置骨骼位置
+                                    // 暂存绝对位置（PivotPoint），稍后计算相对位置
+                                    let absolutePos = new THREE.Vector3();
+                                    
                                     if (boneData.PivotPoints && boneData.PivotPoints.length > 0) {
                                         const pivot = boneData.PivotPoints[0];
-                                        bone.position.set(pivot[0], pivot[1], pivot[2]);
+                                        absolutePos.set(pivot[0], pivot[1], pivot[2]);
                                     } else if (boneData.PivotPoint && boneData.PivotPoint.length > 0) {
                                         // 单个PivotPoint
-                                        bone.position.set(boneData.PivotPoint[0], boneData.PivotPoint[1], boneData.PivotPoint[2]);
+                                        absolutePos.set(boneData.PivotPoint[0], boneData.PivotPoint[1], boneData.PivotPoint[2]);
                                     } else if (boneData.translation && boneData.translation.length > 0) {
                                         // 小写translation
-                                        bone.position.set(boneData.translation[0], boneData.translation[1], boneData.translation[2]);
+                                        absolutePos.set(boneData.translation[0], boneData.translation[1], boneData.translation[2]);
                                     } else if (boneData.Translation && boneData.Translation.length > 0) {
                                         // 大写Translation
-                                        bone.position.set(boneData.Translation[0], boneData.Translation[1], boneData.Translation[2]);
+                                        absolutePos.set(boneData.Translation[0], boneData.Translation[1], boneData.Translation[2]);
                                     }
+                                    
+                                    // 将绝对位置保存到 userData，用于后续相对位置计算
+                                    bone.userData.absolutePos = absolutePos;
+                                    
+                                    // 初始时先设置为绝对位置，等构建完层级后再更新为相对位置
+                                    bone.position.copy(absolutePos);
                                     
                                     bones.push(bone);
                                     boneMap.set(index, bone);
@@ -2592,6 +2614,18 @@
                                     const parentBone = boneMap.get(parentBoneIndex);
                                     if (parentBone && parentBone !== bone) {
                                         parentBone.add(bone);
+                                        
+                                        // 关键修复：计算相对位置
+                                        // MDX 中的 PivotPoint 是世界坐标（绝对位置）
+                                        // Three.js 的 bone.position 是相对于父骨骼的局部坐标
+                                        if (bone.userData.absolutePos && parentBone.userData.absolutePos) {
+                                            const relativePos = new THREE.Vector3().subVectors(
+                                                bone.userData.absolutePos,
+                                                parentBone.userData.absolutePos
+                                            );
+                                            bone.position.copy(relativePos);
+                                            // console.log(`🦴 相对位置调整: ${bone.name} -> ${parentBone.name}, pos:`, relativePos);
+                                        }
                                     }
                                 }
                             });
@@ -2739,8 +2773,6 @@
                                 }
                                 
                                 // 建立 ObjectId 到 skeleton.bones 索引的准确映射
-                                // 这是一个极其关键的步骤：MDX 的 MatrixGroup 指向的是 ObjectId
-                                // 而 Three.js 的 skinIndex 指向的是 skeleton.bones 数组的下标
                                 const objectIdToSkinIndex = new Map();
                                 
                                 if (skeleton && skeleton.bones) {
@@ -2754,7 +2786,7 @@
                                         // 从 bone.userData 中获取原始 ObjectId
                                         if (bone.userData && bone.userData.objectId !== undefined) {
                                             objectIdToSkinIndex.set(bone.userData.objectId, idx);
-                                            console.log(`✅ 映射成功: ObjectId ${bone.userData.objectId} -> SkinIndex ${idx} (通过 userData)`);
+                                            // console.log(`✅ 映射成功: ObjectId ${bone.userData.objectId} -> SkinIndex ${idx} (通过 userData)`);
                                             successCount++;
                                         }
                                         // 备用：尝试从名称解析 ObjectId (如 "Bone_13")
@@ -2764,20 +2796,20 @@
                                                 const id = parseInt(parts[1]);
                                                 if (!isNaN(id)) {
                                                     objectIdToSkinIndex.set(id, idx);
-                                                    console.log(`✅ 映射成功: ObjectId ${id} -> SkinIndex ${idx} (通过名称解析)`);
+                                                    // console.log(`✅ 映射成功: ObjectId ${id} -> SkinIndex ${idx} (通过名称解析)`);
                                                     successCount++;
                                                 } else {
-                                                    console.warn(`❌ 名称解析失败: ${bone.name} -> NaN`);
+                                                    // console.warn(`❌ 名称解析失败: ${bone.name} -> NaN`);
                                                     failCount++;
                                                 }
                                             } else {
-                                                console.warn(`❌ 名称格式错误: ${bone.name}`);
+                                                // console.warn(`❌ 名称格式错误: ${bone.name}`);
                                                 failCount++;
                                             }
                                         }
                                         // 如果以上方法都失败，记录警告
                                         else {
-                                            console.warn(`❌ 无法获取骨骼 ${idx} 的 ObjectId: name="${bone.name}", userData=`, bone.userData);
+                                            // console.warn(`❌ 无法获取骨骼 ${idx} 的 ObjectId: name="${bone.name}", userData=`, bone.userData);
                                             failCount++;
                                         }
                                     });
@@ -2794,10 +2826,10 @@
                                         const id = bone.ObjectId !== undefined ? bone.ObjectId : (bone.objectId !== undefined ? bone.objectId : -1);
                                         if (id !== -1) {
                                             objectIdToSkinIndex.set(id, idx);
-                                            console.log(`✅ 映射成功: ObjectId ${id} -> SkinIndex ${idx} (通过 bonesData)`);
+                                            // console.log(`✅ 映射成功: ObjectId ${id} -> SkinIndex ${idx} (通过 bonesData)`);
                                             successCount++;
                                         } else {
-                                            console.warn(`❌ bonesData[${idx}] 没有有效的 ObjectId`);
+                                            // console.warn(`❌ bonesData[${idx}] 没有有效的 ObjectId`);
                                             failCount++;
                                         }
                                     });
@@ -2955,7 +2987,7 @@
                             // 处理旧版 MDX (Version 800) 的蒙皮数据，当 matrixGroups 和 matrixIndices 缺失时：
                             // **关键发现**：Groups 数组中的每个元素是骨骼ID数组，但通常只有1-2个骨骼
                             // 我们需要智能地扩展邻近骨骼，实现真正的平滑绑定
-                            else if (&vertexGroups.length > 0) {
+                            else if (vertexGroups.length > 0) {
                                 console.log('🔄 启用深度调试模式 - 分析拉伸问题根源');
                                 // 建立 ObjectId 到 bonesData 索引的映射
                                 const objectIdToBoneIndex = new Map();
