@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLP 转 PNG 转换器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .exporter-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 左侧文件选择区域 */
+        .file-selection {
+            width: 300px;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .file-selection h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #007bff;
+            background-color: #f8f9fa;
+        }
+
+        .upload-area.active {
+            border-color: #28a745;
+            background-color: #e8f5e9;
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-area-label {
+            display: block;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-list h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .file-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .file-item.selected {
+            background-color: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .file-icon {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #666;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .file-remove {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .file-remove:hover {
+            background-color: #f8d7da;
+        }
+
+        /* 右侧转换和预览区域 */
+        .conversion-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        .conversion-options {
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        .conversion-options h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .option-group label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .option-group select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .option-group input[type="checkbox"] {
+            align-self: flex-start;
+            margin-top: 2px;
+        }
+
+        .conversion-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn:disabled {
+            background-color: #c6c8ca;
+            cursor: not-allowed;
+        }
+
+        /* 预览和结果区域 */
+        .preview-results {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .preview-panel {
+            flex: 1;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+        }
+
+        .preview-panel h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .preview-container {
+            position: relative;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #f9f9f9;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .preview-placeholder {
+            text-align: center;
+            color: #999;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-panel {
+            width: 300px;
+            padding: 20px;
+            border-left: 1px solid #ddd;
+            overflow-y: auto;
+        }
+
+        .results-panel h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .result-info {
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .download-section {
+            margin-top: 20px;
+        }
+
+        .download-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        .download-button:hover {
+            background-color: #218838;
+        }
+
+        .download-button:disabled {
+            background-color: #c6c8ca;
+            cursor: not-allowed;
+        }
+
+        .status-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .stats-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .stats-container h4 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .stats-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 13px;
+        }
+
+        .stats-label {
+            color: #666;
+        }
+
+        .stats-value {
+            font-weight: 500;
+        }
+
+        .stats-success {
+            color: #28a745;
+        }
+
+        .stats-failed {
+            color: #dc3545;
+        }
+
+        .stats-skipped {
+            color: #ffc107;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="exporter-container">
+        <!-- 左侧文件选择 -->
+        <div class="file-selection">
+            <h2>BLP 文件选择</h2>
+            
+            <div class="upload-area" id="upload-area">
+                <input type="file" id="file-input" multiple accept=".blp">
+                <label for="file-input" class="upload-area-label">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">点击或拖拽文件到此处<br>支持多个 BLP 文件</div>
+                </label>
+            </div>
+
+            <div class="file-list">
+                <h3>已选择文件</h3>
+                <div id="file-list-container"></div>
+            </div>
+        </div>
+
+        <!-- 右侧转换和预览 -->
+        <div class="conversion-area">
+            <!-- 转换选项 -->
+            <div class="conversion-options">
+                <h2>转换选项</h2>
+                <div class="options-grid">
+                    <div class="option-group">
+                        <label for="quality">PNG 质量</label>
+                        <select id="quality">
+                            <option value="0.95">高 (0.95)</option>
+                            <option value="0.8">中 (0.8)</option>
+                            <option value="0.6">低 (0.6)</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="overwrite">覆盖已存在文件</label>
+                        <input type="checkbox" id="overwrite">
+                    </div>
+                    <div class="option-group">
+                        <label for="batch-mode">批量模式</label>
+                        <input type="checkbox" id="batch-mode" checked>
+                    </div>
+                </div>
+                <div class="conversion-buttons">
+                    <button class="btn btn-primary" id="convert-btn">开始转换</button>
+                    <button class="btn btn-secondary" id="clear-btn">清空列表</button>
+                </div>
+            </div>
+
+            <!-- 预览和结果 -->
+            <div class="preview-results">
+                <!-- 左侧：预览 -->
+                <div class="preview-panel">
+                    <h3>PNG 预览</h3>
+                    <div class="preview-container" id="preview-container">
+                        <div class="preview-placeholder">
+                            <div class="upload-icon">🖼️</div>
+                            <div>转换后将显示预览</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：结果信息 -->
+                <div class="results-panel">
+                    <h3>转换结果</h3>
+                    <div class="result-info">
+                        <div class="info-item">
+                            <span class="info-label">选中文件:</span>
+                            <span class="info-value" id="selected-files-count">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">当前文件:</span>
+                            <span class="info-value" id="current-file-name">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">文件大小:</span>
+                            <span class="info-value" id="current-file-size">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">转换状态:</span>
+                            <span class="info-value" id="conversion-status">就绪</span>
+                        </div>
+                    </div>
+
+                    <div class="stats-container">
+                        <h4>转换统计</h4>
+                        <div class="stats-item">
+                            <span class="stats-label">成功:</span>
+                            <span class="stats-value stats-success" id="stats-success">0</span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">失败:</span>
+                            <span class="stats-value stats-failed" id="stats-failed">0</span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">跳过:</span>
+                            <span class="stats-value stats-skipped" id="stats-skipped">0</span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">总计:</span>
+                            <span class="stats-value" id="stats-total">0</span>
+                        </div>
+                    </div>
+
+                    <div class="download-section">
+                        <a class="download-button" id="download-button" disabled>
+                            下载转换结果
+                        </a>
+                        <div id="status-message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入必要的库 -->
+    <script src="https://unpkg.com/war3-model@4.0.0/dist/war3-model.browser.js"></script>
+
+    <script>
+        // 全局变量
+        let selectedFiles = [];
+        let conversionStats = {
+            success: 0,
+            failed: 0,
+            skipped: 0,
+            total: 0
+        };
+        let currentPreviewImage = null;
+        let downloadLinks = [];
+
+        // 初始化函数
+        function init() {
+            bindEvents();
+            updateFileCount();
+            updateStats();
+        }
+
+        // 绑定事件
+        function bindEvents() {
+            // 文件上传
+            const fileInput = document.getElementById('file-input');
+            const uploadArea = document.getElementById('upload-area');
+            const fileListContainer = document.getElementById('file-list-container');
+            const convertBtn = document.getElementById('convert-btn');
+            const clearBtn = document.getElementById('clear-btn');
+
+            // 文件选择
+            fileInput.addEventListener('change', handleFileSelect);
+
+            // 拖拽上传
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('active');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('active');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('active');
+                if (e.dataTransfer.files.length > 0) {
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+
+            // 转换按钮
+            convertBtn.addEventListener('click', startConversion);
+
+            // 清空按钮
+            clearBtn.addEventListener('click', clearFileList);
+        }
+
+        // 处理文件选择
+        function handleFileSelect(e) {
+            handleFiles(e.target.files);
+        }
+
+        // 处理文件
+        function handleFiles(files) {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.name.toLowerCase().endsWith('.blp')) {
+                    selectedFiles.push(file);
+                }
+            }
+            updateFileList();
+            updateFileCount();
+        }
+
+        // 更新文件列表
+        function updateFileList() {
+            const container = document.getElementById('file-list-container');
+            container.innerHTML = '';
+
+            selectedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-icon">📄</div>
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size">${formatFileSize(file.size)}</div>
+                    </div>
+                    <button class="file-remove" data-index="${index}">×</button>
+                `;
+                container.appendChild(fileItem);
+            });
+
+            // 绑定删除按钮事件
+            document.querySelectorAll('.file-remove').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    selectedFiles.splice(index, 1);
+                    updateFileList();
+                    updateFileCount();
+                });
+            });
+        }
+
+        // 更新文件计数
+        function updateFileCount() {
+            document.getElementById('selected-files-count').textContent = selectedFiles.length;
+        }
+
+        // 清空文件列表
+        function clearFileList() {
+            selectedFiles = [];
+            updateFileList();
+            updateFileCount();
+            clearPreview();
+            resetStats();
+            showStatus('文件列表已清空', 'info');
+        }
+
+        // 开始转换
+        function startConversion() {
+            if (selectedFiles.length === 0) {
+                showStatus('请先选择 BLP 文件', 'error');
+                return;
+            }
+
+            // 重置统计
+            resetStats();
+
+            // 显示转换开始信息
+            showStatus('开始转换...', 'info');
+
+            // 获取转换选项
+            const quality = parseFloat(document.getElementById('quality').value);
+            const overwrite = document.getElementById('overwrite').checked;
+            const batchMode = document.getElementById('batch-mode').checked;
+
+            // 批量转换
+            convertFiles(selectedFiles, { quality, overwrite, batchMode });
+        }
+
+        // 转换文件
+        async function convertFiles(files, options) {
+            const previewContainer = document.getElementById('preview-container');
+            downloadLinks = [];
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                updateCurrentFileInfo(file);
+
+                try {
+                    // 显示当前文件状态
+                    showStatus(`正在转换: ${file.name}`, 'info');
+
+                    // 读取文件
+                    const buffer = await readFileAsArrayBuffer(file);
+
+                    // 转换 BLP 到 PNG
+                    const pngBlob = await convertBlpToPng(buffer, options);
+
+                    // 创建预览
+                    if (i === 0) {
+                        createPreview(pngBlob, file.name);
+                    }
+
+                    // 创建下载链接
+                    const downloadLink = createDownloadLink(pngBlob, file.name.replace('.blp', '.png'));
+                    downloadLinks.push(downloadLink);
+
+                    // 更新统计
+                    conversionStats.success++;
+                    updateStats();
+
+                    // 显示成功信息
+                    showStatus(`转换成功: ${file.name}`, 'success');
+
+                } catch (error) {
+                    console.error('转换失败:', error);
+                    conversionStats.failed++;
+                    updateStats();
+                    showStatus(`转换失败: ${file.name} - ${error.message}`, 'error');
+                }
+            }
+
+            // 转换完成
+            conversionStats.total = files.length;
+            updateStats();
+
+            if (downloadLinks.length > 0) {
+                // 启用下载按钮
+                const downloadButton = document.getElementById('download-button');
+                downloadButton.disabled = false;
+                downloadButton.onclick = () => downloadAllFiles();
+                showStatus(`转换完成: ${conversionStats.success} 成功, ${conversionStats.failed} 失败`, 'success');
+            } else {
+                showStatus('所有文件转换失败', 'error');
+            }
+        }
+
+        // 读取文件为 ArrayBuffer
+        function readFileAsArrayBuffer(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        // 核心转换: BLP Buffer -> PNG Blob
+        function convertBlpToPng(blpBuffer, options) {
+            return new Promise((resolve, reject) => {
+                try {
+                    // 1. 解码 BLP
+                    const blpTexture = window.war3model.decodeBLP(blpBuffer);
+                    
+                    if (!blpTexture || !blpTexture.width || !blpTexture.height) {
+                        throw new Error('BLP 解码失败: 无效的纹理数据');
+                    }
+
+                    // 补全 size 属性
+                    if (!blpTexture.size) {
+                        blpTexture.size = blpTexture.width * blpTexture.height * 4;
+                    }
+
+                    // 2. 获取 RGBA 像素数据
+                    const rawData = window.war3model.getBLPImageData(blpTexture, 0); // mipmap 0
+                    
+                    if (!rawData || rawData.length === 0) {
+                        throw new Error('获取图像数据失败');
+                    }
+
+                    // 3. 创建 Canvas 并写入像素
+                    const canvas = document.createElement('canvas');
+                    canvas.width = blpTexture.width;
+                    canvas.height = blpTexture.height;
+                    const ctx = canvas.getContext('2d');
+
+                    // 处理数据格式
+                    const pixelArray = rawData.data || rawData;
+                    
+                    // 创建 ImageData
+                    const imageData = ctx.createImageData(blpTexture.width, blpTexture.height);
+                    imageData.data.set(new Uint8ClampedArray(pixelArray));
+                    ctx.putImageData(imageData, 0, 0);
+
+                    // 4. 导出 PNG
+                    canvas.toBlob(resolve, 'image/png', options.quality);
+
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        // 创建预览
+        function createPreview(pngBlob, fileName) {
+            const previewContainer = document.getElementById('preview-container');
+            
+            // 清除之前的预览
+            clearPreview();
+
+            // 创建预览图像
+            const img = document.createElement('img');
+            img.className = 'preview-image';
+            img.src = URL.createObjectURL(pngBlob);
+            img.alt = fileName;
+            
+            previewContainer.innerHTML = '';
+            previewContainer.appendChild(img);
+            
+            currentPreviewImage = img;
+        }
+
+        // 清除预览
+        function clearPreview() {
+            const previewContainer = document.getElementById('preview-container');
+            previewContainer.innerHTML = `
+                <div class="preview-placeholder">
+                    <div class="upload-icon">🖼️</div>
+                    <div>转换后将显示预览</div>
+                </div>
+            `;
+            currentPreviewImage = null;
+        }
+
+        // 创建下载链接
+        function createDownloadLink(blob, fileName) {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+            return link;
+        }
+
+        // 下载所有文件
+        function downloadAllFiles() {
+            if (downloadLinks.length === 0) {
+                showStatus('没有可下载的文件', 'error');
+                return;
+            }
+
+            // 逐个触发下载
+            downloadLinks.forEach(link => {
+                link.click();
+            });
+
+            showStatus(`已开始下载 ${downloadLinks.length} 个文件`, 'success');
+        }
+
+        // 更新当前文件信息
+        function updateCurrentFileInfo(file) {
+            document.getElementById('current-file-name').textContent = file.name;
+            document.getElementById('current-file-size').textContent = formatFileSize(file.size);
+        }
+
+        // 重置统计
+        function resetStats() {
+            conversionStats = {
+                success: 0,
+                failed: 0,
+                skipped: 0,
+                total: 0
+            };
+            updateStats();
+        }
+
+        // 更新统计显示
+        function updateStats() {
+            document.getElementById('stats-success').textContent = conversionStats.success;
+            document.getElementById('stats-failed').textContent = conversionStats.failed;
+            document.getElementById('stats-skipped').textContent = conversionStats.skipped;
+            document.getElementById('stats-total').textContent = conversionStats.total;
+        }
+
+        // 显示状态信息
+        function showStatus(message, type) {
+            const statusMessage = document.getElementById('status-message');
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message status-${type}`;
+            statusMessage.style.display = 'block';
+
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // 初始化
+        init();
+    </script>
+</body>
+
+</html>

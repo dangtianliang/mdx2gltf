@@ -412,7 +412,7 @@ export async function convertMDX2GLTF(
         // 5. 处理动画（序列 → GLTF AnimationClip）
         const clips: THREE.AnimationClip[] = [];
         if (exportAnimations && model.Sequences && model.Bones) {
-            clips.push(...createAnimationClips(model));
+            clips.push(...convertAnimationsToThreeJS(model.Sequences, model.Bones));
         }
 
         // 6. 处理队伍色材质
