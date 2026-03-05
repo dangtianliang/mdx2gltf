@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDX 数据解析器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 左侧文件选择区域 */
+        .file-section {
+            width: 350px;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .file-section h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #007bff;
+            background-color: #f8f9fa;
+        }
+
+        .upload-area.active {
+            border-color: #28a745;
+            background-color: #e8f5e9;
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-area-label {
+            display: block;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .file-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .file-info h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 13px;
+        }
+
+        .info-label {
+            color: #666;
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn:disabled {
+            background-color: #c6c8ca;
+            cursor: not-allowed;
+        }
+
+        /* 右侧解析结果区域 */
+        .result-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        .result-header {
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-header h2 {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .result-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* JSON 显示区域 */
+        .json-panel {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #ddd;
+        }
+
+        .json-panel h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .json-container {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .json-key {
+            color: #0066cc;
+        }
+
+        .json-string {
+            color: #008000;
+        }
+
+        .json-number {
+            color: #ff6600;
+        }
+
+        .json-boolean {
+            color: #cc00cc;
+        }
+
+        .json-null {
+            color: #999999;
+        }
+
+        /* 数据摘要区域 */
+        .summary-panel {
+            width: 300px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .summary-panel h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .summary-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .summary-section h4 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #666;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .summary-item {
+            padding: 5px 0;
+            font-size: 13px;
+        }
+
+        .summary-item strong {
+            display: block;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .summary-item span {
+            color: #666;
+            word-break: break-all;
+        }
+
+        .material-path {
+            color: #007bff !important;
+            font-weight: 500;
+        }
+
+        .status-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 左侧文件选择 -->
+        <div class="file-section">
+            <h2>MDX 文件选择</h2>
+            
+            <div class="upload-area" id="upload-area">
+                <input type="file" id="file-input" accept=".mdx">
+                <label for="file-input" class="upload-area-label">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">点击或拖拽文件到此处<br>选择 MDX 文件</div>
+                </label>
+            </div>
+
+            <div class="file-info" id="file-info" style="display: none;">
+                <h3>文件信息</h3>
+                <div class="info-item">
+                    <span class="info-label">文件名:</span>
+                    <span class="info-value" id="file-name">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">文件大小:</span>
+                    <span class="info-value" id="file-size">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">修改时间:</span>
+                    <span class="info-value" id="file-modified">-</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="parse-btn" disabled>解析文件</button>
+                <button class="btn btn-secondary" id="clear-btn" disabled>清空</button>
+            </div>
+
+            <div id="status-message"></div>
+        </div>
+
+        <!-- 右侧解析结果 -->
+        <div class="result-section">
+            <div class="result-header">
+                <h2>解析结果</h2>
+                <div>
+                    <button class="btn btn-secondary" id="copy-btn" disabled>复制 JSON</button>
+                    <button class="btn btn-secondary" id="download-btn" disabled>下载 JSON</button>
+                </div>
+            </div>
+
+            <div class="result-content">
+                <!-- JSON 显示 -->
+                <div class="json-panel">
+                    <h3>JSON 数据</h3>
+                    <div class="json-container" id="json-container">
+                        <div style="text-align: center; color: #999; padding: 50px 0;">
+                            选择并解析 MDX 文件后显示数据
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 数据摘要 -->
+                <div class="summary-panel">
+                    <h3>数据摘要</h3>
+                    
+                    <div class="summary-section">
+                        <h4>基本信息</h4>
+                        <div class="summary-item">
+                            <strong>模型名称</strong>
+                            <span id="summary-name">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <strong>版本</strong>
+                            <span id="summary-version">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <strong>顶点数</strong>
+                            <span id="summary-vertices">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <strong>面数</strong>
+                            <span id="summary-faces">-</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>材质信息</h4>
+                        <div id="summary-materials">
+                            <div class="summary-item">
+                                <span>无材质信息</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>动画信息</h4>
+                        <div class="summary-item">
+                            <strong>动画数量</strong>
+                            <span id="summary-animations">-</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>骨骼信息</h4>
+                        <div class="summary-item">
+                            <strong>骨骼数量</strong>
+                            <span id="summary-bones">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入必要的库 -->
+    <script src="https://unpkg.com/war3-model@4.0.0/dist/war3-model.browser.js"></script>
+
+    <script>
+        // 全局变量
+        let selectedFile = null;
+        let parsedData = null;
+
+        // 初始化函数
+        function init() {
+            bindEvents();
+        }
+
+        // 绑定事件
+        function bindEvents() {
+            // 文件上传
+            const fileInput = document.getElementById('file-input');
+            const uploadArea = document.getElementById('upload-area');
+            const parseBtn = document.getElementById('parse-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const copyBtn = document.getElementById('copy-btn');
+            const downloadBtn = document.getElementById('download-btn');
+
+            // 文件选择
+            fileInput.addEventListener('change', handleFileSelect);
+
+            // 拖拽上传
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('active');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('active');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('active');
+                if (e.dataTransfer.files.length > 0) {
+                    const file = e.dataTransfer.files[0];
+                    if (file.name.toLowerCase().endsWith('.mdx')) {
+                        handleFile(file);
+                    } else {
+                        showStatus('请选择 MDX 文件', 'error');
+                    }
+                }
+            });
+
+            // 解析按钮
+            parseBtn.addEventListener('click', parseFile);
+
+            // 清空按钮
+            clearBtn.addEventListener('click', clearAll);
+
+            // 复制按钮
+            copyBtn.addEventListener('click', copyJson);
+
+            // 下载按钮
+            downloadBtn.addEventListener('click', downloadJson);
+        }
+
+        // 处理文件选择
+        function handleFileSelect(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                if (file.name.toLowerCase().endsWith('.mdx')) {
+                    handleFile(file);
+                } else {
+                    showStatus('请选择 MDX 文件', 'error');
+                }
+            }
+        }
+
+        // 处理文件
+        function handleFile(file) {
+            selectedFile = file;
+            updateFileInfo();
+            enableButtons();
+            showStatus('文件已选择，点击解析按钮开始解析', 'info');
+        }
+
+        // 更新文件信息
+        function updateFileInfo() {
+            if (!selectedFile) return;
+
+            document.getElementById('file-info').style.display = 'block';
+            document.getElementById('file-name').textContent = selectedFile.name;
+            document.getElementById('file-size').textContent = formatFileSize(selectedFile.size);
+            document.getElementById('file-modified').textContent = new Date(selectedFile.lastModified).toLocaleString();
+        }
+
+        // 启用按钮
+        function enableButtons() {
+            document.getElementById('parse-btn').disabled = false;
+            document.getElementById('clear-btn').disabled = false;
+        }
+
+        // 禁用按钮
+        function disableButtons() {
+            document.getElementById('parse-btn').disabled = true;
+            document.getElementById('clear-btn').disabled = true;
+            document.getElementById('copy-btn').disabled = true;
+            document.getElementById('download-btn').disabled = true;
+        }
+
+        // 解析文件
+        function parseFile() {
+            if (!selectedFile) {
+                showStatus('请先选择 MDX 文件', 'error');
+                return;
+            }
+
+            showStatus('<div class="loading-container"><div class="loading"></div><span>正在解析文件...</span></div>', 'info');
+
+            // 读取文件
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    // 解析 MDX
+                    const buffer = e.target.result;
+                    parsedData = window.war3model.parseMDX(buffer);
+
+                    // 显示解析结果
+                    displayJson(parsedData);
+                    updateSummary(parsedData);
+
+                    // 启用复制和下载按钮
+                    document.getElementById('copy-btn').disabled = false;
+                    document.getElementById('download-btn').disabled = false;
+
+                    showStatus('解析成功', 'success');
+                } catch (error) {
+                    console.error('解析失败:', error);
+                    showStatus(`解析失败: ${error.message}`, 'error');
+                }
+            };
+            reader.onerror = () => {
+                showStatus('文件读取失败', 'error');
+            };
+            reader.readAsArrayBuffer(selectedFile);
+        }
+
+        // 显示 JSON 数据
+        function displayJson(data) {
+            const container = document.getElementById('json-container');
+            const jsonString = JSON.stringify(data, null, 2);
+            const highlightedJson = highlightJson(jsonString);
+            container.innerHTML = highlightedJson;
+        }
+
+        // JSON 语法高亮
+        function highlightJson(json) {
+            return json
+                .replace(/"([^"]+)"\s*:/g, '<span class="json-key">"$1"</span>:')
+                .replace(/"([^"]+)"/g, '<span class="json-string">"$1"</span>')
+                .replace(/\b(\d+)\b/g, '<span class="json-number">$1</span>')
+                .replace(/\b(true|false)\b/g, '<span class="json-boolean">$1</span>')
+                .replace(/\bnull\b/g, '<span class="json-null">null</span>');
+        }
+
+        // 更新数据摘要
+        function updateSummary(data) {
+            // 基本信息
+            document.getElementById('summary-name').textContent = data.name || '-';
+            document.getElementById('summary-version').textContent = data.version || '-';
+            document.getElementById('summary-vertices').textContent = data.vertices ? data.vertices.length : '-';
+            document.getElementById('summary-faces').textContent = data.faces ? data.faces.length : '-';
+
+            // 动画信息
+            const animations = data.animations || data.Animations || data.Sequences || [];
+            document.getElementById('summary-animations').textContent = Array.isArray(animations) ? animations.length : '-';
+
+            // 骨骼信息
+            const bones = data.bones || data.Bones || [];
+            document.getElementById('summary-bones').textContent = Array.isArray(bones) ? bones.length : '-';
+
+            // 材质信息
+            updateMaterialsSummary(data);
+        }
+
+        // 更新材质信息
+        function updateMaterialsSummary(data) {
+            const container = document.getElementById('summary-materials');
+            const materials = data.materials || data.Materials || [];
+            const textures = data.textures || data.Textures || [];
+
+            if (!Array.isArray(materials) || materials.length === 0) {
+                container.innerHTML = '<div class="summary-item"><span>无材质信息</span></div>';
+                return;
+            }
+
+            let html = '';
+            materials.forEach((material, index) => {
+                html += `<div class="summary-item">
+                    <strong>材质 ${index + 1}</strong>
+                `;
+
+                // 查找材质使用的纹理
+                if (material.Layers && Array.isArray(material.Layers)) {
+                    material.Layers.forEach((layer, layerIndex) => {
+                        const textureId = layer.TextureID || layer.textureId;
+                        if (textureId !== undefined && textures[textureId]) {
+                            const texture = textures[textureId];
+                            const texturePath = texture.path || texture.Path || texture.name || texture.Name || '-';
+                            html += `<span class="material-path">纹理 ${layerIndex + 1}: ${texturePath}</span><br>`;
+                        }
+                    });
+                }
+
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 复制 JSON
+        function copyJson() {
+            if (!parsedData) return;
+
+            const jsonString = JSON.stringify(parsedData, null, 2);
+            navigator.clipboard.writeText(jsonString).then(() => {
+                showStatus('JSON 已复制到剪贴板', 'success');
+            }).catch(() => {
+                showStatus('复制失败', 'error');
+            });
+        }
+
+        // 下载 JSON
+        function downloadJson() {
+            if (!parsedData || !selectedFile) return;
+
+            const jsonString = JSON.stringify(parsedData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = selectedFile.name.replace('.mdx', '.json');
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showStatus('JSON 文件已下载', 'success');
+        }
+
+        // 清空所有
+        function clearAll() {
+            selectedFile = null;
+            parsedData = null;
+            
+            // 重置文件信息
+            document.getElementById('file-info').style.display = 'none';
+            document.getElementById('file-name').textContent = '-';
+            document.getElementById('file-size').textContent = '-';
+            document.getElementById('file-modified').textContent = '-';
+
+            // 重置 JSON 显示
+            document.getElementById('json-container').innerHTML = `
+                <div style="text-align: center; color: #999; padding: 50px 0;">
+                    选择并解析 MDX 文件后显示数据
+                </div>
+            `;
+
+            // 重置摘要
+            document.getElementById('summary-name').textContent = '-';
+            document.getElementById('summary-version').textContent = '-';
+            document.getElementById('summary-vertices').textContent = '-';
+            document.getElementById('summary-faces').textContent = '-';
+            document.getElementById('summary-animations').textContent = '-';
+            document.getElementById('summary-bones').textContent = '-';
+            document.getElementById('summary-materials').innerHTML = '<div class="summary-item"><span>无材质信息</span></div>';
+
+            // 禁用按钮
+            disableButtons();
+
+            showStatus('已清空', 'info');
+        }
+
+        // 显示状态信息
+        function showStatus(message, type) {
+            const statusMessage = document.getElementById('status-message');
+            statusMessage.innerHTML = message;
+            statusMessage.className = `status-message status-${type}`;
+            statusMessage.style.display = 'block';
+
+            // 3秒后自动隐藏
+            if (type !== 'info' || !message.includes('loading')) {
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // 初始化
+        init();
+    </script>
+</body>
+
+</html>
