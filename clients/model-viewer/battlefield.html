@@ -190,12 +190,19 @@
             <p>鼠标滚轮 - 缩放</p>
             <p>空格键 - 重置视角</p>
         </div>
+        <div class="file-input-section" style="margin: 15px 0; padding: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 5px;">
+            <p><strong>加载GLTF模型：</strong></p>
+            <input type="file" id="gltf-file-input" accept=".gltf,.glb" style="width: 100%; margin: 5px 0;">
+            <button onclick="loadSelectedGltfModel()" style="width: 100%; margin: 5px 0; padding: 8px; background-color: rgba(46, 204, 113, 0.3); color: white; border: 1px solid rgba(46, 204, 113, 0.5); border-radius: 3px; cursor: pointer; font-size: 12px;">加载模型</button>
+        </div>
         <div class="debug-buttons">
             <p><strong>调试控制：</strong></p>
             <button onclick="toggleModelViewerRender()" id="toggleRenderBtn">启用ModelViewer渲染</button>
             <button onclick="reloadArchnathidModel()">重新加载Archnathid模型</button>
             <button onclick="resetModelViewer()">重置ModelViewer</button>
             <button onclick="testModelViewer()">测试ModelViewer功能</button>
+            <button onclick="testCoordinateConversion()">测试坐标系转换</button>
+            <button onclick="setCameraToDefaultPosition()">重置相机位置</button>
             <button onclick="clearErrorLogs()">清除错误日志</button>
         </div>
     </div>
@@ -216,10 +223,12 @@
     
     <!-- 引入Three.js库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- 引入轨道控制器 -->
-    <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- 引入GLTF加载器 -->
+    <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <!-- 引入项目的ModelViewer库 -->
     <script src="../../dist/umd/viewer.min.js"></script>
+    <!-- 引入控制系统模块 -->
+    <script type="module" src="controls.js"></script>
     
     <script>
         // ==================== 错误监控功能 ====================
@@ -232,11 +241,19 @@
         let frameCount = 0;
         let fps = 0;
         let modelLoadStartTime = 0;
+        let clock = new THREE.Clock(); // 用于动画更新
+        
+        // 控制系统实例
+        let controlsSystem;
         
         // ModelViewer错误状态
         let modelError = false;
         let errorCount = 0;
         const MAX_ERRORS = 50; // 最大错误数限制
+        
+        // GLTF模型相关变量
+        let gltfModels = []; // 存储加载的GLTF模型
+        let animationMixers = []; // 存储动画混合器
         
         // 日志服务器配置
         const LOG_SERVER_URL = 'http://localhost:8081/api/log';
@@ -469,7 +486,7 @@
         
         // 场景设置
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87ceeb); // 天空蓝色
+        scene.background = new THREE.Color(0x87CEEB); // 天空蓝色
         
         // 相机设置
         const camera = new THREE.PerspectiveCamera(
@@ -478,8 +495,8 @@
             0.1, // 近裁剪面
             1000 // 远裁剪面
         );
-        camera.position.set(5, 5, 5); // 相机位置
-        camera.lookAt(0, 0, 0); // 相机看向原点
+        camera.position.set(0, 2, 5); // 相机位置
+        camera.rotation.order = 'XYZ'; // 设置旋转顺序，确保Y轴旋转是围绕世界坐标系的Y轴
         
         // 渲染器设置
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -488,62 +505,125 @@
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.getElementById('scene-container').appendChild(renderer.domElement);
         
-        // 添加轨道控制器
+        // 添加轨道控制器 - 暂时注释掉，测试快捷键问题
+        /*
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true; // 启用阻尼效果
         controls.dampingFactor = 0.05; // 阻尼系数
+        controls.enableKeys = false; // 禁用OrbitControls的键盘控制，避免与我们的自定义键盘控制冲突
+        */
         
         // 添加地面网格
         function createGroundGrid() {
+            // 创建网格辅助线
+            const gridHelper = new THREE.GridHelper(100, 100, 0x444444, 0x444444);
+            scene.add(gridHelper);
+            
             // 创建地面
-            const groundGeometry = new THREE.PlaneGeometry(20, 20, 20, 20);
-            const groundMaterial = new THREE.MeshStandardMaterial({
-                color: 0x4caf50,
-                side: THREE.DoubleSide,
-                wireframe: false
+            const groundGeometry = new THREE.PlaneGeometry(100, 100);
+            const groundMaterial = new THREE.MeshLambertMaterial({
+                color: 0x90EE90,
+                transparent: true,
+                opacity: 0.3
             });
             const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-            ground.rotation.x = -Math.PI / 2; // 旋转地面使其水平
-            ground.position.y = -0.5; // 地面位置
+            ground.rotation.x = -Math.PI / 2;
             ground.receiveShadow = true;
+            ground.userData.selectable = true;
             scene.add(ground);
+        }
+        
+        // 添加基础元素
+        function addBasicElements() {
+            // 添加一些立方体作为参考物
+            for (let i = 0; i < 15; i++) {
+                const geometry = new THREE.BoxGeometry(
+                    0.5 + Math.random() * 1.5,
+                    0.5 + Math.random() * 1.5,
+                    0.5 + Math.random() * 1.5
+                );
+                const material = new THREE.MeshLambertMaterial({
+                    color: new THREE.Color().setHSL(Math.random(), 0.7, 0.5)
+                });
+                const cube = new THREE.Mesh(geometry, material);
+                const cubeHeight = geometry.parameters.height;
+                cube.position.set(
+                    (Math.random() - 0.5) * 40,
+                    cubeHeight / 2, // 使立方体底部与地面对齐
+                    (Math.random() - 0.5) * 40
+                );
+                cube.castShadow = true;
+                cube.userData.selectable = true;
+                scene.add(cube);
+            }
             
-            // 创建网格辅助线
-            const gridHelper = new THREE.GridHelper(20, 20, 0xffffff, 0x888888);
-            gridHelper.position.y = -0.499; // 略微高于地面
-            scene.add(gridHelper);
+            // 添加一些柱子作为更高的参考物
+            for (let i = 0; i < 8; i++) {
+                const height = 3 + Math.random() * 4;
+                const geometry = new THREE.CylinderGeometry(0.3, 0.3, height);
+                const material = new THREE.MeshLambertMaterial({
+                    color: new THREE.Color().setHSL(Math.random(), 0.5, 0.6)
+                });
+                const cylinder = new THREE.Mesh(geometry, material);
+                cylinder.position.set(
+                    (Math.random() - 0.5) * 30,
+                    height / 2, // 使柱子底部与地面对齐
+                    (Math.random() - 0.5) * 30
+                );
+                cylinder.castShadow = true;
+                cylinder.userData.selectable = true;
+                scene.add(cylinder);
+            }
+            
+            // 创建鼠标射线可视化
+            const mouseRayLine = new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints([
+                    new THREE.Vector3(0, 2, 5),
+                    new THREE.Vector3(0, 2, -100)
+                ]),
+                new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 3 })
+            );
+            mouseRayLine.renderOrder = 9999;
+            mouseRayLine.visible = true;
+            mouseRayLine.name = 'mouseRay';
+            scene.add(mouseRayLine);
         }
         
         // 添加光源
         function addLights() {
-            // 环境光 - 增强亮度
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+            // 增强环境光
+            const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
             scene.add(ambientLight);
             
-            // 方向光（模拟太阳光）- 增强亮度
+            // 主方向光（模拟太阳光）
             const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
             directionalLight.position.set(10, 15, 8);
             directionalLight.castShadow = true;
             directionalLight.shadow.mapSize.width = 2048;
             directionalLight.shadow.mapSize.height = 2048;
-            directionalLight.shadow.camera.near = 0.5;
-            directionalLight.shadow.camera.far = 50;
-            directionalLight.shadow.camera.left = -10;
-            directionalLight.shadow.camera.right = 10;
-            directionalLight.shadow.camera.top = 10;
-            directionalLight.shadow.camera.bottom = -10;
             scene.add(directionalLight);
             
-            // 添加第二个方向光，从不同角度照射
-            const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+            // 辅助方向光，从不同角度照射
+            const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
             directionalLight2.position.set(-8, 10, -5);
             scene.add(directionalLight2);
             
-            // 添加点光源，增强局部照明
-            const pointLight = new THREE.PointLight(0xffffff, 0.3);
-            pointLight.position.set(0, 5, 0);
+            // 顶部点光源，增强整体照明
+            const pointLight = new THREE.PointLight(0xffffff, 0.4);
+            pointLight.position.set(0, 20, 0);
             scene.add(pointLight);
         }
+        
+        // 为对象添加可选择属性
+        function makeObjectSelectable(object) {
+            if (controlsSystem) {
+                controlsSystem.makeObjectSelectable(object);
+            } else {
+                object.userData.selectable = true;
+            }
+        }
+        
+
         
         // 安全集成ModelViewer
         let modelViewer, modelScene, archnathidModel, archnathidInstance, modelCanvas;
@@ -1074,39 +1154,64 @@
             */
         });
         
-        // 处理键盘事件（WASD移动相机）
-        const keys = {};
-        window.addEventListener('keydown', (event) => {
-            keys[event.code] = true;
-            
-            // 空格键重置视角
-            if (event.code === 'Space') {
-                camera.position.set(5, 5, 5);
-                camera.lookAt(0, 0, 0);
-                controls.reset();
-                // 移除对syncCameras的调用，避免错误
-            }
-        });
+        // 空格键重置视角的功能已移至handleKeyDown函数
         
-        window.addEventListener('keyup', (event) => {
-            keys[event.code] = false;
-        });
+        // 示例：使用球坐标设置相机位置
+        // 现在通过controlsSystem.setCameraPositionBySpherical()调用
         
-        // 移动相机
-        function moveCamera() {
-            const speed = 0.1;
+        // 重置相机到默认位置
+        function setCameraToDefaultPosition() {
+            if (controlsSystem) {
+                controlsSystem.setCameraToDefaultPosition();
+            } else {
+                // 备用方案：直接设置相机位置
+                camera.position.set(0, 2, 5);
+                camera.rotation.set(0, 0, 0);
+            }
+        }
+        
+        // 测试坐标系转换功能
+        function testCoordinateConversion() {
+            console.log('=== 测试坐标系转换功能 ===');
             
-            if (keys['KeyW']) {
-                camera.position.z -= speed;
-            }
-            if (keys['KeyS']) {
-                camera.position.z += speed;
-            }
-            if (keys['KeyA']) {
-                camera.position.x -= speed;
-            }
-            if (keys['KeyD']) {
-                camera.position.x += speed;
+            if (controlsSystem && controlsSystem.coordinateConverter) {
+                const coordinateConverter = controlsSystem.coordinateConverter;
+                
+                // 测试笛卡尔坐标转球坐标
+                const testVector = new THREE.Vector3(1, 1, 1);
+                const sphericalCoords = coordinateConverter.cartesianToSpherical(testVector);
+                console.log('笛卡尔坐标转球坐标:', testVector, '→', sphericalCoords);
+                
+                // 测试球坐标转笛卡尔坐标
+                const cartesianCoords = coordinateConverter.sphericalToCartesian(
+                    sphericalCoords.radius, 
+                    sphericalCoords.theta, 
+                    sphericalCoords.phi
+                );
+                console.log('球坐标转笛卡尔坐标:', sphericalCoords, '→', cartesianCoords);
+                
+                // 测试相机位置计算
+                const target = new THREE.Vector3(0, 2, 0);
+                const cameraPosition = coordinateConverter.calculateCameraPosition(
+                    target, 
+                    10, // 半径
+                    Math.PI / 4, // 方位角
+                    Math.PI / 3, // 极角
+                    new THREE.Vector3(0, 1, 0) // 向上方向
+                );
+                console.log('相机位置计算:', target, '→', cameraPosition);
+                
+                // 测试相机旋转计算
+                const cameraRotation = coordinateConverter.calculateCameraRotation(cameraPosition, target);
+                console.log('相机旋转计算:', cameraRotation);
+                
+                // 测试从相机位置计算球坐标
+                const sphericalFromCamera = coordinateConverter.calculateSphericalFromCamera(cameraPosition, target);
+                console.log('从相机位置计算球坐标:', cameraPosition, '→', sphericalFromCamera);
+                
+                console.log('=== 坐标系转换功能测试完成 ===');
+            } else {
+                console.error('坐标系转换器未初始化');
             }
         }
         
@@ -1127,10 +1232,31 @@
                 }
                 
                 try {
+                    addBasicElements();
+                    logError('基础元素添加成功', 'info');
+                } catch (e) {
+                    logError('添加基础元素时出错', 'error', e.stack);
+                }
+                
+                try {
                     addLights();
                     logError('光源添加成功', 'info');
                 } catch (e) {
                     logError('添加光源时出错', 'error', e.stack);
+                }
+                
+                // 创建控制系统实例
+                try {
+                    // 动态导入ControlsSystem
+                    import('./controls.js').then((module) => {
+                        const { ControlsSystem } = module;
+                        controlsSystem = new ControlsSystem(scene, camera, renderer);
+                        logError('控制系统初始化成功', 'info');
+                    }).catch((error) => {
+                        logError('导入控制系统模块时出错', 'error', error.stack);
+                    });
+                } catch (e) {
+                    logError('初始化控制系统时出错', 'error', e.stack);
                 }
                 
                 // 启动动画循环，确保Three.js场景能显示
@@ -1372,22 +1498,173 @@
             }
         }
         
+        // 加载选中的GLTF模型
+        function loadSelectedGltfModel() {
+            const fileInput = document.getElementById('gltf-file-input');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                logError('请先选择一个GLTF或GLB文件', 'warning');
+                return;
+            }
+            
+            logError(`开始加载GLTF模型: ${file.name}`, 'info');
+            
+            // 创建文件URL
+            const fileURL = URL.createObjectURL(file);
+            const loader = new THREE.GLTFLoader();
+            
+            // 生成随机位置（在地面上）
+            const randomX = (Math.random() - 0.5) * 10; // -5 到 5
+            const randomZ = (Math.random() - 0.5) * 10; // -5 到 5
+            const yPosition = 0; // 地面高度
+            
+            loader.load(
+                fileURL,
+                (gltf) => {
+                    logError(`GLTF模型加载成功: ${file.name}`, 'info');
+                    
+                    // 获取模型
+                    const model = gltf.scene;
+                    
+                    // 自动缩放模型以适应场景
+                    const box = new THREE.Box3().setFromObject(model);
+                    const size = box.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    const scale = 2 / maxDim; // 调整缩放比例
+                    model.scale.set(scale, scale, scale);
+                    
+                    // 重新计算缩放后的边界框
+                    box.setFromObject(model);
+                    const scaledSize = box.getSize(new THREE.Vector3());
+                    
+                    // 设置随机位置，直接将模型放置在地面高度
+                    const randomX = (Math.random() - 0.5) * 10; // -5 到 5
+                    const randomZ = (Math.random() - 0.5) * 10; // -5 到 5
+                    const yPosition = 0; // 地面高度
+                    model.position.set(randomX, yPosition, randomZ);
+                    
+                    // 为模型添加阴影
+                    model.castShadow = true;
+                    model.receiveShadow = true;
+                    
+                    // 遍历模型中的所有网格，启用阴影
+                    model.traverse((child) => {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+                    });
+                    
+                    // 为模型添加可选择属性
+                    makeObjectSelectable(model);
+                    
+                    // 为模型的所有子对象也添加可选择属性
+                    model.traverse(function(child) {
+                        if (child.isMesh) {
+                            makeObjectSelectable(child);
+                        }
+                    });
+                    
+                    // 添加到场景
+                    scene.add(model);
+                    
+                    // 检查并播放动画
+                    let mixer = null;
+                    let currentAction = null;
+                    
+                    if (gltf.animations && gltf.animations.length > 0) {
+                        logError(`发现 ${gltf.animations.length} 个动画`, 'info');
+                        
+                        // 创建动画混合器
+                        mixer = new THREE.AnimationMixer(model);
+                        
+                        // 查找stand动画
+                        let standAnimation = gltf.animations.find(anim => 
+                            anim.name.toLowerCase().includes('stand')
+                        );
+                        
+                        // 如果没有stand动画，查找walk动画
+                        if (!standAnimation) {
+                            standAnimation = gltf.animations.find(anim => 
+                                anim.name.toLowerCase().includes('walk')
+                            );
+                        }
+                        
+                        // 如果找到动画，播放它
+                        if (standAnimation) {
+                            logError(`播放动画: ${standAnimation.name}`, 'info');
+                            currentAction = mixer.clipAction(standAnimation);
+                            currentAction.setLoop(THREE.LoopRepeat);
+                            currentAction.play();
+                            
+                            // 存储动画混合器
+                            animationMixers.push({
+                                mixer: mixer,
+                                model: model
+                            });
+                        } else {
+                            logError('未找到stand或walk动画', 'info');
+                        }
+                    } else {
+                        logError('模型没有动画', 'info');
+                    }
+                    
+                    // 存储模型信息
+                    gltfModels.push({
+                        name: file.name,
+                        model: model,
+                        position: new THREE.Vector3(randomX, yPosition, randomZ),
+                        mixer: mixer,
+                        currentAction: currentAction
+                    });
+                    
+                    logError(`模型已添加到场景，位置: (${randomX.toFixed(2)}, ${yPosition.toFixed(2)}, ${randomZ.toFixed(2)})`, 'info');
+                    logError(`当前场景中的GLTF模型数量: ${gltfModels.length}`, 'info');
+                    
+                    // 清理URL对象
+                    URL.revokeObjectURL(fileURL);
+                },
+                (xhr) => {
+                    // 加载进度
+                    const progress = Math.round((xhr.loaded / xhr.total) * 100);
+                    if (progress % 10 === 0) {
+                        logError(`加载GLTF模型: ${progress}%`, 'info');
+                    }
+                },
+                (error) => {
+                    logError(`加载GLTF模型时出错: ${error.message}`, 'error');
+                    // 清理URL对象
+                    URL.revokeObjectURL(fileURL);
+                }
+            );
+        }
+        
         // 高级动画循环 - 实现时间分片渲染
         function animate() {
             requestAnimationFrame(animate);
             
-            // 移动相机
+            // 计算时间增量
+            const delta = clock.getDelta();
+            
+            // 更新控制系统
             try {
-                moveCamera();
+                if (controlsSystem) {
+                    controlsSystem.update();
+                }
             } catch (e) {
-                logError('移动相机时出错', 'error', e.stack);
+                logError('更新控制系统时出错', 'error', e.stack);
             }
             
-            // 更新控制器
+            // 更新GLTF模型动画
             try {
-                controls.update();
+                animationMixers.forEach((item) => {
+                    if (item.mixer) {
+                        item.mixer.update(delta);
+                    }
+                });
             } catch (e) {
-                logError('更新控制器时出错', 'error', e.stack);
+                logError('更新GLTF动画时出错', 'error', e.stack);
             }
             
             // 时间分片渲染策略
