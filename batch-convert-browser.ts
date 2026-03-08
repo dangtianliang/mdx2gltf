@@ -4,6 +4,7 @@ import { parseMDX } from 'war3-model';
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { convertAnimationsToThreeJS } from './src/convert/animationConverter';
 
 // 为Node.js环境添加必要的浏览器API模拟
 if (typeof globalThis.document === 'undefined') {
@@ -44,8 +45,6 @@ if (typeof globalThis.Image === 'undefined') {
 
 // 全局变量，用于存储加载的纹理
 let loadedTexture: THREE.Texture | null = null;
-
-import { convertAnimationsToThreeJS } from '../convert/animationConverter';
 
 // 创建骨骼系统
 function createSkeleton(bonesData: any[]): THREE.Skeleton {

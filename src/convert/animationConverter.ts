@@ -416,8 +416,3 @@ export function convertAnimationsToThreeJS(
 }
 
 // 导出所有相关的类和函数
-export {
-    AnimationDataParser,
-    BoneAnimationExtractor,
-    MdxAnimationConverter
-};

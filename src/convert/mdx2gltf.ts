@@ -5,6 +5,30 @@ import { PNG } from 'pngjs';
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 
+// 解析动画数据
+function parseAnimationData(anim: any, startFrame: number, endFrame: number, fps: number): { times: number[], values: number[] } {
+    const times: number[] = [];
+    const values: number[] = [];
+    
+    if (!anim || !anim.frames || !anim.values) {
+        return { times, values };
+    }
+    
+    for (let i = 0; i < anim.frames.length; i++) {
+        const frame = anim.frames[i];
+        if (frame >= startFrame && frame <= endFrame) {
+            times.push((frame - startFrame) / fps);
+            if (Array.isArray(anim.values[i])) {
+                values.push(...anim.values[i]);
+            } else {
+                values.push(anim.values[i]);
+            }
+        }
+    }
+    
+    return { times, values };
+}
+
 // 为Node.js环境添加必要的浏览器API模拟
 if (typeof globalThis.document === 'undefined') {
     (globalThis as any).document = {
