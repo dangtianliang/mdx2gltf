@@ -7,59 +7,61 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div class="model-viewer-container">
-        <!-- 左侧模型列表 -->
-        <div class="model-list">
-            <h2>模型列表</h2>
-            <!-- 战场链接 -->
-            <div class="battlefield-link">
-                <a href="battlefield.html" target="_blank">战场</a>
-            </div>
-            <!-- 导出链接 -->
-            <div class="battlefield-link">
-                <a href="exporter.html" target="_blank">导出</a>
-            </div>
-            <!-- 动画演示 -->
-            <div class="battlefield-link">
-                <a href="/output/demo.html" target="_blank">动画播放</a>
-            </div>
-            <!-- 动画演示 -->
-            <div class="battlefield-link">
-                <a href="/output/blp2png.html" target="_blank">blp转png</a>
-            </div>
-            <!-- 动画演示 -->
-            <div class="battlefield-link">
-                <a href="/output/parseMdx.html" target="_blank">mdx数据解析</a>
-            </div>
-            <div class="race-categories">
-                <!-- 种族分类将通过JS动态生成 -->
-            </div>
-        </div>
-        
-        <!-- 右侧模型查看器 -->
-        <div class="viewer-container">
-            <div class="viewer-header">
-                <h2>模型查看器</h2>
-                <div class="viewer-controls">
-                    <select id="animation-select">
-                        <option value="-1">无动画</option>
-                        <!-- 动画选项将通过JS动态生成 -->
-                    </select>
-                    <button id="zoom-in">放大</button>
-                    <button id="zoom-out">缩小</button>
-                    <button id="reset-view">重置视角</button>
+    <div id="root">
+        <div class="model-viewer-container">
+            <!-- 左侧模型列表 -->
+            <div class="model-list">
+                <h2>模型列表</h2>
+                <!-- 战场链接 -->
+                <div class="battlefield-link">
+                    <a href="battlefield.html" target="_blank">战场</a>
+                </div>
+                <!-- 导出链接 -->
+                <div class="battlefield-link">
+                    <a href="exporter.html" target="_blank">导出</a>
+                </div>
+                <!-- 动画演示 -->
+                <div class="battlefield-link">
+                    <a href="/output/demo.html" target="_blank">动画播放</a>
+                </div>
+                <!-- 动画演示 -->
+                <div class="battlefield-link">
+                    <a href="/output/blp2png.html" target="_blank">blp转png</a>
+                </div>
+                <!-- 动画演示 -->
+                <div class="battlefield-link">
+                    <a href="/output/parseMdx.html" target="_blank">mdx数据解析</a>
+                </div>
+                <div class="race-categories">
+                    <!-- 种族分类将通过JS动态生成 -->
                 </div>
             </div>
-            <div class="canvas-container">
-                <canvas id="canvas"></canvas>
-            </div>
-            <div class="model-info">
-                <h3 id="model-name">请选择一个模型</h3>
-                <p id="model-details">点击左侧列表中的模型查看详细信息</p>
+            
+            <!-- 右侧模型查看器 -->
+            <div class="viewer-container">
+                <div class="viewer-header">
+                    <h2>模型查看器</h2>
+                    <div class="viewer-controls">
+                        <select id="animation-select">
+                            <option value="-1">无动画</option>
+                            <!-- 动画选项将通过JS动态生成 -->
+                        </select>
+                        <button id="zoom-in">放大</button>
+                        <button id="zoom-out">缩小</button>
+                        <button id="reset-view">重置视角</button>
+                    </div>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div class="model-info">
+                    <h3 id="model-name">请选择一个模型</h3>
+                    <p id="model-details">点击左侧列表中的模型查看详细信息</p>
+                </div>
             </div>
         </div>
     </div>
     
-    <script src="../model-viewer.min.js"></script>
+    <script src="../../dist/clients/model-viewer.min.js"></script>
 </body>
 </html>

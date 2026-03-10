@@ -175,50 +175,52 @@
     </style>
 </head>
 <body>
-    <!-- 场景容器 -->
-    <div id="scene-container"></div>
-    <!-- ModelViewer容器 -->
-    <div id="model-container"></div>
-    
-    <!-- 场景信息 -->
-    <div class="scene-info">
-        <h2>战场</h2>
-        <div class="controls">
-            <p><strong>控制方式：</strong></p>
-            <p>WASD - 移动相机</p>
-            <p>鼠标左键 - 旋转视角</p>
-            <p>鼠标滚轮 - 缩放</p>
-            <p>空格键 - 重置视角</p>
+    <div id="root">
+        <!-- 场景容器 -->
+        <div id="scene-container"></div>
+        <!-- ModelViewer容器 -->
+        <div id="model-container"></div>
+        
+        <!-- 场景信息 -->
+        <div class="scene-info">
+            <h2>战场</h2>
+            <div class="controls">
+                <p><strong>控制方式：</strong></p>
+                <p>WASD - 移动相机</p>
+                <p>鼠标左键 - 旋转视角</p>
+                <p>鼠标滚轮 - 缩放</p>
+                <p>空格键 - 重置视角</p>
+            </div>
+            <div class="file-input-section" style="margin: 15px 0; padding: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 5px;">
+                <p><strong>加载GLTF模型：</strong></p>
+                <input type="file" id="gltf-file-input" accept=".gltf,.glb" style="width: 100%; margin: 5px 0;">
+                <button onclick="loadSelectedGltfModel()" style="width: 100%; margin: 5px 0; padding: 8px; background-color: rgba(46, 204, 113, 0.3); color: white; border: 1px solid rgba(46, 204, 113, 0.5); border-radius: 3px; cursor: pointer; font-size: 12px;">加载模型</button>
+            </div>
+            <div class="debug-buttons">
+                <p><strong>调试控制：</strong></p>
+                <button onclick="toggleModelViewerRender()" id="toggleRenderBtn">启用ModelViewer渲染</button>
+                <button onclick="reloadArchnathidModel()">重新加载Archnathid模型</button>
+                <button onclick="resetModelViewer()">重置ModelViewer</button>
+                <button onclick="testModelViewer()">测试ModelViewer功能</button>
+                <button onclick="testCoordinateConversion()">测试坐标系转换</button>
+                <button onclick="setCameraToDefaultPosition()">重置相机位置</button>
+                <button onclick="clearErrorLogs()">清除错误日志</button>
+            </div>
         </div>
-        <div class="file-input-section" style="margin: 15px 0; padding: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 5px;">
-            <p><strong>加载GLTF模型：</strong></p>
-            <input type="file" id="gltf-file-input" accept=".gltf,.glb" style="width: 100%; margin: 5px 0;">
-            <button onclick="loadSelectedGltfModel()" style="width: 100%; margin: 5px 0; padding: 8px; background-color: rgba(46, 204, 113, 0.3); color: white; border: 1px solid rgba(46, 204, 113, 0.5); border-radius: 3px; cursor: pointer; font-size: 12px;">加载模型</button>
+        
+        <!-- 错误监控面板 -->
+        <div class="error-monitor">
+            <h3>错误监控 <button onclick="clearErrorLogs()">清除日志</button></h3>
+            <div id="error-logs-container"></div>
         </div>
-        <div class="debug-buttons">
-            <p><strong>调试控制：</strong></p>
-            <button onclick="toggleModelViewerRender()" id="toggleRenderBtn">启用ModelViewer渲染</button>
-            <button onclick="reloadArchnathidModel()">重新加载Archnathid模型</button>
-            <button onclick="resetModelViewer()">重置ModelViewer</button>
-            <button onclick="testModelViewer()">测试ModelViewer功能</button>
-            <button onclick="testCoordinateConversion()">测试坐标系转换</button>
-            <button onclick="setCameraToDefaultPosition()">重置相机位置</button>
-            <button onclick="clearErrorLogs()">清除错误日志</button>
+        
+        <!-- 性能监控面板 -->
+        <div class="performance-monitor">
+            <h3>性能监控</h3>
+            <div class="metric">帧率: <span id="fps-counter">0</span> FPS</div>
+            <div class="metric">内存使用: <span id="memory-usage">0</span> MB</div>
+            <div class="metric">模型加载时间: <span id="model-load-time">0</span> ms</div>
         </div>
-    </div>
-    
-    <!-- 错误监控面板 -->
-    <div class="error-monitor">
-        <h3>错误监控 <button onclick="clearErrorLogs()">清除日志</button></h3>
-        <div id="error-logs-container"></div>
-    </div>
-    
-    <!-- 性能监控面板 -->
-    <div class="performance-monitor">
-        <h3>性能监控</h3>
-        <div class="metric">帧率: <span id="fps-counter">0</span> FPS</div>
-        <div class="metric">内存使用: <span id="memory-usage">0</span> MB</div>
-        <div class="metric">模型加载时间: <span id="model-load-time">0</span> ms</div>
     </div>
     
     <!-- 引入Three.js库 -->

@@ -10,160 +10,162 @@
 </head>
 
 <body>
-    <div class="exporter-container">
-        <!-- 左侧模型选择 -->
-        <div class="model-selection">
-            <h2>模型选择</h2>
-            <div class="race-categories" id="race-categories">
-                <!-- 种族分类将通过JS动态生成 -->
-            </div>
-        </div>
-
-        <!-- 右侧转换和预览 -->
-        <div class="conversion-area">
-            <!-- 转换选项 -->
-            <div class="conversion-options">
-                <h2>转换选项</h2>
-                <div class="options-grid">
-                    <div class="option-group">
-                        <label for="output-format">输出格式</label>
-                        <select id="output-format">
-                            <option value="gltf">GLTF (JSON)</option>
-                        </select>
-                    </div>
-                    <div class="option-group">
-                        <label for="embed-textures">嵌入纹理</label>
-                        <input type="checkbox" id="embed-textures" checked>
-                    </div>
-                    <div class="option-group">
-                        <label for="include-animations">包含动画</label>
-                        <input type="checkbox" id="include-animations" checked>
-                    </div>
-                    <div class="option-group">
-                        <label for="texture-format">纹理格式</label>
-                        <select id="texture-format">
-                            <option value="png">PNG</option>
-                            <option value="jpg">JPG</option>
-                        </select>
-                    </div>
-                    <div class="option-group">
-                        <label for="texture-quality">纹理质量</label>
-                        <select id="texture-quality">
-                            <option value="high">高</option>
-                            <option value="medium">中</option>
-                            <option value="low">低</option>
-                        </select>
-                    </div>
-                    <div class="option-group">
-                        <label for="animation-loop">动画循环</label>
-                        <input type="checkbox" id="animation-loop" checked>
-                    </div>
-                    <div class="option-group">
-                        <label for="include-skeleton">包含骨骼</label>
-                        <input type="checkbox" id="include-skeleton" checked>
-                    </div>
-                    <div class="option-group">
-                        <label for="team-color">队伍颜色</label>
-                        <select id="team-color">
-                            <option value="0">默认 (无队伍颜色)</option>
-                            <option value="1">红色</option>
-                            <option value="2">蓝色</option>
-                            <option value="3">青色</option>
-                            <option value="4">紫色</option>
-                            <option value="5">黄色</option>
-                            <option value="6">橙色</option>
-                            <option value="7">绿色</option>
-                            <option value="8">粉色</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="conversion-buttons">
-                    <button class="btn btn-primary" id="convert-btn">开始转换</button>
+    <div id="root">
+        <div class="exporter-container">
+            <!-- 左侧模型选择 -->
+            <div class="model-selection">
+                <h2>模型选择</h2>
+                <div class="race-categories" id="race-categories">
+                    <!-- 种族分类将通过JS动态生成 -->
                 </div>
             </div>
 
-            <!-- 预览和结果 -->
-            <div class="preview-results">
-                <!-- 左侧：原始 MDX 预览 -->
-                <!-- <div class="preview-panel" style="flex: 1;">
-                    <h3>原始 MDX 预览</h3>
-                    <div class="preview-container">
-                        <canvas id="preview-canvas"></canvas>
-                    </div>
-                </div> -->
-
-                <!-- 中间：GLTF 转换预览 -->
-                <div class="preview-panel" style="flex: 1; border-left: 1px solid #ddd; border-right: 1px solid #ddd;">
-                    <h3>GLTF 转换预览</h3>
-                    <div class="preview-container" id="gltf-preview-container">
-                        <canvas id="gltf-preview-canvas"></canvas>
-                        <div id="gltf-loading"
-                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
-                            <div class="loading"></div>
-                            <span style="margin-left: 10px;">加载中...</span>
+            <!-- 右侧转换和预览 -->
+            <div class="conversion-area">
+                <!-- 转换选项 -->
+                <div class="conversion-options">
+                    <h2>转换选项</h2>
+                    <div class="options-grid">
+                        <div class="option-group">
+                            <label for="output-format">输出格式</label>
+                            <select id="output-format">
+                                <option value="gltf">GLTF (JSON)</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label for="embed-textures">嵌入纹理</label>
+                            <input type="checkbox" id="embed-textures" checked>
+                        </div>
+                        <div class="option-group">
+                            <label for="include-animations">包含动画</label>
+                            <input type="checkbox" id="include-animations" checked>
+                        </div>
+                        <div class="option-group">
+                            <label for="texture-format">纹理格式</label>
+                            <select id="texture-format">
+                                <option value="png">PNG</option>
+                                <option value="jpg">JPG</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label for="texture-quality">纹理质量</label>
+                            <select id="texture-quality">
+                                <option value="high">高</option>
+                                <option value="medium">中</option>
+                                <option value="low">低</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label for="animation-loop">动画循环</label>
+                            <input type="checkbox" id="animation-loop" checked>
+                        </div>
+                        <div class="option-group">
+                            <label for="include-skeleton">包含骨骼</label>
+                            <input type="checkbox" id="include-skeleton" checked>
+                        </div>
+                        <div class="option-group">
+                            <label for="team-color">队伍颜色</label>
+                            <select id="team-color">
+                                <option value="0">默认 (无队伍颜色)</option>
+                                <option value="1">红色</option>
+                                <option value="2">蓝色</option>
+                                <option value="3">青色</option>
+                                <option value="4">紫色</option>
+                                <option value="5">黄色</option>
+                                <option value="6">橙色</option>
+                                <option value="7">绿色</option>
+                                <option value="8">粉色</option>
+                            </select>
                         </div>
                     </div>
-                    <!-- 动画控制 -->
-                    <div id="animation-controls"
-                        style="padding: 10px; background: #f5f5f5; border-top: 1px solid #ddd; display: none;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                            <button id="anim-play-btn" class="btn btn-primary"
-                                style="padding: 5px 15px; font-size: 12px;">▶ 播放</button>
-                            <button id="anim-pause-btn" class="btn btn-secondary"
-                                style="padding: 5px 15px; font-size: 12px;">⏸ 暂停</button>
-                            <button id="anim-stop-btn" class="btn btn-secondary"
-                                style="padding: 5px 15px; font-size: 12px;">⏹ 停止</button>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <label style="font-size: 12px;">动画:</label>
-                            <select id="anim-selector" style="flex: 1; padding: 5px; font-size: 12px;"></select>
-                        </div>
-                        <div style="margin-top: 8px; font-size: 11px; color: #666;">
-                            <span id="anim-info">无动画</span>
-                        </div>
+                    <div class="conversion-buttons">
+                        <button class="btn btn-primary" id="convert-btn">开始转换</button>
                     </div>
                 </div>
 
-                <!-- 右侧：结果信息 -->
-                <div class="results-panel" style="width: 280px;">
-                    <h3>转换结果</h3>
-                    <div class="result-info">
-                        <div class="info-item">
-                            <span class="info-label">选中模型:</span>
-                            <span id="selected-model-name">未选择</span>
+                <!-- 预览和结果 -->
+                <div class="preview-results">
+                    <!-- 左侧：原始 MDX 预览 -->
+                    <!-- <div class="preview-panel" style="flex: 1;">
+                        <h3>原始 MDX 预览</h3>
+                        <div class="preview-container">
+                            <canvas id="preview-canvas"></canvas>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">模型路径:</span>
-                            <span id="selected-model-path">-</span>
+                    </div> -->
+
+                    <!-- 中间：GLTF 转换预览 -->
+                    <div class="preview-panel" style="flex: 1; border-left: 1px solid #ddd; border-right: 1px solid #ddd;">
+                        <h3>GLTF 转换预览</h3>
+                        <div class="preview-container" id="gltf-preview-container">
+                            <canvas id="gltf-preview-canvas"></canvas>
+                            <div id="gltf-loading"
+                                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
+                                <div class="loading"></div>
+                                <span style="margin-left: 10px;">加载中...</span>
+                            </div>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">顶点数:</span>
-                            <span id="model-vertices">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">面数:</span>
-                            <span id="model-faces">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">骨骼数:</span>
-                            <span id="model-bones">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">材质数:</span>
-                            <span id="model-materials">-</span>
+                        <!-- 动画控制 -->
+                        <div id="animation-controls"
+                            style="padding: 10px; background: #f5f5f5; border-top: 1px solid #ddd; display: none;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <button id="anim-play-btn" class="btn btn-primary"
+                                    style="padding: 5px 15px; font-size: 12px;">▶ 播放</button>
+                                <button id="anim-pause-btn" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 12px;">⏸ 暂停</button>
+                                <button id="anim-stop-btn" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 12px;">⏹ 停止</button>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <label style="font-size: 12px;">动画:</label>
+                                <select id="anim-selector" style="flex: 1; padding: 5px; font-size: 12px;"></select>
+                            </div>
+                            <div style="margin-top: 8px; font-size: 11px; color: #666;">
+                                <span id="anim-info">无动画</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="download-section">
-                        <a class="download-button" id="download-button" disabled
-                            style="width: 100%; padding: 12px; margin-top: 10px;">
-                            下载转换结果
-                        </a>
-                        <button class="btn btn-secondary" id="threejs-preview-btn" disabled
-                            style="margin-top: 10px; width: 100%; padding: 12px;">
-                            在Three.js中预览
-                        </button>
-                        <div id="status-message"></div>
+                    <!-- 右侧：结果信息 -->
+                    <div class="results-panel" style="width: 280px;">
+                        <h3>转换结果</h3>
+                        <div class="result-info">
+                            <div class="info-item">
+                                <span class="info-label">选中模型:</span>
+                                <span id="selected-model-name">未选择</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">模型路径:</span>
+                                <span id="selected-model-path">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">顶点数:</span>
+                                <span id="model-vertices">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">面数:</span>
+                                <span id="model-faces">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">骨骼数:</span>
+                                <span id="model-bones">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">材质数:</span>
+                                <span id="model-materials">-</span>
+                            </div>
+                        </div>
+
+                        <div class="download-section">
+                            <a class="download-button" id="download-button" disabled
+                                style="width: 100%; padding: 12px; margin-top: 10px;">
+                                下载转换结果
+                            </a>
+                            <button class="btn btn-secondary" id="threejs-preview-btn" disabled
+                                style="margin-top: 10px; width: 100%; padding: 12px;">
+                                在Three.js中预览
+                            </button>
+                            <div id="status-message"></div>
+                        </div>
                     </div>
                 </div>
             </div>
