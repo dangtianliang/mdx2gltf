@@ -35,7 +35,8 @@
     <!-- Info Panel -->
     <div id="info-panel">
         <h1>GLTF 动画验证</h1>
-        <p>模型: export.gltf</p>
+        <p>模型: <span id="model-name">export.gltf</span></p>
+        <input type="file" id="file-input" accept=".gltf,.glb" style="margin: 10px 0; width: 100%;">
         <p id="status">加载中...</p>
         <div id="animation-list"></div>
         <hr style="border-color: rgba(255,255,255,0.2); margin: 10px 0;">
@@ -62,6 +63,8 @@
         // UI Elements
         const statusEl = document.getElementById('status');
         const animationListEl = document.getElementById('animation-list');
+        const modelNameEl = document.getElementById('model-name');
+        const fileInputEl = document.getElementById('file-input');
 
         init();
         animate();
@@ -96,17 +99,33 @@
             dirLight.position.set(5, 10, 7);
             scene.add(dirLight);
 
-            // Load the export.gltf model
-            loadModel();
+            // Load the initial export.gltf model
+            loadModel('export.gltf');
+
+            // File input event listener
+            fileInputEl.addEventListener('change', handleFileSelect);
 
             // Event Listeners
             window.addEventListener('resize', onWindowResize);
         }
 
-        function loadModel() {
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            modelNameEl.textContent = file.name;
+            statusEl.innerHTML = '加载中...';
+            animationListEl.innerHTML = '';
+
+            // Create a URL for the selected file
+            const fileURL = URL.createObjectURL(file);
+            loadModel(fileURL, file.name);
+        }
+
+        function loadModel(modelUrl, modelName = 'export.gltf') {
             const loader = new GLTFLoader();
             
-            loader.load('export.gltf', (gltf) => {
+            loader.load(modelUrl, (gltf) => {
                 statusEl.innerHTML = '<span class="success">模型加载成功！</span>';
                 
                 // Remove old model
