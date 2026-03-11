@@ -1,0 +1,5194 @@
+[
+  {
+    "timestamp": "2026-03-10T18:21:54.397Z",
+    "level": "info",
+    "message": "错误监控已初始化",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:21:54.410Z",
+    "level": "info",
+    "message": "开始初始化场景...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:21:54.411Z",
+    "level": "info",
+    "message": "地面网格创建成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:21:54.413Z",
+    "level": "info",
+    "message": "基础元素添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:21:54.414Z",
+    "level": "info",
+    "message": "光源添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:21:54.429Z",
+    "level": "info",
+    "message": "动画循环启动成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:21:54.430Z",
+    "level": "info",
+    "message": "ModelViewer初始化启动",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:21:54.430Z",
+    "level": "info",
+    "message": "场景初始化完成",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:21:54.445Z",
+    "level": "info",
+    "message": "控制系统初始化成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:21:57.432Z",
+    "level": "info",
+    "message": "开始安全初始化ModelViewer...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:21:57.433Z",
+    "level": "error",
+    "message": "初始化ModelViewer时出错",
+    "details": "ReferenceError: ModelViewer is not defined\n    at http://localhost:8080/clients/model-viewer/battlefield.html:706:21",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:01.961Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:01.970Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:01.972Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.011Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.011Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.014Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (0.78, 0.00, 4.09)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.011Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.014Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 1",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.136Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.146Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.146Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.166Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.167Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.167Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.168Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (-4.37, 0.00, -3.90)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.168Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 2",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.338Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.345Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.346Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.364Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.364Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.364Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.365Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (-1.67, 0.00, -1.77)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.365Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 3",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.552Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.561Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.562Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.581Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.582Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.582Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.583Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (-3.10, 0.00, 4.01)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:22:02.583Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 4",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:25:06.199Z",
+    "level": "info",
+    "message": "错误监控已初始化",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:25:06.210Z",
+    "level": "info",
+    "message": "开始初始化场景...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:25:06.210Z",
+    "level": "info",
+    "message": "地面网格创建成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:25:06.211Z",
+    "level": "info",
+    "message": "基础元素添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:25:06.212Z",
+    "level": "info",
+    "message": "光源添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:25:06.228Z",
+    "level": "info",
+    "message": "动画循环启动成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:25:06.229Z",
+    "level": "info",
+    "message": "ModelViewer初始化启动",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:25:06.229Z",
+    "level": "info",
+    "message": "场景初始化完成",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:25:06.232Z",
+    "level": "info",
+    "message": "控制系统初始化成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:25:09.229Z",
+    "level": "info",
+    "message": "开始安全初始化ModelViewer...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:25:09.230Z",
+    "level": "error",
+    "message": "初始化ModelViewer时出错",
+    "details": "ReferenceError: ModelViewer is not defined\n    at http://localhost:8080/clients/model-viewer/battlefield.html:706:21",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:26:02.293Z",
+    "level": "info",
+    "message": "错误监控已初始化",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:26:02.302Z",
+    "level": "info",
+    "message": "开始初始化场景...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:26:02.303Z",
+    "level": "info",
+    "message": "地面网格创建成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:26:02.304Z",
+    "level": "info",
+    "message": "基础元素添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:26:02.304Z",
+    "level": "info",
+    "message": "光源添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:26:02.318Z",
+    "level": "info",
+    "message": "动画循环启动成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:26:02.318Z",
+    "level": "info",
+    "message": "ModelViewer初始化启动",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:26:02.318Z",
+    "level": "info",
+    "message": "场景初始化完成",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:26:02.320Z",
+    "level": "info",
+    "message": "控制系统初始化成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:26:05.320Z",
+    "level": "info",
+    "message": "开始安全初始化ModelViewer...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:26:05.321Z",
+    "level": "error",
+    "message": "初始化ModelViewer时出错",
+    "details": "ReferenceError: ModelViewer is not defined\n    at http://localhost:8080/clients/model-viewer/battlefield.html:706:21",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:27:52.355Z",
+    "level": "info",
+    "message": "错误监控已初始化",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:27:52.366Z",
+    "level": "info",
+    "message": "开始初始化场景...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:27:52.366Z",
+    "level": "info",
+    "message": "地面网格创建成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:27:52.367Z",
+    "level": "info",
+    "message": "基础元素添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:27:52.368Z",
+    "level": "info",
+    "message": "光源添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:27:52.387Z",
+    "level": "info",
+    "message": "动画循环启动成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:27:52.388Z",
+    "level": "info",
+    "message": "ModelViewer初始化启动",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:27:52.388Z",
+    "level": "info",
+    "message": "场景初始化完成",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:27:52.391Z",
+    "level": "info",
+    "message": "控制系统初始化成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:27:55.389Z",
+    "level": "info",
+    "message": "开始安全初始化ModelViewer...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:27:55.391Z",
+    "level": "error",
+    "message": "初始化ModelViewer时出错",
+    "details": "ReferenceError: ModelViewer is not defined\n    at http://localhost:8080/clients/model-viewer/battlefield.html:706:21",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:12.668Z",
+    "level": "info",
+    "message": "错误监控已初始化",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:12.679Z",
+    "level": "info",
+    "message": "开始初始化场景...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:12.679Z",
+    "level": "info",
+    "message": "地面网格创建成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:12.681Z",
+    "level": "info",
+    "message": "基础元素添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:12.681Z",
+    "level": "info",
+    "message": "光源添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:12.698Z",
+    "level": "info",
+    "message": "动画循环启动成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:12.698Z",
+    "level": "info",
+    "message": "ModelViewer初始化启动",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:12.698Z",
+    "level": "info",
+    "message": "场景初始化完成",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:12.702Z",
+    "level": "info",
+    "message": "控制系统初始化成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:15.699Z",
+    "level": "info",
+    "message": "开始安全初始化ModelViewer...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:15.700Z",
+    "level": "error",
+    "message": "初始化ModelViewer时出错",
+    "details": "ReferenceError: ModelViewer is not defined\n    at http://localhost:8080/clients/model-viewer/battlefield.html:706:21",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.749Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.756Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.758Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.782Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.782Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.784Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (0.08, 0.00, 3.24)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.783Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.784Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 1",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.909Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.913Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.913Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.930Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.931Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.931Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.932Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (4.68, 0.00, 4.63)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:32.932Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 2",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.054Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.063Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.064Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.082Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.082Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.083Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.083Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (-1.68, 0.00, 4.27)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.083Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 3",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.207Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.213Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.214Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.230Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.230Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.230Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.231Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (-4.50, 0.00, -3.09)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.231Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 4",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.370Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.374Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.374Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.388Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.388Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.388Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.389Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (3.56, 0.00, 4.02)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:28:33.389Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 5",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:29:02.472Z",
+    "level": "info",
+    "message": "错误监控已初始化",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:29:02.484Z",
+    "level": "info",
+    "message": "开始初始化场景...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:29:02.484Z",
+    "level": "info",
+    "message": "地面网格创建成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:29:02.485Z",
+    "level": "info",
+    "message": "基础元素添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:29:02.486Z",
+    "level": "info",
+    "message": "光源添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:29:02.502Z",
+    "level": "info",
+    "message": "动画循环启动成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:29:02.502Z",
+    "level": "info",
+    "message": "ModelViewer初始化启动",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:29:02.503Z",
+    "level": "info",
+    "message": "场景初始化完成",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:29:02.507Z",
+    "level": "info",
+    "message": "控制系统初始化成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:29:05.504Z",
+    "level": "info",
+    "message": "开始安全初始化ModelViewer...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:29:05.506Z",
+    "level": "error",
+    "message": "初始化ModelViewer时出错",
+    "details": "ReferenceError: ModelViewer is not defined\n    at http://localhost:8080/clients/model-viewer/battlefield.html:706:21",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:19.300Z",
+    "level": "info",
+    "message": "错误监控已初始化",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:19.313Z",
+    "level": "info",
+    "message": "开始初始化场景...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:19.313Z",
+    "level": "info",
+    "message": "地面网格创建成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:19.314Z",
+    "level": "info",
+    "message": "基础元素添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:19.315Z",
+    "level": "info",
+    "message": "光源添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:19.334Z",
+    "level": "info",
+    "message": "动画循环启动成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:19.334Z",
+    "level": "info",
+    "message": "ModelViewer初始化启动",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:19.334Z",
+    "level": "info",
+    "message": "场景初始化完成",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:19.337Z",
+    "level": "info",
+    "message": "控制系统初始化成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:22.336Z",
+    "level": "info",
+    "message": "开始安全初始化ModelViewer...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:22.337Z",
+    "level": "error",
+    "message": "初始化ModelViewer时出错",
+    "details": "ReferenceError: ModelViewer is not defined\n    at http://localhost:8080/clients/model-viewer/battlefield.html:706:21",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:25.984Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:25.994Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.030Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.030Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.030Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.033Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (-3.26, 0.00, 4.02)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.033Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 1",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.129Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.137Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.138Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.155Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.156Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.156Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.157Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (4.97, 0.00, 1.60)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.157Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 2",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.283Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.287Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.288Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.309Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.309Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.309Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.310Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (4.24, 0.00, -2.13)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.310Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 3",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.436Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.446Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.447Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.465Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.465Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.466Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.466Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (4.76, 0.00, -1.00)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.466Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 4",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.602Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.606Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.606Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.627Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.628Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.628Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.629Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (4.32, 0.00, -2.73)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.629Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 5",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.753Z",
+    "level": "info",
+    "message": "开始加载GLTF模型: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.762Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.762Z",
+    "level": "info",
+    "message": "加载GLTF模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.781Z",
+    "level": "info",
+    "message": "GLTF模型加载成功: export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.781Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.781Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.782Z",
+    "level": "info",
+    "message": "模型已添加到场景，位置: (3.98, 0.00, -4.12)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:33:26.783Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 6",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.626Z",
+    "level": "info",
+    "message": "错误监控已初始化",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.637Z",
+    "level": "info",
+    "message": "开始初始化场景...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.637Z",
+    "level": "info",
+    "message": "地面网格创建成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.639Z",
+    "level": "info",
+    "message": "基础元素添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.639Z",
+    "level": "info",
+    "message": "光源添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.639Z",
+    "level": "info",
+    "message": "开始加载默认模型: ../../src/model/Demon/EredarWarlock/export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.640Z",
+    "level": "info",
+    "message": "默认模型加载启动",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.658Z",
+    "level": "info",
+    "message": "动画循环启动成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.659Z",
+    "level": "info",
+    "message": "ModelViewer初始化启动",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.659Z",
+    "level": "info",
+    "message": "场景初始化完成",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.662Z",
+    "level": "info",
+    "message": "控制系统初始化成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.664Z",
+    "level": "info",
+    "message": "加载默认模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.667Z",
+    "level": "info",
+    "message": "加载默认模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.715Z",
+    "level": "info",
+    "message": "默认模型加载成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.715Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.715Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.717Z",
+    "level": "info",
+    "message": "默认模型已添加到场景，位置: (0, 0, 0)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:34.718Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 1",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:37.661Z",
+    "level": "info",
+    "message": "开始安全初始化ModelViewer...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:37.663Z",
+    "level": "error",
+    "message": "初始化ModelViewer时出错",
+    "details": "ReferenceError: ModelViewer is not defined\n    at http://localhost:8080/clients/model-viewer/battlefield.html:706:21",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.532Z",
+    "level": "info",
+    "message": "错误监控已初始化",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.545Z",
+    "level": "info",
+    "message": "开始初始化场景...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.546Z",
+    "level": "info",
+    "message": "地面网格创建成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.547Z",
+    "level": "info",
+    "message": "基础元素添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.548Z",
+    "level": "info",
+    "message": "光源添加成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.548Z",
+    "level": "info",
+    "message": "开始加载默认模型: ../../src/model/Demon/EredarWarlock/export.gltf",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.548Z",
+    "level": "info",
+    "message": "默认模型加载启动",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.568Z",
+    "level": "info",
+    "message": "动画循环启动成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.569Z",
+    "level": "info",
+    "message": "ModelViewer初始化启动",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.569Z",
+    "level": "info",
+    "message": "场景初始化完成",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.573Z",
+    "level": "info",
+    "message": "控制系统初始化成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.574Z",
+    "level": "info",
+    "message": "加载默认模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.578Z",
+    "level": "info",
+    "message": "加载默认模型: 100%",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.614Z",
+    "level": "info",
+    "message": "默认模型加载成功",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.615Z",
+    "level": "info",
+    "message": "发现 4 个动画",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.615Z",
+    "level": "info",
+    "message": "播放动画: Stand",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.617Z",
+    "level": "info",
+    "message": "默认模型已添加到场景，位置: (0, 0, 0)",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:42.617Z",
+    "level": "info",
+    "message": "当前场景中的GLTF模型数量: 1",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:45.569Z",
+    "level": "info",
+    "message": "开始安全初始化ModelViewer...",
+    "details": "",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  },
+  {
+    "timestamp": "2026-03-10T18:37:45.571Z",
+    "level": "error",
+    "message": "初始化ModelViewer时出错",
+    "details": "ReferenceError: ModelViewer is not defined\n    at http://localhost:8080/clients/model-viewer/battlefield.html:706:21",
+    "browser": {
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+      "platform": "MacIntel",
+      "language": "zh-CN",
+      "screen": {
+        "width": 1728,
+        "height": 1117
+      }
+    },
+    "url": "http://localhost:8080/clients/model-viewer/battlefield.html",
+    "referrer": "http://localhost:8080/clients/model-viewer/",
+    "environment": {
+      "nodeVersion": "v20.19.4",
+      "platform": "darwin",
+      "arch": "arm64"
+    }
+  }
+]

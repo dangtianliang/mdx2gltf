@@ -43,6 +43,11 @@ class ControlsSystem {
         
         // 设置相机默认位置
         this.setCameraToDefaultPosition();
+        
+        // 触发控制系统就绪事件
+        setTimeout(() => {
+            window.dispatchEvent(new Event('controlsSystemReady'));
+        }, 100);
     }
     
     // 添加事件监听器
@@ -384,6 +389,44 @@ class ControlsSystem {
     // 更新控制系统
     update() {
         this.moveCamera();
+    }
+    
+    // 调节相机距离（镜头长度）
+    adjustCameraDistance(distance) {
+        // 确定相机的目标点（看向的点）
+        // 这里我们使用一个固定的目标点，比如原点，或者计算相机当前看向的点
+        const target = new THREE.Vector3(0, 0, 0); // 使用原点作为目标点
+        
+        // 计算相机当前到目标点的方向
+        const direction = new THREE.Vector3();
+        direction.subVectors(this.camera.position, target).normalize();
+        
+        // 计算相机当前到目标点的距离
+        const currentDistance = this.camera.position.distanceTo(target);
+        
+        // 计算新的相机位置：沿着方向向量，距离目标点为指定的distance
+        const newPosition = new THREE.Vector3();
+        newPosition.copy(target).add(direction.multiplyScalar(distance));
+        
+        // 更新相机位置
+        this.camera.position.copy(newPosition);
+        
+        // 确保相机看向目标点
+        this.camera.lookAt(target);
+        
+        // 确保相机不会低于地面
+        if (this.camera.position.y < 1.7) {
+            this.camera.position.y = 1.7;
+            // 重新看向目标点，确保视角正确
+            this.camera.lookAt(target);
+        }
+    }
+    
+    // 获取当前相机距离
+    getCameraDistance() {
+        // 返回相机到目标点（原点）的距离
+        const target = new THREE.Vector3(0, 0, 0);
+        return this.camera.position.distanceTo(target);
     }
 }
 

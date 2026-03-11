@@ -206,6 +206,14 @@
                 <button onclick="setCameraToDefaultPosition()">重置相机位置</button>
                 <button onclick="clearErrorLogs()">清除错误日志</button>
             </div>
+            
+            <div class="camera-controls" style="margin: 15px 0; padding: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 5px;">
+                <p><strong>摄像机控制：</strong></p>
+                <div style="margin: 10px 0;">
+                    <label for="camera-distance" style="display: block; margin-bottom: 5px;">镜头长度: <span id="camera-distance-value">5</span></label>
+                    <input type="range" id="camera-distance" min="1" max="20" value="5" step="0.1" style="width: 100%;">
+                </div>
+            </div>
         </div>
         
         <!-- 错误监控面板 -->
@@ -483,6 +491,40 @@
         
         // 初始化监控
         initMonitoring();
+        
+        // 初始化相机距离控制
+        function initCameraDistanceControl() {
+            const distanceSlider = document.getElementById('camera-distance');
+            const distanceValue = document.getElementById('camera-distance-value');
+            
+            if (distanceSlider && distanceValue) {
+                // 设置初始值
+                distanceValue.textContent = distanceSlider.value;
+                
+                // 添加事件监听器
+                distanceSlider.addEventListener('input', function() {
+                    const distance = parseFloat(this.value);
+                    distanceValue.textContent = distance.toFixed(1);
+                    
+                    // 调用控制系统的方法来调节相机距离
+                    if (controlsSystem) {
+                        controlsSystem.adjustCameraDistance(distance);
+                    }
+                });
+                
+                // 当控制系统初始化后，更新拖动条的值
+                window.addEventListener('controlsSystemReady', function() {
+                    if (controlsSystem) {
+                        const currentDistance = controlsSystem.getCameraDistance();
+                        distanceSlider.value = currentDistance;
+                        distanceValue.textContent = currentDistance.toFixed(1);
+                    }
+                });
+            }
+        }
+        
+        // 初始化相机距离控制
+        initCameraDistanceControl();
         
         // ==================== 场景设置 ====================
         
@@ -1220,6 +1262,122 @@
         // 动画循环已移至下方的增强版本
         // 保留此注释以避免混淆
         
+        // 加载默认模型
+        function loadDefaultModel() {
+            const modelPath = '../../src/model/Demon/EredarWarlock/export.gltf';
+            const loader = new THREE.GLTFLoader();
+            
+            logError(`开始加载默认模型: ${modelPath}`, 'info');
+            
+            loader.load(
+                modelPath,
+                (gltf) => {
+                    logError('默认模型加载成功', 'info');
+                    
+                    // 获取模型
+                    const model = gltf.scene;
+                    
+                    // 自动缩放模型以适应场景
+                    const box = new THREE.Box3().setFromObject(model);
+                    const size = box.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    const scale = 2 / maxDim; // 调整缩放比例
+                    model.scale.set(scale, scale, scale);
+                    
+                    // 将模型放置到进截面的点上（原点）
+                    model.position.set(0, 0, 0);
+                    
+                    // 为模型添加阴影
+                    model.castShadow = true;
+                    model.receiveShadow = true;
+                    
+                    // 遍历模型中的所有网格，启用阴影
+                    model.traverse((child) => {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+                    });
+                    
+                    // 为模型添加可选择属性
+                    makeObjectSelectable(model);
+                    
+                    // 为模型的所有子对象也添加可选择属性
+                    model.traverse(function(child) {
+                        if (child.isMesh) {
+                            makeObjectSelectable(child);
+                        }
+                    });
+                    
+                    // 添加到场景
+                    scene.add(model);
+                    
+                    // 检查并播放动画
+                    let mixer = null;
+                    let currentAction = null;
+                    
+                    if (gltf.animations && gltf.animations.length > 0) {
+                        logError(`发现 ${gltf.animations.length} 个动画`, 'info');
+                        
+                        // 创建动画混合器
+                        mixer = new THREE.AnimationMixer(model);
+                        
+                        // 查找stand动画
+                        let standAnimation = gltf.animations.find(anim => 
+                            anim.name.toLowerCase().includes('stand')
+                        );
+                        
+                        // 如果没有stand动画，查找walk动画
+                        if (!standAnimation) {
+                            standAnimation = gltf.animations.find(anim => 
+                                anim.name.toLowerCase().includes('walk')
+                            );
+                        }
+                        
+                        // 如果找到动画，播放它
+                        if (standAnimation) {
+                            logError(`播放动画: ${standAnimation.name}`, 'info');
+                            currentAction = mixer.clipAction(standAnimation);
+                            currentAction.setLoop(THREE.LoopRepeat);
+                            currentAction.play();
+                            
+                            // 存储动画混合器
+                            animationMixers.push({
+                                mixer: mixer,
+                                model: model
+                            });
+                        } else {
+                            logError('未找到stand或walk动画', 'info');
+                        }
+                    } else {
+                        logError('模型没有动画', 'info');
+                    }
+                    
+                    // 存储模型信息
+                    gltfModels.push({
+                        name: 'EredarWarlock',
+                        model: model,
+                        position: new THREE.Vector3(0, 0, 0),
+                        mixer: mixer,
+                        currentAction: currentAction
+                    });
+                    
+                    logError('默认模型已添加到场景，位置: (0, 0, 0)', 'info');
+                    logError(`当前场景中的GLTF模型数量: ${gltfModels.length}`, 'info');
+                },
+                (xhr) => {
+                    // 加载进度
+                    const progress = Math.round((xhr.loaded / xhr.total) * 100);
+                    if (progress % 10 === 0) {
+                        logError(`加载默认模型: ${progress}%`, 'info');
+                    }
+                },
+                (error) => {
+                    logError(`加载默认模型时出错: ${error.message}`, 'error');
+                }
+            );
+        }
+        
         // 初始化场景
         function initScene() {
             try {
@@ -1259,6 +1417,14 @@
                     });
                 } catch (e) {
                     logError('初始化控制系统时出错', 'error', e.stack);
+                }
+                
+                // 加载默认模型
+                try {
+                    loadDefaultModel();
+                    logError('默认模型加载启动', 'info');
+                } catch (e) {
+                    logError('加载默认模型时出错', 'error', e.stack);
                 }
                 
                 // 启动动画循环，确保Three.js场景能显示
