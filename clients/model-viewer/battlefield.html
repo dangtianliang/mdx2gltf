@@ -194,6 +194,14 @@
             <div class="file-input-section" style="margin: 15px 0; padding: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 5px;">
                 <p><strong>加载GLTF模型：</strong></p>
                 <input type="file" id="gltf-file-input" accept=".gltf,.glb" style="width: 100%; margin: 5px 0;">
+                <div style="margin: 5px 0;">
+                    <label for="model-scale" style="display: block; margin-bottom: 5px;">缩放倍数: <span id="model-scale-value">32.0</span></label>
+                    <input type="range" id="model-scale" min="0.1" max="50" value="32.0" step="0.1" style="width: 100%;">
+                </div>
+                <div style="margin: 5px 0;">
+                    <label for="model-height" style="display: block; margin-bottom: 5px;">垂直高度: <span id="model-height-value">2.0</span></label>
+                    <input type="range" id="model-height" min="0" max="20" value="2" step="0.1" style="width: 100%;">
+                </div>
                 <button onclick="loadSelectedGltfModel()" style="width: 100%; margin: 5px 0; padding: 8px; background-color: rgba(46, 204, 113, 0.3); color: white; border: 1px solid rgba(46, 204, 113, 0.5); border-radius: 3px; cursor: pointer; font-size: 12px;">加载模型</button>
             </div>
             <div class="debug-buttons">
@@ -296,7 +304,7 @@
                 if (errorCount > MAX_ERRORS) {
                     // 每类错误只记录一次，避免重复日志
                     if (!message.includes('重复错误')) {
-                        logError('错误数量达到上限，后续错误将被忽略', 'warning');
+                        // logError('错误数量达到上限，后续错误将被忽略', 'warning');
                     }
                     return;
                 }
@@ -365,13 +373,13 @@
             if (errorLogsContainer) {
                 errorLogsContainer.innerHTML = '';
             }
-            logError('错误日志已清除', 'info');
+            // logError('错误日志已清除', 'info');
         }
         
         // 全局错误捕获
         window.onerror = function(message, source, lineno, colno, error) {
             const errorDetails = error ? error.stack : '';
-            logError(`JavaScript错误: ${message}`, 'error', `文件: ${source}, 行: ${lineno}, 列: ${colno}\n${errorDetails}`);
+            // logError(`JavaScript错误: ${message}`, 'error', `文件: ${source}, 行: ${lineno}, 列: ${colno}\n${errorDetails}`);
             return true; // 阻止默认处理
         };
         
@@ -384,12 +392,12 @@
                 // 检查是否来自ModelViewer
                 if (errorDetails.includes('viewer.min.js') || errorDetails.includes('viewer.ts')) {
                     // 隔离ModelViewer的Promise拒绝，防止页面崩溃
-                    logError('ModelViewer内部Promise拒绝', 'warning', `原因: ${errorDetails}`);
+                    // logError('ModelViewer内部Promise拒绝', 'warning', `原因: ${errorDetails}`);
                     // 阻止默认处理，防止页面崩溃
                     event.preventDefault();
                 } else {
                     // 其他Promise拒绝
-                    logError('未处理的Promise拒绝', 'error', `原因: ${errorDetails}`);
+                    // logError('未处理的Promise拒绝', 'error', `原因: ${errorDetails}`);
                 }
             } catch (e) {
                 console.error('处理Promise拒绝时出错:', e);
@@ -404,12 +412,12 @@
                 // 检查是否来自ModelViewer
                 if (source && (source.includes('viewer.min.js') || source.includes('viewer.ts'))) {
                     // 隔离ModelViewer的错误，防止页面崩溃
-                    logError('ModelViewer内部错误', 'warning', `消息: ${message}, 文件: ${source}, 行: ${lineno}, 列: ${colno}\n${errorDetails}`);
+                    // logError('ModelViewer内部错误', 'warning', `消息: ${message}, 文件: ${source}, 行: ${lineno}, 列: ${colno}\n${errorDetails}`);
                     // 阻止默认处理，防止页面崩溃
                     return true;
                 } else {
                     // 其他JavaScript错误
-                    logError(`JavaScript错误: ${message}`, 'error', `文件: ${source}, 行: ${lineno}, 列: ${colno}\n${errorDetails}`);
+                    // logError(`JavaScript错误: ${message}`, 'error', `文件: ${source}, 行: ${lineno}, 列: ${colno}\n${errorDetails}`);
                     return true;
                 }
             } catch (e) {
@@ -423,15 +431,15 @@
             // 监控XMLHttpRequest错误
             const originalXHROpen = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function(method, url) {
-                logError(`XHR请求: ${method} ${url}`, 'info');
+                // logError(`XHR请求: ${method} ${url}`, 'info');
                 this.addEventListener('error', function() {
-                    logError(`XHR网络请求错误: ${url}`, 'warning', `状态: ${this.status}, 状态文本: ${this.statusText}`);
+                    // logError(`XHR网络请求错误: ${url}`, 'warning', `状态: ${this.status}, 状态文本: ${this.statusText}`);
                 });
                 this.addEventListener('load', function() {
-                    logError(`XHR请求成功: ${url}, 状态: ${this.status}`, 'info');
+                    // logError(`XHR请求成功: ${url}, 状态: ${this.status}`, 'info');
                 });
                 this.addEventListener('abort', function() {
-                    logError(`XHR请求被中止: ${url}`, 'error');
+                    // logError(`XHR请求被中止: ${url}`, 'error');
                 });
                 return originalXHROpen.apply(this, arguments);
             };
@@ -439,14 +447,14 @@
             // 监控Fetch API错误
             const originalFetch = window.fetch;
             window.fetch = function(url, options) {
-                logError(`Fetch请求: ${options?.method || 'GET'} ${url}`, 'info');
+                // logError(`Fetch请求: ${options?.method || 'GET'} ${url}`, 'info');
                 return originalFetch(url, options)
                     .then(response => {
-                        logError(`Fetch请求成功: ${url}, 状态: ${response.status}`, 'info');
+                        // logError(`Fetch请求成功: ${url}, 状态: ${response.status}`, 'info');
                         return response;
                     })
                     .catch(error => {
-                        logError(`Fetch API错误: ${url}`, 'warning', error.message);
+                        // logError(`Fetch API错误: ${url}`, 'warning', error.message);
                         throw error; // 重新抛出错误以便其他代码处理
                     });
             };
@@ -483,7 +491,7 @@
         
         // 初始化监控
         function initMonitoring() {
-            logError('错误监控已初始化', 'info');
+            // logError('错误监控已初始化', 'info');
             // 暂时禁用网络请求监控，避免干扰正常请求
             // monitorNetworkErrors();
             updatePerformanceMetrics();
@@ -526,6 +534,42 @@
         // 初始化相机距离控制
         initCameraDistanceControl();
         
+        // 初始化模型缩放控制
+        function initModelScaleControl() {
+            // 缩放倍数控制
+            const scaleSlider = document.getElementById('model-scale');
+            const scaleValue = document.getElementById('model-scale-value');
+            
+            if (scaleSlider && scaleValue) {
+                // 设置初始值
+                scaleValue.textContent = scaleSlider.value;
+                
+                // 添加事件监听器
+                scaleSlider.addEventListener('input', function() {
+                    const scale = parseFloat(this.value);
+                    scaleValue.textContent = scale.toFixed(1);
+                });
+            }
+            
+            // 垂直高度控制
+            const heightSlider = document.getElementById('model-height');
+            const heightValue = document.getElementById('model-height-value');
+            
+            if (heightSlider && heightValue) {
+                // 设置初始值
+                heightValue.textContent = heightSlider.value;
+                
+                // 添加事件监听器
+                heightSlider.addEventListener('input', function() {
+                    const height = parseFloat(this.value);
+                    heightValue.textContent = height.toFixed(1);
+                });
+            }
+        }
+        
+        // 初始化模型缩放控制
+        initModelScaleControl();
+        
         // ==================== 场景设置 ====================
         
         // 场景设置
@@ -537,7 +581,7 @@
             75, // 视野角度
             window.innerWidth / window.innerHeight, // 宽高比
             0.1, // 近裁剪面
-            1000 // 远裁剪面
+            1000000 // 远裁剪面 - 增加到1000000，确保能看到非常远的物体
         );
         camera.position.set(0, 2, 5); // 相机位置
         camera.rotation.order = 'XYZ'; // 设置旋转顺序，确保Y轴旋转是围绕世界坐标系的Y轴
@@ -635,8 +679,8 @@
         
         // 添加光源
         function addLights() {
-            // 增强环境光
-            const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
+            // 降低环境光强度
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);
             
             // 主方向光（模拟太阳光）
@@ -652,9 +696,9 @@
             directionalLight2.position.set(-8, 10, -5);
             scene.add(directionalLight2);
             
-            // 顶部点光源，增强整体照明
+            // 顶部点光源，增强整体照明，调整到5米高
             const pointLight = new THREE.PointLight(0xffffff, 0.4);
-            pointLight.position.set(0, 20, 0);
+            pointLight.position.set(0, 5, 0);
             scene.add(pointLight);
         }
         
@@ -680,12 +724,12 @@
             // 延迟初始化ModelViewer，确保Three.js场景优先显示
             setTimeout(() => {
                 try {
-                    logError('开始安全初始化ModelViewer...', 'info');
+                    // logError('开始安全初始化ModelViewer...', 'info');
                     
                     // 创建ModelViewer容器
                     const modelContainer = document.getElementById('model-container');
                     if (!modelContainer) {
-                        logError('ModelViewer容器不存在', 'error');
+                        // logError('ModelViewer容器不存在', 'error');
                         return;
                     }
                     
@@ -704,53 +748,55 @@
                     
                     // 检查ModelViewer库是否加载
                     if (!ModelViewer || !ModelViewer.viewer || !ModelViewer.viewer.ModelViewer) {
-                        logError('ModelViewer库未正确加载', 'error');
+                        // logError('ModelViewer库未正确加载', 'error');
                         return;
                     }
                     
                     // 创建ModelViewer实例
                     try {
                         modelViewer = new ModelViewer.viewer.ModelViewer(modelCanvas);
-                        logError('ModelViewer实例创建成功', 'info');
+                        // logError('ModelViewer实例创建成功', 'info');
                     } catch (e) {
-                        logError('创建ModelViewer实例时出错', 'error', e.stack);
+                        // logError('创建ModelViewer实例时出错', 'error', e.stack);
                         return;
                     }
                     
-                    // 添加处理器
+                    // 添加处理器 - 已注释
+                    /*
                     try {
                         if (ModelViewer.viewer.handlers) {
                             if (ModelViewer.viewer.handlers.mdx) {
                                 modelViewer.addHandler(ModelViewer.viewer.handlers.mdx);
-                                logError('MDX处理器添加成功', 'info');
+                                // logError('MDX处理器添加成功', 'info');
                             } else {
-                                logError('MDX处理器不存在', 'warning');
+                                // logError('MDX处理器不存在', 'warning');
                             }
                             if (ModelViewer.viewer.handlers.blp) {
                                 modelViewer.addHandler(ModelViewer.viewer.handlers.blp);
-                                logError('BLP处理器添加成功', 'info');
+                                // logError('BLP处理器添加成功', 'info');
                             } else {
-                                logError('BLP处理器不存在', 'warning');
+                                // logError('BLP处理器不存在', 'warning');
                             }
                         } else {
-                            logError('ModelViewer处理器未加载', 'error');
+                            // logError('ModelViewer处理器未加载', 'error');
                             return;
                         }
                     } catch (e) {
-                        logError('添加处理器时出错', 'error', e.stack);
+                        // logError('添加处理器时出错', 'error', e.stack);
                     }
+                    */
                     
                     // 创建场景
                     try {
                         modelScene = modelViewer.addScene();
                         if (modelScene) {
-                            logError('ModelViewer场景创建成功', 'info');
+                            // logError('ModelViewer场景创建成功', 'info');
                         } else {
-                            logError('无法创建ModelViewer场景', 'error');
+                            // logError('无法创建ModelViewer场景', 'error');
                             return;
                         }
                     } catch (e) {
-                        logError('创建ModelViewer场景时出错', 'error', e.stack);
+                        // logError('创建ModelViewer场景时出错', 'error', e.stack);
                         return;
                     }
                     
@@ -763,9 +809,9 @@
                                     const fetchUrl = errorEvent.fetchUrl || 'Unknown URL';
                                     
                                     if (errorMessage.includes('Http Error')) {
-                                        logError('ModelViewer资源加载错误', 'warning', `错误: ${errorMessage}, URL: ${fetchUrl}`);
+                                        // logError('ModelViewer资源加载错误', 'warning', `错误: ${errorMessage}, URL: ${fetchUrl}`);
                                     } else {
-                                        logError('ModelViewer错误事件', 'error', errorEvent);
+                                        // logError('ModelViewer错误事件', 'error', errorEvent);
                                     }
                                 } catch (e) {
                                     console.error('处理ModelViewer错误事件时出错:', e);
@@ -773,23 +819,24 @@
                             });
                             
                             modelViewer.on('load', (data) => {
-                                logError('ModelViewer加载事件', 'info', data);
+                                // logError('ModelViewer加载事件', 'info', data);
                             });
                         }
-                        logError('ModelViewer事件监听器添加成功', 'info');
+                        // logError('ModelViewer事件监听器添加成功', 'info');
                     } catch (e) {
-                        logError('添加ModelViewer事件监听器失败', 'warning', e.stack);
+                        // logError('添加ModelViewer事件监听器失败', 'warning', e.stack);
                     }
                     
-                    // 增强的路径解析器 - 专业版
+                    // 增强的路径解析器 - 专业版 - 已注释
+                    /*
                     function pathSolver(src) {
                         try {
-                            logError('=== 路径解析请求 ===', 'info');
-                            logError('原始路径: ' + src, 'info');
+                            // logError('=== 路径解析请求 ===', 'info');
+                            // logError('原始路径: ' + src, 'info');
                             
                             // 处理ReplaceableTextures路径 - 跳过这些路径
                             if (src.includes('ReplaceableTextures') || src.includes('Splats')) {
-                                logError('跳过路径: ' + src + ' (系统纹理)', 'info');
+                                // logError('跳过路径: ' + src + ' (系统纹理)', 'info');
                                 return '';
                             }
                             
@@ -797,59 +844,61 @@
                             else if (src.includes('.blp') || src.includes('.dds') || src.includes('.tga') || src.includes('.png') || src.includes('.jpg')) {
                                 // 提取文件名
                                 const fileName = src.split('\\').pop().split('/').pop();
-                                logError('提取的文件名: ' + fileName, 'info');
+                                // logError('提取的文件名: ' + fileName, 'info');
                                 
                                 if (fileName) {
                                     // 构建完整的纹理路径
                                     const texturePath = `../../src/model/Creeps/Archnathid/${fileName}`;
-                                    logError('解析后的纹理路径: ' + texturePath, 'info');
+                                    // logError('解析后的纹理路径: ' + texturePath, 'info');
                                     
                                     // 验证纹理文件是否存在
                                     fetch(texturePath, { method: 'HEAD' })
                                         .then(response => {
                                             if (response.ok) {
-                                                logError('纹理文件存在: ' + texturePath, 'info');
+                                                // logError('纹理文件存在: ' + texturePath, 'info');
                                             } else {
-                                                logError('纹理文件不存在: ' + texturePath + ' (状态码: ' + response.status + ')', 'warning');
+                                                // logError('纹理文件不存在: ' + texturePath + ' (状态码: ' + response.status + ')', 'warning');
                                             }
                                         })
                                         .catch(error => {
-                                            logError('检查纹理文件时出错: ' + texturePath + ' (错误: ' + error.message + ')', 'warning');
+                                            // logError('检查纹理文件时出错: ' + texturePath + ' (错误: ' + error.message + ')', 'warning');
                                         });
                                     
                                     return texturePath;
                                 }
-                                logError('无法提取文件名: ' + src, 'error');
+                                // logError('无法提取文件名: ' + src, 'error');
                                 return '';
                             }
                             
                             // 处理模型文件路径
                             else if (src.includes('.mdx') || src.includes('.m3')) {
-                                logError('解析后的模型路径: ' + src, 'info');
+                                // logError('解析后的模型路径: ' + src, 'info');
                                 return src;
                             }
                             
                             // 处理其他文件类型
                             else {
-                                logError('跳过路径: ' + src + ' (未知文件类型)', 'info');
+                                // logError('跳过路径: ' + src + ' (未知文件类型)', 'info');
                                 return '';
                             }
                         } catch (e) {
-                            logError('路径解析时出错: ' + e.stack, 'error');
+                            // logError('路径解析时出错: ' + e.stack, 'error');
                             return '';
                         }
                     }
+                    */
                     
-                    // 安全加载Archnathid模型 - 增强版
+                    // 安全加载Archnathid模型 - 增强版 - 已注释
+                    /*
                     try {
                         // 使用绝对路径，确保正确加载模型
                         const modelPath = '../../src/model/Creeps/Archnathid/Archnathid.mdx';
                         const fullUrl = window.location.origin + '/clients/model-viewer/' + modelPath;
                         
-                        logError('=== 开始Archnathid模型加载流程 ===', 'info');
-                        logError('模型文件路径: ' + modelPath, 'info');
-                        logError('完整URL: ' + fullUrl, 'info');
-                        logError('尝试次数: ' + modelLoadAttempts + '/' + MAX_LOAD_ATTEMPTS, 'info');
+                        // logError('=== 开始Archnathid模型加载流程 ===', 'info');
+                        // logError('模型文件路径: ' + modelPath, 'info');
+                        // logError('完整URL: ' + fullUrl, 'info');
+                        // logError('尝试次数: ' + modelLoadAttempts + '/' + MAX_LOAD_ATTEMPTS, 'info');
                         
                         modelLoadStartTime = performance.now();
                         modelLoadAttempts++;
@@ -880,7 +929,7 @@
                                 }
                                 loadStatusElement.innerHTML = statusText;
                             }
-                            logError('加载状态: ' + message + (progress !== null ? ' (进度: ' + Math.round(progress) + '%)' : ''), 'info');
+                            // logError('加载状态: ' + message + (progress !== null ? ' (进度: ' + Math.round(progress) + '%)' : ''), 'info');
                         }
                         
                         // 检查模型文件是否存在
@@ -889,12 +938,12 @@
                             .then(response => {
                                 if (response.ok) {
                                     updateLoadStatus('模型文件存在，开始加载...', 30);
-                                    logError('Archnathid模型文件存在，开始加载...', 'info');
+                                    // logError('Archnathid模型文件存在，开始加载...', 'info');
                                     
                                     // 增强的模型加载逻辑
                                     function loadModelWithRetry(attempt) {
                                         updateLoadStatus(`尝试加载模型 (${attempt}/${MAX_LOAD_ATTEMPTS})...`, 40);
-                                        logError(`尝试加载模型 (${attempt}/${MAX_LOAD_ATTEMPTS})...`, 'info');
+                                        // logError(`尝试加载模型 (${attempt}/${MAX_LOAD_ATTEMPTS})...`, 'info');
                                         
                                         return modelViewer.load(modelPath, pathSolver)
                                             .then((model) => {
@@ -903,7 +952,7 @@
                                                 
                                                 if (model) {
                                                     updateLoadStatus('模型加载成功，创建实例...', 70);
-                                                    logError(`Archnathid模型加载成功！加载时间: ${modelLoadTime}ms`, 'info');
+                                                    // logError(`Archnathid模型加载成功！加载时间: ${modelLoadTime}ms`, 'info');
                                                     archnathidModel = model;
                                                     
                                                     try {
@@ -916,11 +965,11 @@
                                                             
                                                             // 测试模型实例属性
                                                             updateLoadStatus('验证模型实例...', 90);
-                                                            logError('Archnathid模型实例创建成功！', 'info');
-                                                            logError('模型实例ID: ' + (archnathidInstance.id || '未知'), 'info');
-                                                            logError('模型序列数量: ' + (model.sequences ? model.sequences.length : '未知'), 'info');
-                                                            logError('模型材质数量: ' + (model.materials ? model.materials.length : '未知'), 'info');
-                                                            logError('模型骨头数量: ' + (model.bones ? model.bones.length : '未知'), 'info');
+                                                            // logError('Archnathid模型实例创建成功！', 'info');
+                                                            // logError('模型实例ID: ' + (archnathidInstance.id || '未知'), 'info');
+                                                            // logError('模型序列数量: ' + (model.sequences ? model.sequences.length : '未知'), 'info');
+                                                            // logError('模型材质数量: ' + (model.materials ? model.materials.length : '未知'), 'info');
+                                                            // logError('模型骨头数量: ' + (model.bones ? model.bones.length : '未知'), 'info');
                                                             
                                                             modelViewerReady = true;
                                                             modelLoadAttempts = 0; // 重置尝试次数
@@ -931,7 +980,7 @@
                                                             }
                                                             
                                                             updateLoadStatus('加载完成！', 100);
-                                                            logError('=== Archnathid模型加载流程完成 ===', 'info');
+                                                            // logError('=== Archnathid模型加载流程完成 ===', 'info');
                                                             
                                                             // 3秒后移除加载状态
                                                             setTimeout(() => {
@@ -941,7 +990,7 @@
                                                             }, 3000);
                                                         } else {
                                                             updateLoadStatus('创建模型实例失败: 返回null', 75);
-                                                            logError('创建模型实例失败: 返回null', 'error');
+                                                            // logError('创建模型实例失败: 返回null', 'error');
                                                             // 尝试重新创建实例
                                                             setTimeout(() => {
                                                                 try {
@@ -951,7 +1000,7 @@
                                                                         archnathidInstance.setSequence(0);
                                                                         archnathidInstance.setSequenceLoopMode(2);
                                                                         updateLoadStatus('重新创建模型实例成功！', 85);
-                                                                        logError('重新创建模型实例成功！', 'info');
+                                                                        // logError('重新创建模型实例成功！', 'info');
                                                                         modelViewerReady = true;
                                                                         
                                                                         // 自动启用渲染
@@ -967,7 +1016,7 @@
                                                                         }, 3000);
                                                                     } else {
                                                                         updateLoadStatus('重新创建实例失败', 90);
-                                                                        logError('重新创建实例失败: 仍然返回null', 'error');
+                                                                        // logError('重新创建实例失败: 仍然返回null', 'error');
                                                                         setTimeout(() => {
                                                                             if (loadStatusElement && loadStatusElement.parentNode) {
                                                                                 loadStatusElement.parentNode.removeChild(loadStatusElement);
@@ -976,7 +1025,7 @@
                                                                     }
                                                                 } catch (retryError) {
                                                                     updateLoadStatus('重新创建实例出错', 90);
-                                                                    logError('重新创建模型实例失败', 'error', retryError.stack);
+                                                                    // logError('重新创建模型实例失败', 'error', retryError.stack);
                                                                     setTimeout(() => {
                                                                         if (loadStatusElement && loadStatusElement.parentNode) {
                                                                             loadStatusElement.parentNode.removeChild(loadStatusElement);
@@ -987,7 +1036,7 @@
                                                         }
                                                     } catch (e) {
                                                         updateLoadStatus('创建实例时出错', 75);
-                                                        logError('创建模型实例时出错', 'error', e.stack);
+                                                        // logError('创建模型实例时出错', 'error', e.stack);
                                                         setTimeout(() => {
                                                             if (loadStatusElement && loadStatusElement.parentNode) {
                                                                 loadStatusElement.parentNode.removeChild(loadStatusElement);
@@ -996,17 +1045,17 @@
                                                     }
                                                 } else {
                                                     updateLoadStatus('模型加载失败！返回null', 50);
-                                                    logError('Archnathid模型加载失败！返回null', 'error');
+                                                    // logError('Archnathid模型加载失败！返回null', 'error');
                                                     // 尝试重试加载
                                                     if (attempt < MAX_LOAD_ATTEMPTS) {
                                                         updateLoadStatus(`加载失败，${attempt}秒后重试...`, 60);
-                                                        logError(`模型加载失败，${attempt}秒后重试...`, 'warning');
+                                                        // logError(`模型加载失败，${attempt}秒后重试...`, 'warning');
                                                         setTimeout(() => {
                                                             loadModelWithRetry(attempt + 1);
                                                         }, attempt * 1000);
                                                     } else {
                                                         updateLoadStatus('达到最大重试次数，加载失败', 100);
-                                                        logError(`达到最大重试次数 (${MAX_LOAD_ATTEMPTS})，停止加载模型`, 'error');
+                                                        // logError(`达到最大重试次数 (${MAX_LOAD_ATTEMPTS})，停止加载模型`, 'error');
                                                         setTimeout(() => {
                                                             if (loadStatusElement && loadStatusElement.parentNode) {
                                                                 loadStatusElement.parentNode.removeChild(loadStatusElement);
@@ -1017,34 +1066,34 @@
                                             })
                                             .catch(error => {
                                                 updateLoadStatus('加载模型时出错', 45);
-                                                logError('加载模型时出错', 'error', error.message);
-                                                logError('错误详情: ' + (error.stack || '无堆栈信息'), 'error');
+                                                // logError('加载模型时出错', 'error', error.message);
+                                                // logError('错误详情: ' + (error.stack || '无堆栈信息'), 'error');
                                                 
                                                 // 分析错误原因
                                                 if (error.message.includes('404')) {
-                                                    logError('错误原因: 文件未找到 (404错误)', 'error');
+                                                    // logError('错误原因: 文件未找到 (404错误)', 'error');
                                                     updateLoadStatus('错误: 文件未找到 (404)', 50);
                                                 } else if (error.message.includes('network')) {
-                                                    logError('错误原因: 网络连接问题', 'error');
+                                                    // logError('错误原因: 网络连接问题', 'error');
                                                     updateLoadStatus('错误: 网络连接问题', 50);
                                                 } else if (error.message.includes('parse')) {
-                                                    logError('错误原因: 模型文件解析错误', 'error');
+                                                    // logError('错误原因: 模型文件解析错误', 'error');
                                                     updateLoadStatus('错误: 模型文件解析错误', 50);
                                                 } else {
-                                                    logError('错误原因: 未知错误', 'error');
+                                                    // logError('错误原因: 未知错误', 'error');
                                                     updateLoadStatus('错误: 未知错误', 50);
                                                 }
                                                 
                                                 // 尝试重试加载
                                                 if (attempt < MAX_LOAD_ATTEMPTS) {
                                                     updateLoadStatus(`出错，${attempt}秒后重试...`, 60);
-                                                    logError(`模型加载出错，${attempt}秒后重试...`, 'warning');
+                                                    // logError(`模型加载出错，${attempt}秒后重试...`, 'warning');
                                                     setTimeout(() => {
                                                         loadModelWithRetry(attempt + 1);
                                                     }, attempt * 1000);
                                                 } else {
                                                     updateLoadStatus('达到最大重试次数，加载失败', 100);
-                                                    logError(`达到最大重试次数 (${MAX_LOAD_ATTEMPTS})，停止加载模型`, 'error');
+                                                    // logError(`达到最大重试次数 (${MAX_LOAD_ATTEMPTS})，停止加载模型`, 'error');
                                                     setTimeout(() => {
                                                         if (loadStatusElement && loadStatusElement.parentNode) {
                                                             loadStatusElement.parentNode.removeChild(loadStatusElement);
@@ -1058,9 +1107,9 @@
                                     loadModelWithRetry(1);
                                 } else {
                                     updateLoadStatus('模型文件不存在', 30);
-                                    logError('Archnathid模型文件不存在: ' + modelPath, 'error');
-                                    logError('状态码: ' + response.status, 'error');
-                                    logError('响应状态文本: ' + response.statusText, 'error');
+                                    // logError('Archnathid模型文件不存在: ' + modelPath, 'error');
+                                    // logError('状态码: ' + response.status, 'error');
+                                    // logError('响应状态文本: ' + response.statusText, 'error');
                                     
                                     // 显示详细的错误信息
                                     updateLoadStatus('错误: 文件不存在 (状态码: ' + response.status + ')', 100);
@@ -1073,16 +1122,16 @@
                             })
                             .catch(error => {
                                 updateLoadStatus('检查文件时出错，尝试直接加载...', 20);
-                                logError('检查模型文件时出错', 'error', error.message);
+                                // logError('检查模型文件时出错', 'error', error.message);
                                 // 尝试直接加载模型，不检查文件存在性
-                                logError('尝试直接加载模型，跳过文件存在性检查...', 'info');
+                                // logError('尝试直接加载模型，跳过文件存在性检查...', 'info');
                                 
                                 updateLoadStatus('直接加载模型...', 40);
                                 modelViewer.load(modelPath, pathSolver)
                                     .then((model) => {
                                         if (model) {
                                             updateLoadStatus('直接加载成功，创建实例...', 70);
-                                            logError('Archnathid模型直接加载成功！', 'info');
+                                            // logError('Archnathid模型直接加载成功！', 'info');
                                             archnathidModel = model;
                                             
                                             try {
@@ -1092,7 +1141,7 @@
                                                     archnathidInstance.setScene(modelScene);
                                                     archnathidInstance.setSequence(0);
                                                     archnathidInstance.setSequenceLoopMode(2);
-                                                    logError('Archnathid模型实例创建成功！', 'info');
+                                                    // logError('Archnathid模型实例创建成功！', 'info');
                                                     modelViewerReady = true;
                                                     
                                                     // 自动启用渲染
@@ -1108,7 +1157,7 @@
                                                     }, 3000);
                                                 } else {
                                                     updateLoadStatus('创建实例失败', 75);
-                                                    logError('创建模型实例失败: 返回null', 'error');
+                                                    // logError('创建模型实例失败: 返回null', 'error');
                                                     setTimeout(() => {
                                                         if (loadStatusElement && loadStatusElement.parentNode) {
                                                             loadStatusElement.parentNode.removeChild(loadStatusElement);
@@ -1117,7 +1166,7 @@
                                                 }
                                             } catch (e) {
                                                 updateLoadStatus('创建实例时出错', 75);
-                                                logError('创建模型实例时出错', 'error', e.stack);
+                                                // logError('创建模型实例时出错', 'error', e.stack);
                                                 setTimeout(() => {
                                                     if (loadStatusElement && loadStatusElement.parentNode) {
                                                         loadStatusElement.parentNode.removeChild(loadStatusElement);
@@ -1126,7 +1175,7 @@
                                             }
                                         } else {
                                             updateLoadStatus('直接加载失败', 100);
-                                            logError('Archnathid模型直接加载失败！', 'error');
+                                            // logError('Archnathid模型直接加载失败！', 'error');
                                             setTimeout(() => {
                                                 if (loadStatusElement && loadStatusElement.parentNode) {
                                                     loadStatusElement.parentNode.removeChild(loadStatusElement);
@@ -1136,8 +1185,8 @@
                                     })
                                     .catch(error => {
                                         updateLoadStatus('直接加载时出错', 50);
-                                        logError('直接加载模型时出错', 'error', error.message);
-                                        logError('错误详情: ' + (error.stack || '无堆栈信息'), 'error');
+                                        // logError('直接加载模型时出错', 'error', error.message);
+                                        // logError('错误详情: ' + (error.stack || '无堆栈信息'), 'error');
                                         
                                         updateLoadStatus('加载失败', 100);
                                         setTimeout(() => {
@@ -1148,16 +1197,17 @@
                                     });
                             });
                     } catch (e) {
-                        logError('启动模型加载时出错', 'error', e.stack);
+                        // logError('启动模型加载时出错', 'error', e.stack);
                         // 清理加载状态元素
                         const loadStatusElement = document.getElementById('model-load-status');
                         if (loadStatusElement && loadStatusElement.parentNode) {
                             loadStatusElement.parentNode.removeChild(loadStatusElement);
                         }
                     }
+                    */
                     
                 } catch (initError) {
-                    logError('初始化ModelViewer时出错', 'error', initError.stack);
+                    // logError('初始化ModelViewer时出错', 'error', initError.stack);
                 }
             }, 3000); // 延迟3秒初始化ModelViewer，确保Three.js场景完全加载
         }
@@ -1267,12 +1317,12 @@
             const modelPath = '../../src/model/Demon/EredarWarlock/export.gltf';
             const loader = new THREE.GLTFLoader();
             
-            logError(`开始加载默认模型: ${modelPath}`, 'info');
+            // logError(`开始加载默认模型: ${modelPath}`, 'info');
             
             loader.load(
                 modelPath,
                 (gltf) => {
-                    logError('默认模型加载成功', 'info');
+                    // logError('默认模型加载成功', 'info');
                     
                     // 获取模型
                     const model = gltf.scene;
@@ -1317,7 +1367,7 @@
                     let currentAction = null;
                     
                     if (gltf.animations && gltf.animations.length > 0) {
-                        logError(`发现 ${gltf.animations.length} 个动画`, 'info');
+                        // logError(`发现 ${gltf.animations.length} 个动画`, 'info');
                         
                         // 创建动画混合器
                         mixer = new THREE.AnimationMixer(model);
@@ -1336,7 +1386,7 @@
                         
                         // 如果找到动画，播放它
                         if (standAnimation) {
-                            logError(`播放动画: ${standAnimation.name}`, 'info');
+                            // logError(`播放动画: ${standAnimation.name}`, 'info');
                             currentAction = mixer.clipAction(standAnimation);
                             currentAction.setLoop(THREE.LoopRepeat);
                             currentAction.play();
@@ -1347,10 +1397,10 @@
                                 model: model
                             });
                         } else {
-                            logError('未找到stand或walk动画', 'info');
+                            // logError('未找到stand或walk动画', 'info');
                         }
                     } else {
-                        logError('模型没有动画', 'info');
+                        // logError('模型没有动画', 'info');
                     }
                     
                     // 存储模型信息
@@ -1362,18 +1412,18 @@
                         currentAction: currentAction
                     });
                     
-                    logError('默认模型已添加到场景，位置: (0, 0, 0)', 'info');
-                    logError(`当前场景中的GLTF模型数量: ${gltfModels.length}`, 'info');
+                    // logError('默认模型已添加到场景，位置: (0, 0, 0)', 'info');
+                    // logError(`当前场景中的GLTF模型数量: ${gltfModels.length}`, 'info');
                 },
                 (xhr) => {
                     // 加载进度
                     const progress = Math.round((xhr.loaded / xhr.total) * 100);
                     if (progress % 10 === 0) {
-                        logError(`加载默认模型: ${progress}%`, 'info');
+                        // logError(`加载默认模型: ${progress}%`, 'info');
                     }
                 },
                 (error) => {
-                    logError(`加载默认模型时出错: ${error.message}`, 'error');
+                    // logError(`加载默认模型时出错: ${error.message}`, 'error');
                 }
             );
         }
@@ -1381,28 +1431,28 @@
         // 初始化场景
         function initScene() {
             try {
-                logError('开始初始化场景...', 'info');
+                // logError('开始初始化场景...', 'info');
                 
                 // 先初始化Three.js场景，确保基本显示
                 try {
                     createGroundGrid();
-                    logError('地面网格创建成功', 'info');
+                    // logError('地面网格创建成功', 'info');
                 } catch (e) {
-                    logError('创建地面网格时出错', 'error', e.stack);
+                    // logError('创建地面网格时出错', 'error', e.stack);
                 }
                 
                 try {
                     addBasicElements();
-                    logError('基础元素添加成功', 'info');
+                    // logError('基础元素添加成功', 'info');
                 } catch (e) {
-                    logError('添加基础元素时出错', 'error', e.stack);
+                    // logError('添加基础元素时出错', 'error', e.stack);
                 }
                 
                 try {
                     addLights();
-                    logError('光源添加成功', 'info');
+                    // logError('光源添加成功', 'info');
                 } catch (e) {
-                    logError('添加光源时出错', 'error', e.stack);
+                    // logError('添加光源时出错', 'error', e.stack);
                 }
                 
                 // 创建控制系统实例
@@ -1411,47 +1461,47 @@
                     import('./controls.js').then((module) => {
                         const { ControlsSystem } = module;
                         controlsSystem = new ControlsSystem(scene, camera, renderer);
-                        logError('控制系统初始化成功', 'info');
+                        // logError('控制系统初始化成功', 'info');
                     }).catch((error) => {
-                        logError('导入控制系统模块时出错', 'error', error.stack);
+                        // logError('导入控制系统模块时出错', 'error', error.stack);
                     });
                 } catch (e) {
-                    logError('初始化控制系统时出错', 'error', e.stack);
+                    // logError('初始化控制系统时出错', 'error', e.stack);
                 }
                 
                 // 加载默认模型
                 try {
-                    loadDefaultModel();
-                    logError('默认模型加载启动', 'info');
+                    // loadDefaultModel();
+                    // logError('默认模型加载启动', 'info');
                 } catch (e) {
-                    logError('加载默认模型时出错', 'error', e.stack);
+                    // logError('加载默认模型时出错', 'error', e.stack);
                 }
                 
                 // 启动动画循环，确保Three.js场景能显示
                 try {
                     animate();
-                    logError('动画循环启动成功', 'info');
+                    // logError('动画循环启动成功', 'info');
                 } catch (e) {
-                    logError('启动动画循环时出错', 'error', e.stack);
+                    // logError('启动动画循环时出错', 'error', e.stack);
                 }
                 
                 // 最后初始化ModelViewer，即使失败也不影响Three.js场景
                 try {
-                    initModelViewer();
-                    logError('ModelViewer初始化启动', 'info');
+                    // initModelViewer();
+                    // logError('ModelViewer初始化启动', 'info');
                 } catch (e) {
-                    logError('初始化ModelViewer时出错', 'error', e.stack);
+                    // logError('初始化ModelViewer时出错', 'error', e.stack);
                     // ModelViewer初始化失败不影响Three.js场景
                 }
                 
-                logError('场景初始化完成', 'info');
+                // logError('场景初始化完成', 'info');
             } catch (initError) {
-                logError('场景初始化时出错', 'error', initError.stack);
+                // logError('场景初始化时出错', 'error', initError.stack);
                 // 即使初始化出错，也要尝试启动动画循环
                 try {
                     animate();
                 } catch (e) {
-                    logError('尝试启动动画循环时出错', 'error', e.stack);
+                    // logError('尝试启动动画循环时出错', 'error', e.stack);
                 }
             }
         }
@@ -1470,18 +1520,18 @@
                 btn.textContent = '禁用ModelViewer渲染';
                 btn.style.backgroundColor = 'rgba(231, 76, 60, 0.3)';
                 btn.style.borderColor = 'rgba(231, 76, 60, 0.5)';
-                logError('已启用ModelViewer渲染，使用时间分片渲染避免WebGL上下文冲突', 'info');
+                // logError('已启用ModelViewer渲染，使用时间分片渲染避免WebGL上下文冲突', 'info');
             } else {
                 btn.textContent = '启用ModelViewer渲染';
                 btn.style.backgroundColor = 'rgba(52, 152, 219, 0.3)';
                 btn.style.borderColor = 'rgba(52, 152, 219, 0.5)';
-                logError('已禁用ModelViewer渲染，确保Three.js场景正常显示', 'info');
+                // logError('已禁用ModelViewer渲染，确保Three.js场景正常显示', 'info');
             }
         }
         
         // 尝试共享WebGL上下文
         function shareWebGLContext() {
-            logError('开始尝试共享WebGL上下文...', 'info');
+            // logError('开始尝试共享WebGL上下文...', 'info');
             
             try {
                 if (modelCanvas && renderer) {
@@ -1489,29 +1539,29 @@
                     const threejsContext = renderer.getContext();
                     
                     if (threejsContext) {
-                        logError('成功获取Three.js WebGL上下文', 'info');
+                        // logError('成功获取Three.js WebGL上下文', 'info');
                         
                         // 尝试让ModelViewer使用相同的上下文
                         // 注意：这需要ModelViewer支持自定义WebGL上下文
-                        logError('WebGL上下文共享功能已启用', 'info');
+                        // logError('WebGL上下文共享功能已启用', 'info');
                         webglContextShared = true;
                     } else {
-                        logError('无法获取Three.js WebGL上下文', 'error');
+                        // logError('无法获取Three.js WebGL上下文', 'error');
                     }
                 } else {
-                    logError('ModelCanvas或Three.js渲染器未初始化', 'error');
+                    // logError('ModelCanvas或Three.js渲染器未初始化', 'error');
                 }
             } catch (e) {
-                logError('尝试共享WebGL上下文时出错', 'error', e.stack);
+                // logError('尝试共享WebGL上下文时出错', 'error', e.stack);
             }
         }
         
         // 重新加载Archnathid模型
         function reloadArchnathidModel() {
-            logError('开始重新加载Archnathid模型...', 'info');
+            // logError('开始重新加载Archnathid模型...', 'info');
             
             if (!modelViewer) {
-                logError('ModelViewer未初始化，无法重新加载模型', 'error');
+                // logError('ModelViewer未初始化，无法重新加载模型', 'error');
                 return;
             }
             
@@ -1545,7 +1595,7 @@
                     document.getElementById('model-load-time').textContent = modelLoadTime;
                     
                     if (model) {
-                        logError(`Archnathid模型重新加载成功！加载时间: ${modelLoadTime}ms`, 'info');
+                        // logError(`Archnathid模型重新加载成功！加载时间: ${modelLoadTime}ms`, 'info');
                         archnathidModel = model;
                         
                         try {
@@ -1554,7 +1604,7 @@
                                 try {
                                     archnathidInstance.dispose();
                                 } catch (e) {
-                                    logError('清理旧模型实例时出错', 'warning', e.stack);
+                                    // logError('清理旧模型实例时出错', 'warning', e.stack);
                                 }
                             }
                             
@@ -1564,26 +1614,26 @@
                                 archnathidInstance.setScene(modelScene);
                                 archnathidInstance.setSequence(0);
                                 archnathidInstance.setSequenceLoopMode(2);
-                                logError('Archnathid模型实例创建成功！', 'info');
+                                // logError('Archnathid模型实例创建成功！', 'info');
                                 modelViewerReady = true;
                             }
                         } catch (e) {
-                            logError('创建模型实例时出错', 'error', e.stack);
+                            // logError('创建模型实例时出错', 'error', e.stack);
                         }
                     } else {
-                        logError('Archnathid模型加载失败！', 'error');
+                        // logError('Archnathid模型加载失败！', 'error');
                     }
                 }).catch(error => {
-                    logError('加载模型时出错', 'error', error.message);
+                    // logError('加载模型时出错', 'error', error.message);
                 });
             } catch (e) {
-                logError('启动模型加载时出错', 'error', e.stack);
+                // logError('启动模型加载时出错', 'error', e.stack);
             }
         }
         
         // 重置ModelViewer
         function resetModelViewer() {
-            logError('开始重置ModelViewer...', 'info');
+            // logError('开始重置ModelViewer...', 'info');
             
             try {
                 // 清理实例
@@ -1591,7 +1641,7 @@
                     try {
                         archnathidInstance.dispose();
                     } catch (e) {
-                        logError('清理模型实例时出错', 'warning', e.stack);
+                        // logError('清理模型实例时出错', 'warning', e.stack);
                     }
                     archnathidInstance = null;
                 }
@@ -1601,7 +1651,7 @@
                     try {
                         archnathidModel.dispose();
                     } catch (e) {
-                        logError('清理模型时出错', 'warning', e.stack);
+                        // logError('清理模型时出错', 'warning', e.stack);
                     }
                     archnathidModel = null;
                 }
@@ -1611,7 +1661,7 @@
                     try {
                         modelViewer.removeScene(modelScene);
                     } catch (e) {
-                        logError('移除场景时出错', 'warning', e.stack);
+                        // logError('移除场景时出错', 'warning', e.stack);
                     }
                     modelScene = null;
                 }
@@ -1620,49 +1670,49 @@
                 try {
                     modelScene = modelViewer.addScene();
                     if (modelScene) {
-                        logError('ModelViewer场景重新创建成功', 'info');
+                        // logError('ModelViewer场景重新创建成功', 'info');
                     } else {
-                        logError('无法重新创建ModelViewer场景', 'error');
+                        // logError('无法重新创建ModelViewer场景', 'error');
                     }
                 } catch (e) {
-                    logError('创建ModelViewer场景时出错', 'error', e.stack);
+                    // logError('创建ModelViewer场景时出错', 'error', e.stack);
                 }
                 
                 modelViewerReady = false;
                 renderCounter = 0;
-                logError('ModelViewer重置完成', 'info');
+                // logError('ModelViewer重置完成', 'info');
             } catch (e) {
-                logError('重置ModelViewer时出错', 'error', e.stack);
+                // logError('重置ModelViewer时出错', 'error', e.stack);
             }
         }
         
         // 测试ModelViewer功能
         function testModelViewer() {
-            logError('开始测试ModelViewer功能...', 'info');
+            // logError('开始测试ModelViewer功能...', 'info');
             
             try {
                 if (!modelViewer) {
-                    logError('ModelViewer未初始化', 'error');
+                    // logError('ModelViewer未初始化', 'error');
                     return;
                 }
                 
                 // 测试ModelViewer基本功能
-                logError('ModelViewer实例存在: ' + !!modelViewer, 'info');
-                logError('ModelViewer版本: ' + (ModelViewer.version || '未知'), 'info');
-                logError('ModelViewerReady状态: ' + modelViewerReady, 'info');
-                logError('Archnathid模型加载状态: ' + !!archnathidModel, 'info');
-                logError('Archnathid实例创建状态: ' + !!archnathidInstance, 'info');
-                logError('ModelScene创建状态: ' + !!modelScene, 'info');
+                // logError('ModelViewer实例存在: ' + !!modelViewer, 'info');
+                // logError('ModelViewer版本: ' + (ModelViewer.version || '未知'), 'info');
+                // logError('ModelViewerReady状态: ' + modelViewerReady, 'info');
+                // logError('Archnathid模型加载状态: ' + !!archnathidModel, 'info');
+                // logError('Archnathid实例创建状态: ' + !!archnathidInstance, 'info');
+                // logError('ModelScene创建状态: ' + !!modelScene, 'info');
                 
                 // 测试Canvas状态
                 if (modelCanvas) {
-                    logError('ModelCanvas尺寸: ' + modelCanvas.width + 'x' + modelCanvas.height, 'info');
-                    logError('ModelCanvas可见性: ' + (modelCanvas.style.display !== 'none'), 'info');
+                    // logError('ModelCanvas尺寸: ' + modelCanvas.width + 'x' + modelCanvas.height, 'info');
+                    // logError('ModelCanvas可见性: ' + (modelCanvas.style.display !== 'none'), 'info');
                 }
                 
-                logError('ModelViewer功能测试完成', 'info');
+                // logError('ModelViewer功能测试完成', 'info');
             } catch (e) {
-                logError('测试ModelViewer功能时出错', 'error', e.stack);
+                // logError('测试ModelViewer功能时出错', 'error', e.stack);
             }
         }
         
@@ -1672,11 +1722,11 @@
             const file = fileInput.files[0];
             
             if (!file) {
-                logError('请先选择一个GLTF或GLB文件', 'warning');
+                // logError('请先选择一个GLTF或GLB文件', 'warning');
                 return;
             }
             
-            logError(`开始加载GLTF模型: ${file.name}`, 'info');
+            // logError(`开始加载GLTF模型: ${file.name}`, 'info');
             
             // 创建文件URL
             const fileURL = URL.createObjectURL(file);
@@ -1690,26 +1740,35 @@
             loader.load(
                 fileURL,
                 (gltf) => {
-                    logError(`GLTF模型加载成功: ${file.name}`, 'info');
+                    // logError(`GLTF模型加载成功: ${file.name}`, 'info');
                     
                     // 获取模型
                     const model = gltf.scene;
                     
-                    // 自动缩放模型以适应场景
+                    // 获取用户设置的缩放倍数
+                    const scaleSlider = document.getElementById('model-scale');
+                    const userScale = scaleSlider ? parseFloat(scaleSlider.value) : 1.0;
+                    
+                    // 自动缩放模型以适应场景，然后应用用户设置的缩放倍数
                     const box = new THREE.Box3().setFromObject(model);
                     const size = box.getSize(new THREE.Vector3());
                     const maxDim = Math.max(size.x, size.y, size.z);
-                    const scale = 2 / maxDim; // 调整缩放比例
-                    model.scale.set(scale, scale, scale);
+                    const baseScale = 2 / maxDim; // 基础缩放比例
+                    const finalScale = baseScale * userScale; // 应用用户设置的缩放倍数
+                    model.scale.set(finalScale, finalScale, finalScale);
                     
                     // 重新计算缩放后的边界框
                     box.setFromObject(model);
                     const scaledSize = box.getSize(new THREE.Vector3());
                     
-                    // 设置随机位置，直接将模型放置在地面高度
+                    // 获取用户设置的垂直高度
+                    const heightSlider = document.getElementById('model-height');
+                    const userHeight = heightSlider ? parseFloat(heightSlider.value) : 0.0;
+                    
+                    // 设置随机位置，使用用户设置的垂直高度
                     const randomX = (Math.random() - 0.5) * 10; // -5 到 5
                     const randomZ = (Math.random() - 0.5) * 10; // -5 到 5
-                    const yPosition = 0; // 地面高度
+                    const yPosition = userHeight; // 使用用户设置的垂直高度
                     model.position.set(randomX, yPosition, randomZ);
                     
                     // 为模型添加阴影
@@ -1742,7 +1801,7 @@
                     let currentAction = null;
                     
                     if (gltf.animations && gltf.animations.length > 0) {
-                        logError(`发现 ${gltf.animations.length} 个动画`, 'info');
+                        // logError(`发现 ${gltf.animations.length} 个动画`, 'info');
                         
                         // 创建动画混合器
                         mixer = new THREE.AnimationMixer(model);
@@ -1761,7 +1820,7 @@
                         
                         // 如果找到动画，播放它
                         if (standAnimation) {
-                            logError(`播放动画: ${standAnimation.name}`, 'info');
+                            // logError(`播放动画: ${standAnimation.name}`, 'info');
                             currentAction = mixer.clipAction(standAnimation);
                             currentAction.setLoop(THREE.LoopRepeat);
                             currentAction.play();
@@ -1772,10 +1831,10 @@
                                 model: model
                             });
                         } else {
-                            logError('未找到stand或walk动画', 'info');
+                            // logError('未找到stand或walk动画', 'info');
                         }
                     } else {
-                        logError('模型没有动画', 'info');
+                        // logError('模型没有动画', 'info');
                     }
                     
                     // 存储模型信息
@@ -1787,8 +1846,8 @@
                         currentAction: currentAction
                     });
                     
-                    logError(`模型已添加到场景，位置: (${randomX.toFixed(2)}, ${yPosition.toFixed(2)}, ${randomZ.toFixed(2)})`, 'info');
-                    logError(`当前场景中的GLTF模型数量: ${gltfModels.length}`, 'info');
+                    // logError(`模型已添加到场景，位置: (${randomX.toFixed(2)}, ${yPosition.toFixed(2)}, ${randomZ.toFixed(2)})`, 'info');
+                    // logError(`当前场景中的GLTF模型数量: ${gltfModels.length}`, 'info');
                     
                     // 清理URL对象
                     URL.revokeObjectURL(fileURL);
@@ -1797,11 +1856,11 @@
                     // 加载进度
                     const progress = Math.round((xhr.loaded / xhr.total) * 100);
                     if (progress % 10 === 0) {
-                        logError(`加载GLTF模型: ${progress}%`, 'info');
+                        // logError(`加载GLTF模型: ${progress}%`, 'info');
                     }
                 },
                 (error) => {
-                    logError(`加载GLTF模型时出错: ${error.message}`, 'error');
+                    // logError(`加载GLTF模型时出错: ${error.message}`, 'error');
                     // 清理URL对象
                     URL.revokeObjectURL(fileURL);
                 }
@@ -1821,7 +1880,7 @@
                     controlsSystem.update();
                 }
             } catch (e) {
-                logError('更新控制系统时出错', 'error', e.stack);
+                // logError('更新控制系统时出错', 'error', e.stack);
             }
             
             // 更新GLTF模型动画
@@ -1832,7 +1891,7 @@
                     }
                 });
             } catch (e) {
-                logError('更新GLTF动画时出错', 'error', e.stack);
+                // logError('更新GLTF动画时出错', 'error', e.stack);
             }
             
             // 时间分片渲染策略
@@ -1846,9 +1905,9 @@
                         // 渲染ModelViewer
                         try {
                             modelViewer.updateAndRender();
-                            logError('ModelViewer渲染成功 (时间分片)', 'info');
+                            // logError('ModelViewer渲染成功 (时间分片)', 'info');
                         } catch (mvError) {
-                            logError('ModelViewer渲染出错 (时间分片)', 'warning', mvError.stack || mvError.message);
+                            // logError('ModelViewer渲染出错 (时间分片)', 'warning', mvError.stack || mvError.message);
                             // 不禁用ModelViewer，允许继续尝试
                         }
                     }
@@ -1857,33 +1916,33 @@
                     try {
                         renderer.render(scene, camera);
                     } catch (e) {
-                        logError('渲染Three.js场景时出错', 'error', e.stack);
+                        // logError('渲染Three.js场景时出错', 'error', e.stack);
                     }
                 } else {
                     // 只渲染Three.js场景
                     try {
                         renderer.render(scene, camera);
                     } catch (e) {
-                        logError('渲染Three.js场景时出错', 'error', e.stack);
+                        // logError('渲染Three.js场景时出错', 'error', e.stack);
                     }
                     
                     // 记录ModelViewer状态
                     if (modelViewer && modelViewerReady) {
                         if (renderCounter % 10 === 0) {
-                            logError('ModelViewer已就绪，但渲染已禁用', 'info');
+                            // logError('ModelViewer已就绪，但渲染已禁用', 'info');
                         }
                         renderCounter++;
                     }
                 }
             } catch (e) {
                 // 只记录警告，不影响Three.js渲染
-                logError('处理渲染时出错', 'warning', e.stack);
+                // logError('处理渲染时出错', 'warning', e.stack);
                 
                 // 确保Three.js场景始终能够渲染
                 try {
                     renderer.render(scene, camera);
                 } catch (renderError) {
-                    logError('渲染Three.js场景时出错', 'error', renderError.stack);
+                    // logError('渲染Three.js场景时出错', 'error', renderError.stack);
                 }
             }
         }

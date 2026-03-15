@@ -26,6 +26,11 @@ class ControlsSystem {
         // 触摸事件相关变量
         this.touchStartDistance = 0;
         
+        // 鼠标拖动相关变量
+        this.isMouseDown = false;
+        this.lastMouseX = 0;
+        this.lastMouseY = 0;
+        
         // 坐标系转换工具
         this.coordinateConverter = new CoordinateConverter();
         
@@ -55,6 +60,8 @@ class ControlsSystem {
         document.addEventListener('keydown', (event) => this.handleKeyDown(event));
         document.addEventListener('keyup', (event) => this.handleKeyUp(event));
         this.renderer.domElement.addEventListener('wheel', (event) => this.handleWheel(event), { passive: false });
+        this.renderer.domElement.addEventListener('mousedown', (event) => this.handleMouseDown(event), false);
+        window.addEventListener('mouseup', (event) => this.handleMouseUp(event), false);
         window.addEventListener('mousemove', (event) => this.handleMouseMove(event), false);
         window.addEventListener('click', (event) => this.handleMouseClick(event), false);
         window.addEventListener('touchstart', (event) => this.handleTouchStart(event), false);
@@ -154,12 +161,20 @@ class ControlsSystem {
             this.camera.quaternion.multiplyQuaternions(quaternion, this.camera.quaternion);
         }
         
-        // 处理垂直滑动（上下视角）- 类似R/T键
+        // 处理垂直滑动（相机前后移动）- 实现无限拉远
         if (event.deltaY !== 0) {
-            // y正向的差值对应R键效果（向下看），y负方向的差值对应T键效果（向上看）
-            // 翻转纵向差值，使向上滑动对应T键效果（向上看），向下滑动对应R键效果（向下看）
-            const pitchDelta = -event.deltaY * 0.001;
-            this.adjustCameraPitch(pitchDelta);
+            // 计算相机的前进方向
+            const direction = new THREE.Vector3();
+            this.camera.getWorldDirection(direction);
+            
+            // 移动相机（deltaY为正向前移动，为负向后移动）
+            const moveDistance = event.deltaY * 0.01;
+            this.camera.position.add(direction.multiplyScalar(moveDistance));
+            
+            // 确保相机不会低于地面
+            if (this.camera.position.y < 1.7) {
+                this.camera.position.y = 1.7;
+            }
         }
     }
     
@@ -251,6 +266,55 @@ class ControlsSystem {
         // 计算鼠标在屏幕上的位置
         this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    }
+    
+    // 鼠标按下事件处理
+    handleMouseDown(event) {
+        if (event.button === 0) { // 左键
+            this.isMouseDown = true;
+            this.lastMouseX = event.clientX;
+            this.lastMouseY = event.clientY;
+        }
+    }
+    
+    // 鼠标释放事件处理
+    handleMouseUp(event) {
+        if (event.button === 0) { // 左键
+            this.isMouseDown = false;
+        }
+    }
+    
+    // 鼠标移动事件处理
+    handleMouseMove(event) {
+        // 计算鼠标在屏幕上的位置
+        this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        
+        // 处理鼠标拖动控制相机
+        if (this.isMouseDown) {
+            const deltaX = event.clientX - this.lastMouseX;
+            const deltaY = event.clientY - this.lastMouseY;
+            
+            // 处理水平拖动（左右转向）- 类似Q/E键
+            if (deltaX !== 0) {
+                const quaternion = new THREE.Quaternion();
+                // 翻转旋转方向，使向右拖动时相机向右转
+                quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -deltaX * 0.005);
+                this.camera.quaternion.multiplyQuaternions(quaternion, this.camera.quaternion);
+            }
+            
+            // 处理垂直拖动（上下视角）- 类似R/T键
+            if (deltaY !== 0) {
+                // y正向的差值对应R键效果（向下看），y负方向的差值对应T键效果（向上看）
+                // 翻转纵向差值，使向上拖动对应T键效果（向上看），向下拖动对应R键效果（向下看）
+                const pitchDelta = deltaY * 0.005;
+                this.adjustCameraPitch(pitchDelta);
+            }
+            
+            // 更新上一次鼠标位置
+            this.lastMouseX = event.clientX;
+            this.lastMouseY = event.clientY;
+        }
     }
     
     // 鼠标点击事件处理
